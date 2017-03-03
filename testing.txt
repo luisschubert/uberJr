@@ -1,0 +1,2 @@
+testing the getTravelTime API
+curl -i -H "Content-Type: application/json" -X POST -d '{"longitude":"-121.88516329999997","latitude":"37.3355551"}' http://127.0.0.1:5000/api/getTravelTime

@@ -1,5 +1,6 @@
-from flask import Flask,request,render_template
+from flask import Flask,request,render_template, jsonify
 import json
+import helperFunctions
 from datetime import datetime
 import requests
 
@@ -26,33 +27,50 @@ def signup():
 def login():
     return render_template("login.html")
 
-#API for the frontend to request estimate travel time based on user GPS location and destination Address
-@app.route("/api/getTravelTime")
-def getTravelTime():
+@app.route("/geolocationTest")
+def geolocationTest():
+    return render_template("geolocationTest.html")
+
+#API for the frontend to request estimate travel time/cost based on user GPS location and destination Address
+@app.route("/api/getTravelTime", methods=['POST'])
+def api_getTravelInfo():
     #json payload contains:
     #gps coordinates of user location
     #destination address
-    jsonPayload = request.get_json()
-    gpsCoordinates  = jsonPayload['GPS']
-    originAddress = getAddressFromGPS(gpsCoordinates)
-    destinationAddress = jsonPayload['destinationAddress']
-    r = request.get("https://maps.googleapis.com/maps/api/directions/json?origin=%s&destination=%s&key=%s" % (originAddress,destinationAddress,apiKey))
+    print "THIS IS REAL"
+    #parsedJSON =request.get_json()
+    originLongitude  = request.json.get('longitude')
+    originLatitude = request.json.get('latitude')
+    originGPS ="%s,%s" % (originLatitude,originLongitude)
+    print originGPS
+    #destinationAddress = parseJSON['destinationAddress']
+    destinationAddress = "3440+Bryant+Street+Palo+Alto+CA"
+    departureTime = "now"
+    #we should add departure time to this request based on the available drivers.
+    #currently departure time is set to now.
+    #departure time parameter is necessary to receive traffic information in the response.
+    #there are 3 different modes for traffic calculation based on historical data. best_guess, pessimistic, optimistic.
+    r = requests.get("https://maps.googleapis.com/maps/api/directions/json?origin=%s&destination=%s&key=%s&departure_time=%s" % (originGPS,destinationAddress,apiKey, departureTime))
+    print r
     if r.status_code == 200:
         response = r.content
-        travelTime = extractTravelTime(response)
-        return jsonify(estimateTime = travelTime)
+        travelTime, travelDistance = helperFunctions.extractTravelTime(response)
+        travelCost = helperFunctions.calculateCost(travelTime,travelDistance)
+        response = jsonify(estimateTime = travelTime, estimateCost = travelCost)
+        print response
+        return response
     else:
         return "error"
 
-
-#takes gpsCoordinates as a parameter and makes a request to Geolocation API to return address.
-def getAddressFromGPS(gpsCoordinates):
-    return
-
-#extracts the travel time from the direction API response
-#routes.legs.duration.value --> this returns the duration of the trip in seconds.
-def extractTravelTime(response):
-    return
+@app.route("/api/signup", methods=['POST'])
+def api_signup():
+    email = request.form['email']
+    password = request.form['password']
+    success = helperFunctions.signup(email,password)
+    if(success):
+        return "OK"
+    else:
+        return "FAILURE"
 
 
 
