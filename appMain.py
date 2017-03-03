@@ -1,4 +1,4 @@
-from flask import Flask,request
+from flask import Flask,request,render_template
 import json
 from datetime import datetime
 import requests
@@ -13,9 +13,18 @@ app = Flask(__name__)
 # if r.status_code ==200:
 #     response =r.content
 
-@app.route("/")
+#ROUTES
+@app.route("/main")
 def home():
-    return "<h1>UberJr</h1>"
+    return render_template("index.html")
+
+@app.route("/signup")
+def signup():
+    return render_template("signup.html")
+
+@app.route("/login")
+def login():
+    return render_template("login.html")
 
 #API for the frontend to request estimate travel time based on user GPS location and destination Address
 @app.route("/api/getTravelTime")
@@ -34,11 +43,14 @@ def getTravelTime():
         return jsonify(estimateTime = travelTime)
     else:
         return "error"
+
+
 #takes gpsCoordinates as a parameter and makes a request to Geolocation API to return address.
 def getAddressFromGPS(gpsCoordinates):
     return
 
 #extracts the travel time from the direction API response
+#routes.legs.duration.value --> this returns the duration of the trip in seconds.
 def extractTravelTime(response):
     return
 
