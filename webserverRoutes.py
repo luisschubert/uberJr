@@ -19,6 +19,14 @@ app = Flask(__name__)
 def home():
     return render_template("index.html")
 
+@app.route("/driver")
+def driver():
+    return render_template("driver.html")
+
+@app.route("/rider")
+def rider():
+    return render_template("rider.html")
+
 @app.route("/signup")
 def signup():
     return render_template("signup.html")
