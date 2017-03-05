@@ -1,0 +1,166 @@
+// devices viewport width starts at:
+$widescreen: 1372px;
+$tablet: 960px;
+$mobile: 767px;
+$mobile-sm: 479px;
+
+@import "base/markup-variables";
+@import "base/markup-mixins";
+@import "base/base-reset";
+@import "base/animate";
+@import "base/overlay";
+
+body {
+   /* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#30c2d1+0,19225b+100 */
+   background: #30c2d1; /* Old browsers */
+   background: -moz-linear-gradient(-45deg, #30c2d1 0%, #19225b 100%); /* FF3.6-15 */
+   background: -webkit-linear-gradient(-45deg, #30c2d1 0%, #19225b 100%); /* Chrome10-25,Safari5.1-6 */
+   background: linear-gradient(135deg, #30c2d1 0%, #19225b 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+   filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#30c2d1', endColorstr='#19225b',GradientType=1 ); /* IE6-9 fallback on horizontal gradient */
+}
+
+h2 {
+   font-size: 34px;
+   line-height: 1.4;
+   font-weight: 300;
+   margin: 0 0 30px;
+
+   @media screen and (max-width: $mobile) {
+      font-size: 26px;
+      margin: 0 0 20px;
+   }
+}
+
+@media screen and (max-width: $mobile) {
+   body {
+      font-size: 16px;
+   }
+}
+
+p {
+   margin: 0 0 20px;
+}
+
+img.logo {
+   max-width: 160px;
+   margin-bottom: 20px;
+}
+
+.container {
+   max-width: 1200px;
+   margin: 0 auto;
+   position: relative;
+
+   @extend %clearfix;
+}
+
+.centered {
+   text-align: center;
+}
+
+#wrapper {
+   overflow: hidden;
+   min-height: 100%;
+   display: none;
+
+   .map-bg {
+      position: absolute;
+      left: 0;
+      right: 0;
+      height: 100vh;
+      background: url("../images/map-bg.png") center;
+      background-size: cover;
+      opacity: .08;
+   }
+}
+
+#map-canvas {
+   margin: 0;
+   height: 80vh;
+   width: 100%;
+}
+
+.register-wrapper {
+   max-width: 400px;
+   background: #fff;
+   padding: 40px 40px 20px;
+   margin: 40px auto;
+   border-radius: 3px;
+   text-align: center;
+
+   form {
+      h2 {
+         text-align: left;
+      }
+
+      input {
+         width: 100%;
+         margin: 0 0 20px;
+         border-radius: 2px;
+         font-size: 16px;
+      }
+
+      input[type="text"] {}
+
+      input[type="submit"] {
+         border: none;
+         background: #10b8f9;
+         color: #fff;
+         padding: 8px;
+         border-radius: 3px;
+         text-transform: uppercase;
+         margin-bottom: 20px;
+      }
+
+      p {
+         font-size: 14px;
+      }
+
+      a {
+         font-size: 14px;
+         font-weight: bold;
+      }
+   }
+}
+
+.sjsu-map {
+   width: 100%;
+   height: 80vh;
+   opacity: .6;
+}
+
+.pace {
+   -webkit-pointer-events: none;
+   pointer-events: none;
+   -webkit-user-select: none;
+   -moz-user-select: none;
+   user-select: none;
+   position: fixed;
+   top: 0;
+   left: 0;
+   width: 100%;
+   -webkit-transform: translate3d(0, -50px, 0);
+   -ms-transform: translate3d(0, -50px, 0);
+   transform: translate3d(0, -50px, 0);
+   -webkit-transition: -webkit-transform .5s ease-out;
+   -ms-transition: -webkit-transform .5s ease-out;
+   transition: transform .5s ease-out;
+}
+
+.pace.pace-active {
+   -webkit-transform: translate3d(0, 0, 0);
+   -ms-transform: translate3d(0, 0, 0);
+   transform: translate3d(0, 0, 0);
+}
+
+.pace .pace-progress {
+   display: block;
+   position: fixed;
+   z-index: 999;
+   top: 0;
+   right: 100%;
+   width: 100%;
+   height: 7px;
+   background: #04cbff;
+   pointer-events: none;
+}
