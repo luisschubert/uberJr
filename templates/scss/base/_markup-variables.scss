@@ -1,0 +1,27 @@
+// brand colors (http://name-of-color.com/)
+$black: #6d6f73;
+$white: #fff;
+$mountain-mist: #b8b8b8;
+$green: #00968f;
+$red: #9d2235;
+$link-blue: #04cbff;
+
+// base variables
+$base-text-color: $black;
+$base-background-color: $white;
+$base-link-color: $link-blue;
+$base-form-text-color: $black;
+$base-form-placeholder-color: $mountain-mist;
+$base-input-border-color: $mountain-mist;
+$base-form-button-bg: $black;
+$base-form-button-color: $white;
+
+$base-font-size: 20px;
+$base-line-height: 1.5;
+$base-font-family: "open-sans", sans-serif;
+$base-text-interval: $base-font-size * $base-line-height;
+
+$base-min-width: 320px;
+
+// @font-face-serif: 
+// @font-face-sans-serif:

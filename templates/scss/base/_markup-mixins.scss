@@ -1,0 +1,79 @@
+// clearfix
+%clearfix {
+  &:after {
+    content: " ";
+    display: block;
+    clear: both;
+  }
+}
+
+// reset for list
+%listreset {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+// hide text
+@mixin hide-text {
+  overflow: hidden;
+  text-indent: -9999px;
+}
+
+// linear gradient
+@mixin linear-gradient($direction, $fromColor, $toColor) {
+  background-color: $toColor;
+  background-image: -webkit-linear-gradient($direction, $fromColor, $toColor);
+  background-image: -moz-linear-gradient($direction, $fromColor, $toColor);
+  background-image: -ms-linear-gradient($direction, $fromColor, $toColor);
+  background-image: -o-linear-gradient($direction, $fromColor, $toColor);
+  background-image: linear-gradient($direction, $fromColor, $toColor);
+}
+
+// radial gradient
+@mixin radial-gradient($from, $to) {
+  background-color: $from;
+  background: -moz-radial-gradient(center, circle cover, $from 0%, $to 100%);
+  background: -webkit-gradient(radial, center center, 0px, center center, 100%, color-stop(0%, $from), color-stop(100%, $to));
+  background: -webkit-radial-gradient(center, circle cover, $from 0%, $to 100%);
+  background: -o-radial-gradient(center, circle cover, $from 0%, $to 100%);
+  background: -ms-radial-gradient(center, circle cover, $from 0%, $to 100%);
+  background: radial-gradient(center, circle cover, $from 0%, $to 100%);
+}
+
+// transform
+@mixin transform ($deg) {
+  transform: $deg;
+  -moz-transform: $deg;
+  -ms-transform: $deg;
+  -o-transform: $deg;
+  -webkit-transform : $deg;
+}
+
+// transition
+@mixin transition($var...) {
+  -webkit-transition: $var;
+  -moz-transition: $var;
+  -ms-transition: $var;
+  -o-transition: $var;
+  transition: $var;
+}
+
+// form placeholder
+@mixin placeholder($color: $input-color-placeholder) {
+  &::-moz-placeholder {
+    color: $color;
+    opacity: 1;
+  }
+  &:-ms-input-placeholder { color: $color;}
+  &::-webkit-input-placeholder { color: $color;}
+  &.placeholder { color: $color;}
+}
+
+// full width
+%full-width {
+  padding-left: 9999px;
+  padding-right: 9999px;
+  margin-left: -9999px;
+  margin-right: -9999px;
+}

@@ -1,0 +1,51 @@
+.overlay {
+   position: absolute;
+   top: 50%;
+   left: 50%;
+   margin-left: -200px;
+   margin-top: -230px;
+   padding: 30px 40px 20px;
+   width: 100%;
+   max-width: 400px;
+   background: #fff;
+   border-radius: 2px;
+   box-shadow: 0 10px 16px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+
+   input {
+      width: 100%;
+      margin: 0 0 20px;
+      border-radius: 2px;
+      font-size: 16px;
+   }
+
+   input[type="text"] {}
+
+   input[type="submit"] {
+      border: none;
+      background: #10b8f9;
+      color: #fff;
+      padding: 8px;
+      border-radius: 3px;
+      text-transform: uppercase;
+      margin-bottom: 20px;
+   }
+
+   &.login {
+      text-align: center;
+
+      h2 {
+         margin-bottom: 20px;
+      }
+
+      p {
+         font-size: 14px;
+      }
+
+      a {
+         font-size: 14px;
+         font-weight: bold;
+      }
+   }
+
+   .destination {}
+}
