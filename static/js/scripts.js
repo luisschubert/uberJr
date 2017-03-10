@@ -62,6 +62,7 @@ format:function(b){var d="",a;for(a in b)if(a&&b.hasOwnProperty(a)){var c=a,e=b[
 var map;
 var zwolle = new google.maps.LatLng(52.5143874,6.0968913);
 
+
 var MY_MAPTYPE_ID = 'custom_style';
 
 function initMap() {
@@ -104,6 +105,8 @@ function initMap() {
   var styledMapOptions = {
     name: 'Custom Style'
   };
+
+
 
   var customMapType = new google.maps.StyledMapType(featureOpts, styledMapOptions);
 
