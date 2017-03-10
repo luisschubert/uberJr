@@ -42,18 +42,16 @@ def geolocationTest():
 #API for the frontend to request estimate travel time/cost based on user GPS location and destination Address
 @app.route("/api/getTravelTime", methods=['POST'])
 def api_getTravelInfo():
-    #json payload contains:
-    #gps coordinates of user location
-    #destination address
-    print "THIS IS REAL"
-    #parsedJSON =request.get_json()
     originLongitude  = request.json.get('longitude')
     originLatitude = request.json.get('latitude')
+    destinationAddress = request.json.get('destinationAddress')
+    estimatePickUpTime = request.json.get('estimatePickUpTime')
+
     originGPS ="%s,%s" % (originLatitude,originLongitude)
-    print originGPS
-    #destinationAddress = parseJSON['destinationAddress']
-    destinationAddress = "3440+Bryant+Street+Palo+Alto+CA"
+
+    #for now
     departureTime = "now"
+
     #we should add departure time to this request based on the available drivers.
     #currently departure time is set to now.
     #departure time parameter is necessary to receive traffic information in the response.

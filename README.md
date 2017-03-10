@@ -1,10 +1,9 @@
 # uberJr
 Uber clone
 
-## API Documentation
-
 ## Webserver Routes
-This will outline the routes our webserver can handle and the views it will return.
+>This will outline the routes our webserver can handle and the views it will return.
+
 ##### /
 displays the login view
 
@@ -19,3 +18,27 @@ displays the signup view
 
 ##### /login
 displays the login view
+
+#### /geolocationTest
+displays a button to retrieve GPS Coordinates using HTML5 API
+
+
+## API Documentation
+
+###### getTravelTime (POST) JSON
+Parameters:
+* originLongitude
+* originLatitude
+* destinationAddress
+* estimatePickupTime
+* pickUpAddress //OPTIONAL
+
+##### getEstimatePickupTime (POST) JSON
+Parameters:
+* originLongitude
+* originLatitude
+
+##### signup (POST) FORM
+Parameters:
+* email
+* password
