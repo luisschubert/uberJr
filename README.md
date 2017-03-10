@@ -25,20 +25,20 @@ displays a button to retrieve GPS Coordinates using HTML5 API
 
 ## API Documentation
 
-###### getTravelTime (POST) JSON
-Parameters:
+#### getTravelTime (POST) JSON
+###### Parameters:
 * originLongitude
 * originLatitude
 * destinationAddress
 * estimatePickupTime
 * pickUpAddress //OPTIONAL
 
-##### getEstimatePickupTime (POST) JSON
-Parameters:
+#### getEstimatePickupTime (POST) JSON
+###### Parameters:
 * originLongitude
 * originLatitude
 
-##### signup (POST) FORM
-Parameters:
+#### signup (POST) FORM
+###### Parameters:
 * email
 * password
