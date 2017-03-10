@@ -78,6 +78,11 @@ def api_signup():
     else:
         return "FAILURE"
 
+@app.route("/api/login", methods=['POST'])
+def api_login():
+    email = request.json.get('email')
+    password = request.json.get('password')
+
 
 
 if __name__ == '__main__':

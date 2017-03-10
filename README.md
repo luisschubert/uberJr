@@ -4,19 +4,19 @@ Uber clone
 ## Webserver Routes
 >This will outline the routes our webserver can handle and the views it will return.
 
-##### /
+#### /
 displays the login view
 
-##### /driver
+#### /driver
 displays the driver view
 
-##### /rider
+#### /rider
 displays the rider view
 
-##### /signup
+#### /signup
 displays the signup view
 
-##### /login
+#### /login
 displays the login view
 
 #### /geolocationTest
@@ -24,6 +24,7 @@ displays a button to retrieve GPS Coordinates using HTML5 API
 
 
 ## API Documentation
+>all api calls go to /api/...
 
 #### getTravelTime (POST) JSON
 ###### Parameters:
@@ -38,7 +39,12 @@ displays a button to retrieve GPS Coordinates using HTML5 API
 * originLongitude
 * originLatitude
 
-#### signup (POST) FORM
+#### signup (POST) JSON
+###### Parameters:
+* email
+* password
+
+#### login (POST) JSON
 ###### Parameters:
 * email
 * password

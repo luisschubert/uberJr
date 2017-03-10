@@ -6,9 +6,6 @@ def extractTravelTime(response):
     parsed_response = json.loads(response)
     #TEST# this needs to be tested. most likely this will not work.
     #['duration_in_traffic']['value']
-    print "####\n"
-    print parsed_response
-    print "####\n"
     travelTime = parsed_response[u'routes'][0][u'legs'][0][u'duration_in_traffic'][u'value']
     print "##2##\n"
     print travelTime

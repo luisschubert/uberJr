@@ -12,6 +12,19 @@ $(document).ready(function(){
    $('#wrapper').fadeIn(1200);
 });
 
+function doLogin(){
+	var email = $('#emailField').val();
+	var password = $('#passwordField').val();
+	$.post("/api/login",
+    {
+        email: email,
+        password: password
+    },
+    function(data, status){
+        //what to do when data is returned
+    });
+}
+
 
 /*! WOW - v1.0.3 - 2015-01-14
 * Copyright (c) 2015 Matthieu Aussaguel; Licensed MIT */
@@ -98,8 +111,3 @@ function initMap() {
 }
 
 google.maps.event.addDomListener(window, 'load', initMap);
-
-
-
-
-

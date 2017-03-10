@@ -19,9 +19,9 @@
     <div class="overlay login wow fadeInUpMin" data-wow-delay=".2s" data-wow-duration="2.s">
       <img class="logo" src="/static/images/uberjr-logo.png" alt="uber jr logo">
       <h2>Please LogIn</h2>
-      <form>
-        <input type="email" name="email" placeholder="Email">
-        <input type="password" name="password" placeholder="Password">
+      <form action="doLogin" >
+        <input id="emailField" type="email" name="email" placeholder="Email">
+        <input id="passwordField" type="password" name="password" placeholder="Password">
         <input type="submit" value="Submit">
       </form>
       <p>Need an account? <a href="/signup" target="_self">Sign Up</a></p>
