@@ -15,9 +15,9 @@ app = Flask(__name__)
 #     response =r.content
 
 #ROUTES
-@app.route("/main")
+@app.route("/")
 def home():
-    return render_template("index.html")
+    return render_template("login.html")
 
 @app.route("/driver")
 def driver():
