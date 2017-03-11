@@ -10,7 +10,22 @@ function initWow() {
 
 $(document).ready(function(){
    $('#wrapper').fadeIn(1200);
+	 getLocation()
 });
+
+function getLocation() {
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(showPosition);
+    } else {
+        console.log("there was an error with getting the location");
+    }
+}
+
+function showPosition(position) {
+    lat = position.coords.latitude;
+    lng = position.coords.longitude;
+		map.setCenter(new google.maps.LatLng(lat, lng))
+}
 
 function doLogin(){
 	var email = $('#emailField').val();
@@ -60,7 +75,9 @@ format:function(b){var d="",a;for(a in b)if(a&&b.hasOwnProperty(a)){var c=a,e=b[
 
 
 var map;
-var zwolle = new google.maps.LatLng(52.5143874,6.0968913);
+
+
+var sjsu = new google.maps.LatLng(32.336206, -121.882491);
 
 
 var MY_MAPTYPE_ID = 'custom_style';
@@ -92,7 +109,7 @@ function initMap() {
 
   var mapOptions = {
     zoom: 14,
-    center: zwolle,
+    center: sjsu,
     mapTypeControlOptions: {
       mapTypeIds: [google.maps.MapTypeId.ROADMAP, MY_MAPTYPE_ID]
     },
