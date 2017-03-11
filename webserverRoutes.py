@@ -82,6 +82,8 @@ def api_signup():
 def api_login():
     email = request.json.get('email')
     password = request.json.get('password')
+    #compute hash for password
+    # request to the firebase
 
 
 
