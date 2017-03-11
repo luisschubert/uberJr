@@ -77,7 +77,7 @@ format:function(b){var d="",a;for(a in b)if(a&&b.hasOwnProperty(a)){var c=a,e=b[
 var map;
 
 
-var sjsu = new google.maps.LatLng(32.336206, -121.882491);
+var sjsu = new google.maps.LatLng(37.336206, -121.882491);
 
 
 var MY_MAPTYPE_ID = 'custom_style';
