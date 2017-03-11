@@ -84,6 +84,7 @@ def api_login():
     password = request.json.get('password')
     #compute hash for password
     # request to the firebase
+    #i want to implement this!
 
 
 
