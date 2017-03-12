@@ -19,13 +19,13 @@
     <div class="map-bg"></div>
     <div class="container">
       <div class="register-wrapper wow fadeInUpMin" data-wow-delay=".2s" data-wow-duration="2.s">
-        <form>
+        <form action="doRegister" >
           <img class="logo" src="/static/images/uberjr-logo.png" alt="uber jr logo">
           <h2>Register</h2>
-          <input type="text" placeholder="name">
-          <input type="email" placeholder="email">
-          <input type="password" placeholder="password">
-          <input type="password" placeholder="confirm password">
+          <input id="nameField" type="text" placeholder="name">
+          <input id="emailField" type="email" name="email" placeholder="Email">
+          <input id="passwordField" type="password" name="password" placeholder="Password">
+          <input id="confPasswordField" type="password" name="confpassword" placeholder="Password">
           <input type="submit" value="Submit">
           <p>Have an account? <a href="/login" target="_self">Sign In</a></p>
         </form>

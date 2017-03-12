@@ -27,6 +27,21 @@ function showPosition(position) {
 		map.setCenter(new google.maps.LatLng(lat, lng))
 }
 
+function doRegister(){
+	var name = $('#nameField').val();
+	var email = $('#emailField').val();
+	var password = $('#passwordField').val();
+	$.post("/api/signup"),
+		{
+				name: name,
+				email: email,
+				password: password
+		},
+		function(data, status){
+			//what to do when data is returned
+		});
+}
+
 function doLogin(){
 	var email = $('#emailField').val();
 	var password = $('#passwordField').val();
@@ -39,7 +54,6 @@ function doLogin(){
         //what to do when data is returned
     });
 }
-
 
 /*! WOW - v1.0.3 - 2015-01-14
 * Copyright (c) 2015 Matthieu Aussaguel; Licensed MIT */

@@ -70,9 +70,10 @@ def api_getTravelInfo():
 
 @app.route("/api/signup", methods=['POST'])
 def api_signup():
+    name = request.json.get('name')
     email = request.json.get('email')
     password = request.json.get('password')
-    success = helperFunctions.signup(email,password)
+    success = helperFunctions.signup(name,email,password)
     if(success):
         return "OK"
     else:
