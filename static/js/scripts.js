@@ -31,7 +31,7 @@ function doRegister(){
 	var name = $('#nameField').val();
 	var email = $('#emailField').val();
 	var password = $('#passwordField').val();
-	$.post("/api/signup"),
+	$.post("/api/signup",
 		{
 				name: name,
 				email: email,
