@@ -41,6 +41,7 @@ displays a button to retrieve GPS Coordinates using HTML5 API
 
 #### signup (POST) JSON
 ###### Parameters:
+* name
 * email
 * password
 
