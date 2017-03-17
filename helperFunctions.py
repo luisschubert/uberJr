@@ -11,13 +11,14 @@ def extractTravelTime(response):
 #this will access the database and check if the username is not already registered.
 #if the user is not registered a new entry will be created.
 def signup(email,password):
-    return
+    return False
 
 def login(email,password):
+    return False
     #check if the email exists in the system
     #get the hash for the user-email
     #then calculate the hash
-    #compare the hashes 
+    #compare the hashes
 
 #calculates the travelCost based on the formula
 def calculateCost(travelTime, travelDistance):
