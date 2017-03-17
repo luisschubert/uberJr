@@ -10,8 +10,15 @@ def extractTravelTime(response):
 
 #this will access the database and check if the username is not already registered.
 #if the user is not registered a new entry will be created.
-def signup(email,password):
-    return False
+def signup(name,email,password,confirmpassword):
+    if not db.userExists(email):
+        if password == confirmpassword:
+            db.addUser(email,password)
+            return "SUCCESS"
+        else:
+            return "FAILURE"
+    else:
+        return "DUPLICATE"
 
 def login(email,password):
     if db.userExists(email):

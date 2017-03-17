@@ -74,7 +74,8 @@ def api_signup():
     name = request.json.get('name')
     email = request.json.get('email')
     password = request.json.get('password')
-    signupCode = helperFunctions.signup(name,email,password)
+    confirmpassword = request.json.get('confirmpassword')
+    signupCode = helperFunctions.signup(name,email,password,confirmpassword)
     if signupCode == "SUCCESS":
         return "OK"
     else if signupCode == "DUPLICATE":
