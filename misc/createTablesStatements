@@ -1,0 +1,44 @@
+HELPFUL COMMANDS:
+\d --> show all the databases
+\l --> shows all the tables in a database
+\c --> used to connect to specific database
+
+1. create a database named uber jr
+create database uberjr;
+
+2. connect to the database
+\c uberjr
+
+3. inside the database create all the tables 
+create table usertable(
+  userId int,
+  email text,
+  hashedPassword text,
+  driver boolean,
+  PRIMARY KEY(userId)
+);
+
+create table driver(
+  userId int,
+  licensePlate text,
+  carColor text,
+  carModel text,
+  activelyDriving boolean,
+  PRIMARY KEY(userId)
+);
+
+create table location(
+  userId int,
+  longitude float,
+  latitude float,
+  lastUpdatedTime timestamp,
+  PRIMARY KEY(userId)
+);
+
+create table rides(
+  riderUserId int,
+  driverUserId int,
+  pickUpAddress text,
+  duration int,
+  PRIMARY KEY(riderUserId)
+);
