@@ -1,0 +1,32 @@
+CREATE TABLE User{
+  userId int,
+  email text,
+  hashedPassword text,
+  driver boolean,
+  PRIMARY KEY(userId)
+}
+
+CREATE TABLE Driver{
+  userId int,
+  licensePlate text,
+  carColor text,
+  carModel text,
+  activelyDriving boolean,
+  PRIMARY KEY(userId)
+}
+
+CREATE TABLE Location{
+  userId int,
+  longitude float,
+  latitude float,
+  lastUpdatedTime timestamp,
+  PRIMARY KEY(userId)
+}
+
+CREATE TABLE Rides{
+  riderUserId int,
+  driverUserId int,
+  pickUpAddress text,
+  duration int,
+  PRIMARY KEY(userId)
+}

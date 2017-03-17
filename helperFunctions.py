@@ -13,6 +13,12 @@ def extractTravelTime(response):
 def signup(email,password):
     return
 
+def login(email,password):
+    #check if the email exists in the system
+    #get the hash for the user-email
+    #then calculate the hash
+    #compare the hashes 
+
 #calculates the travelCost based on the formula
 def calculateCost(travelTime, travelDistance):
     return 300
