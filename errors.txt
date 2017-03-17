@@ -1,6 +1,0 @@
-Make sure all dependencies are install:
-flask, requests, ...? //there might be more
-
-when running the webserverRoutes.py
-make sure that you are using /usr/bin/python on mac.
-isaias had a problem because he was not using usr/bin python executable.
