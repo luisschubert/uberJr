@@ -14,11 +14,14 @@ def signup(email,password):
     return False
 
 def login(email,password):
-    return False
-    #check if the email exists in the system
-    #get the hash for the user-email
-    #then calculate the hash
-    #compare the hashes
+    if db.userExists(email):
+        storedPassword = userdb.getPassword(email)
+        if storedPassword == password:
+            return "SUCCESS"
+        else:
+            "INCORRECT"
+    else:
+        return "NONEXISTENT"
 
 #calculates the travelCost based on the formula
 def calculateCost(travelTime, travelDistance):

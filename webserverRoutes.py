@@ -50,6 +50,7 @@ def api_getTravelInfo():
     originGPS ="%s,%s" % (originLatitude,originLongitude)
 
     #for now
+    #get current systemtime
     departureTime = "now"
 
     #we should add departure time to this request based on the available drivers.
@@ -73,19 +74,33 @@ def api_signup():
     name = request.json.get('name')
     email = request.json.get('email')
     password = request.json.get('password')
-    success = helperFunctions.signup(name,email,password)
-    if(success):
+    signupCode = helperFunctions.signup(name,email,password)
+    if signupCode == "SUCCESS":
         return "OK"
-    else:
+    else if signupCode == "DUPLICATE":
         return "FAILURE"
 
 @app.route("/api/login", methods=['POST'])
 def api_login():
     email = request.json.get('email')
     password = request.json.get('password')
-    #compute hash for password
-    # request to the firebase
-    #i want to implement this!
+    loginCode = helperFunctions.login(email,password)
+    if loginCode == "SUCCESS":
+        print 'login succeeded'
+        return True
+        #here we need to create a cookie for the client and return it along with the response
+    else if loginCode == "NONEXISTENT":
+        print 'user email does not exist'
+        return False
+    else if loginCode == "INCORRECT":
+        print 'users password is incorrect'
+        return False
+    else:
+        #can't think of additional errors to be thrown
+        #but if they exist print them here
+        print loginCode
+        return False
+
 
 
 
