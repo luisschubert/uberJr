@@ -1,5 +1,4 @@
 .overlay {
-   display: none;
    position: absolute;
    top: 50%;
    left: 50%;
@@ -48,5 +47,8 @@
       }
    }
 
-   .destination {}
+   &.destination {
+      top: 80px;
+      margin-top: 0;
+   }
 }
