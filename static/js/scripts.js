@@ -80,7 +80,7 @@ function initMap() {
     {
       elementType: 'labels',
       stylers: [
-        { visibility: 'off' }
+        { visibility: 'on' }
       ]
     },
     {
