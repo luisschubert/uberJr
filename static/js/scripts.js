@@ -10,8 +10,10 @@ function initWow() {
 
 $(document).ready(function(){
    $('#wrapper').fadeIn(1200);
-	 getLocation()
+	 getLocation();
 });
+
+var locationCenterMap = "";
 
 function getLocation() {
     if (navigator.geolocation) {
@@ -24,7 +26,8 @@ function getLocation() {
 function showPosition(position) {
     lat = position.coords.latitude;
     lng = position.coords.longitude;
-		map.setCenter(new google.maps.LatLng(lat, lng))
+    map.setCenter(new google.maps.LatLng(lat, lng));
+    locationCenterMap = new google.maps.LatLng(parseFloat(lat), parseFloat(lng));
 }
 
 function doRegister(){
@@ -57,8 +60,8 @@ function doLogin(){
 
 var map;
 
-
 var sjsu = new google.maps.LatLng(37.336206, -121.882491);
+
 
 
 var MY_MAPTYPE_ID = 'custom_style';
@@ -90,7 +93,7 @@ function initMap() {
 
   var mapOptions = {
     zoom: 14,
-    center: sjsu,
+    center:sjsu,
     mapTypeControlOptions: {
       mapTypeIds: [google.maps.MapTypeId.ROADMAP, MY_MAPTYPE_ID]
     },
@@ -104,8 +107,16 @@ function initMap() {
     name: 'Custom Style'
   };
 
-
-
+  //To show rider location
+  setTimeout(function () { //here tmp until lat lng fix
+        curMarker = new RichMarker({
+			position: locationCenterMap,
+			map: map,
+			content: '<div class="richmarker-wrapper"><span class="pulse"></span></div>',
+			shadow: 0
+		});
+  }, 4000);
+  
   var customMapType = new google.maps.StyledMapType(featureOpts, styledMapOptions);
 
   map.mapTypes.set(MY_MAPTYPE_ID, customMapType);
