@@ -1,4 +1,14 @@
 .richmarker-wrapper {
+   .uber-car {
+      width: 34px;
+      height: 34px;
+      background: url("/static/images/icon-car-b.png") center no-repeat;
+      background-size: 100%;
+      margin: 0;
+      display: block;
+      cursor: pointer;
+   }
+
    .pulse {
       margin: 0 100px 100px 100px;
       display: block;
@@ -10,6 +20,7 @@
       box-shadow: 0 0 0 rgba(12, 188, 247, 0.4);
       animation: pulse 2s infinite;
       border: solid 4px #fff;
+      z-index: 99;
    }
 
    .pulse:hover {

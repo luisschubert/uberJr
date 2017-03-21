@@ -63,31 +63,95 @@ var map;
 var sjsu = new google.maps.LatLng(37.336206, -121.882491);
 
 
+var driverslocations = [
+	['driverOne', 37.3495, -121.8940 ],
+	['driverTwo', 37.3290, -121.8888 ],
+	['driverThree', 37.3310, -121.8604 ]
+];
+
 
 var MY_MAPTYPE_ID = 'custom_style';
 
 function initMap() {
 
   var featureOpts = [
-    {
-      stylers: [
-        { hue: '#87CEFA' },
-        { visibility: 'simplified' },
-        { gamma: 0.5 },
-        { weight: 0.5 }
-      ]
+  	{
+        "featureType": "all",
+        "elementType": "all",
+        "stylers": [
+            {
+                "invert_lightness": true
+            },
+            {
+                "saturation": 20
+            },
+            {
+                "lightness": 50
+            },
+            {
+                "gamma": 0.4
+            },
+            {
+                "hue": "#00ffee"
+            }
+        ]
     },
     {
-      elementType: 'labels',
-      stylers: [
-        { visibility: 'on' }
-      ]
+        "featureType": "all",
+        "elementType": "geometry",
+        "stylers": [
+            {
+                "visibility": "simplified"
+            }
+        ]
     },
     {
-      featureType: 'water',
-      stylers: [
-        { color: '#0878be' }
-      ]
+        "featureType": "all",
+        "elementType": "labels",
+        "stylers": [
+            {
+                "visibility": "on"
+            }
+        ]
+    },
+    {
+        "featureType": "administrative",
+        "elementType": "all",
+        "stylers": [
+            {
+                "color": "#ffffff"
+            },
+            {
+                "visibility": "simplified"
+            }
+        ]
+    },
+    {
+        "featureType": "administrative.land_parcel",
+        "elementType": "geometry.stroke",
+        "stylers": [
+            {
+                "visibility": "simplified"
+            }
+        ]
+    },
+    {
+        "featureType": "landscape",
+        "elementType": "all",
+        "stylers": [
+            {
+                "color": "#405769"
+            }
+        ]
+    },
+    {
+        "featureType": "water",
+        "elementType": "geometry.fill",
+        "stylers": [
+            {
+                "color": "#232f3a"
+            }
+        ]
     }
   ];
 
@@ -116,6 +180,16 @@ function initMap() {
 			shadow: 0
 		});
   }, 4000);
+
+  //To show drivers near by
+  for(var i = 0; i < driverslocations.length; i++){
+		curMarker = new RichMarker({
+			position: new google.maps.LatLng(driverslocations[i][1], driverslocations[i][2]),
+			map: map,
+			content: '<div class="richmarker-wrapper"><span class="uber-car"></span></div>',
+			shadow: 0
+		});
+	}
   
   var customMapType = new google.maps.StyledMapType(featureOpts, styledMapOptions);
 
