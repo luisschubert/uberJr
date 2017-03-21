@@ -77,37 +77,19 @@ function initMap() {
   var featureOpts = [
   	{
         "featureType": "all",
-        "elementType": "all",
+        "elementType": "labels.text.fill",
         "stylers": [
             {
-                "invert_lightness": true
+                "color": "#7c93a3"
             },
             {
-                "saturation": 20
-            },
-            {
-                "lightness": 50
-            },
-            {
-                "gamma": 0.4
-            },
-            {
-                "hue": "#00ffee"
+                "lightness": "-10"
             }
         ]
     },
     {
-        "featureType": "all",
+        "featureType": "administrative.country",
         "elementType": "geometry",
-        "stylers": [
-            {
-                "visibility": "simplified"
-            }
-        ]
-    },
-    {
-        "featureType": "all",
-        "elementType": "labels",
         "stylers": [
             {
                 "visibility": "on"
@@ -115,32 +97,41 @@ function initMap() {
         ]
     },
     {
-        "featureType": "administrative",
-        "elementType": "all",
-        "stylers": [
-            {
-                "color": "#ffffff"
-            },
-            {
-                "visibility": "simplified"
-            }
-        ]
-    },
-    {
-        "featureType": "administrative.land_parcel",
+        "featureType": "administrative.country",
         "elementType": "geometry.stroke",
         "stylers": [
             {
-                "visibility": "simplified"
+                "color": "#c2d1d6"
             }
         ]
     },
     {
         "featureType": "landscape",
-        "elementType": "all",
+        "elementType": "geometry.fill",
         "stylers": [
             {
-                "color": "#405769"
+                "color": "#dde3e3"
+            }
+        ]
+    },
+    {
+        "featureType": "road.highway",
+        "elementType": "geometry.fill",
+        "stylers": [
+            {
+                "color": "#c2d1d6"
+            }
+        ]
+    },
+    {
+        "featureType": "road.highway",
+        "elementType": "geometry.stroke",
+        "stylers": [
+            {
+                "color": "#a9b4b8"
+            },
+            {
+                "lightness": "0"
             }
         ]
     },
@@ -149,7 +140,7 @@ function initMap() {
         "elementType": "geometry.fill",
         "stylers": [
             {
-                "color": "#232f3a"
+                "color": "#a3c7df"
             }
         ]
     }
