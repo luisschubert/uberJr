@@ -74,6 +74,8 @@ var MY_MAPTYPE_ID = 'custom_style';
 
 function initMap() {
 
+
+  //map styles
   var featureOpts = [
   	{
         "featureType": "all",
@@ -164,13 +166,14 @@ function initMap() {
 
   //To show rider location
   setTimeout(function () { //here tmp until lat lng fix
-        curMarker = new RichMarker({
+        userMarker = new RichMarker({
 			position: locationCenterMap,
 			map: map,
 			content: '<div class="richmarker-wrapper"><span class="pulse"></span></div>',
 			shadow: 0
 		});
   }, 4000);
+
 
   //To show drivers near by
   for(var i = 0; i < driverslocations.length; i++){

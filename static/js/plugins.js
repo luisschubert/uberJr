@@ -853,7 +853,6 @@ var RichMarkerPosition = {
 };
 window['RichMarkerPosition'] = RichMarkerPosition;
 
-
 //var marker = new google.maps.Marker({
 		// position:locationCenterMap,
 		// // icon:'/static/images/icon-location-a.png',
