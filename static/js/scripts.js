@@ -11,6 +11,10 @@ function initWow() {
 $(document).ready(function(){
    $('#wrapper').fadeIn(1200);
 	 getLocation();
+	 $('#signupForm').submit(function(e) {
+	  e.preventDefault();
+		doRegister()
+	});
 });
 
 var locationCenterMap = "";
@@ -33,21 +37,40 @@ function showPosition(position) {
 function doRegister(){
 	console.log("running");
 	var name = $('#nameField').val();
+	console.log(name);
 	var email = $('#emailField').val();
+	console.log(email);
 	var password = $('#passwordField').val();
+	console.log(password);
 	var confirmpassword = $('#confPasswordField').val();
-	$.post("/api/signup",
-		{
-				name: name,
-				email: email,
-				password: password,
-				confirmpassword: confirmpassword
+	console.log(confirmpassword);
+	console.log(name);
+	// $.post("/api/signup",
+	// 	data: {
+	// 			name: name,
+	// 			email: email,
+	// 			password: password,
+	// 			confirmpassword: confirmpassword
+	// 	},
+	// 	function(data, status){
+	// 		//what to do when data is returned
+	// 		console.log(data);
+	// 		console.log(status);
+	// 	});
+		$.ajax({
+		url:"/api/signup",
+		method: "GET",
+		data: {
+			name: name,
+			email: email,
+			password: password,
+			confirmpassword: confirmpassword
 		},
-		function(data, status){
+		success: function(data, status){
 			//what to do when data is returned
-			console.log(data);
-			console.log(status);
-		});
+			console.log(status + " : "+ data)
+		}
+	});
 }
 
 function doLogin(){
