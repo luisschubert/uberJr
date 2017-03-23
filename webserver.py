@@ -1,4 +1,5 @@
 from flask import Flask,request,render_template, jsonify
+from flask_sqlalchemy import SQLAlchemy
 import json
 import tools
 from datetime import datetime
@@ -13,6 +14,24 @@ app = Flask(__name__)
 # r = requests.get("https://maps.googleapis.com/maps/api/directions/json?origin=75+9th+Ave+New+York,+NY&destination=MetLife+Stadium+1+MetLife+Stadium+Dr+East+Rutherford,+NJ+07073&key=AIzaSyBSbiX832JWq30JrqzH4tj-HriK9eJhhNs")
 # if r.status_code ==200:
 #     response =r.content
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://luisschubert@localhost:5432/uberjr'
+db = SQLAlchemy(app)
+
+class Users(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.Text)
+    email = db.Column(db.Text, unique=True)
+    password = db.Column(db.Text)
+    isDriver = db.Column(db.Boolean)
+
+    def __init__(self, name, email, password, isDriver):
+        self.name = name
+        self.email = email
+        self.password = password
+        self.isDriver = isDriver
+
+    def __repr__(self):
+        return '<User %r>' % self.name
 
 #ROUTES
 @app.route("/")
@@ -71,14 +90,16 @@ def api_getTravelInfo():
 
 @app.route("/api/signup", methods=['POST'])
 def api_signup():
-    name = request.json.get('name')
-    email = request.json.get('email')
-    password = request.json.get('password')
-    confirmpassword = request.json.get('confirmpassword')
-    signupCode = tools.signup(name,email,password,confirmpassword)
-    if signupCode == "SUCCESS":
+    name = request.args.get('name')
+    email = request.args.get('email')
+    password = request.args.get('password')
+    confirmpassword = request.args.get('confirmpassword')
+    if password == confirmpassword:
+        new_user = Users(name, email, password, False)
+        db.session.add(new_user)
+        db.session.commit()
         return "OK"
-    elif signupCode == "DUPLICATE":
+    else:
         return "FAILURE"
 
 @app.route("/api/login", methods=['POST'])

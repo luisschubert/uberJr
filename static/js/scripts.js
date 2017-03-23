@@ -31,17 +31,22 @@ function showPosition(position) {
 }
 
 function doRegister(){
+	console.log("running");
 	var name = $('#nameField').val();
 	var email = $('#emailField').val();
 	var password = $('#passwordField').val();
+	var confirmpassword = $('#confPasswordField').val();
 	$.post("/api/signup",
 		{
 				name: name,
 				email: email,
-				password: password
+				password: password,
+				confirmpassword: confirmpassword
 		},
 		function(data, status){
 			//what to do when data is returned
+			console.log(data);
+			console.log(status);
 		});
 }
 
@@ -184,7 +189,7 @@ function initMap() {
 			shadow: 0
 		});
 	}
-  
+
   var customMapType = new google.maps.StyledMapType(featureOpts, styledMapOptions);
 
   map.mapTypes.set(MY_MAPTYPE_ID, customMapType);
