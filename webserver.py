@@ -1,4 +1,5 @@
 from flask import Flask,request,render_template, jsonify
+from flask_sqlalchemy import SQLAlchemy
 import json
 import tools
 from datetime import datetime
@@ -13,6 +14,24 @@ app = Flask(__name__)
 # r = requests.get("https://maps.googleapis.com/maps/api/directions/json?origin=75+9th+Ave+New+York,+NY&destination=MetLife+Stadium+1+MetLife+Stadium+Dr+East+Rutherford,+NJ+07073&key=AIzaSyBSbiX832JWq30JrqzH4tj-HriK9eJhhNs")
 # if r.status_code ==200:
 #     response =r.content
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://luisschubert@localhost:5432/uberjr'
+db = SQLAlchemy(app)
+
+class Users(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.Text)
+    email = db.Column(db.Text, unique=True)
+    password = db.Column(db.Text)
+    isDriver = db.Column(db.Boolean)
+
+    def __init__(self, name, email, password, isDriver):
+        self.name = name
+        self.email = email
+        self.password = password
+        self.isDriver = isDriver
+
+    def __repr__(self):
+        return '<User %r>' % self.name
 
 #ROUTES
 @app.route("/")
@@ -69,38 +88,65 @@ def api_getTravelInfo():
     else:
         return "error"
 
-@app.route("/api/signup", methods=['POST'])
+@app.route("/api/signup", methods=['GET'])
 def api_signup():
-    name = request.json.get('name')
-    email = request.json.get('email')
-    password = request.json.get('password')
-    confirmpassword = request.json.get('confirmpassword')
-    signupCode = tools.signup(name,email,password,confirmpassword)
-    if signupCode == "SUCCESS":
+    name = request.args.get('name')
+    email = request.args.get('email')
+    password = request.args.get('password')
+    confirmpassword = request.args.get('confirmpassword')
+    print "name: %s, email: %s, password: %s, confirmpassword: %s" %(name,email,password, confirmpassword)
+    if password == confirmpassword:
+        new_user = Users(name, email, password, False)
+        print new_user
+        db.session.add(new_user)
+        db.session.commit()
         return "OK"
-    elif signupCode == "DUPLICATE":
+    else:
         return "FAILURE"
 
-@app.route("/api/login", methods=['POST'])
+# @app.route("/api/login", methods=['POST'])
+# def api_login():
+#     email = request.json.get('email')
+#     password = request.json.get('password')
+#     loginCode = tools.login(email,password)
+#     if loginCode == "SUCCESS":
+#         print 'login succeeded'
+#         return True
+#         #here we need to create a cookie for the client and return it along with the response
+#     elif loginCode == "NONEXISTENT":
+#         print 'user email does not exist'
+#         return False
+#     elif loginCode == "INCORRECT":
+#         print 'users password is incorrect'
+#         return False
+#     else:
+#         #can't think of additional errors to be thrown
+#         #but if they exist print them here
+#         print loginCode
+#         return False
+@app.route("/api/login", methods=['GET'])
 def api_login():
-    email = request.json.get('email')
-    password = request.json.get('password')
-    loginCode = tools.login(email,password)
-    if loginCode == "SUCCESS":
-        print 'login succeeded'
-        return True
-        #here we need to create a cookie for the client and return it along with the response
-    elif loginCode == "NONEXISTENT":
-        print 'user email does not exist'
-        return False
-    elif loginCode == "INCORRECT":
-        print 'users password is incorrect'
-        return False
+    userEmail = request.args.get('email')
+    password = request.args.get('password')
+    #hash password here?
+    user = Users.query.filter_by(email=userEmail).first()
+    if user is not None:
+        #compare hashed password to hashed password in db
+        if user.password == password:
+            print 'login succeeded'
+            return "Logged in!"
+            #here we need to create a cookie for the client and return it along with the response
+        else:
+            print 'users password is incorrect'
+            return "Invalid password!"
+    elif user is None:
+        print 'user by that email does not exist'
+        return "No account by that email was found!"
     else:
         #can't think of additional errors to be thrown
         #but if they exist print them here
-        print loginCode
-        return False
+        print "No idea??"
+        return "No idea??"
 
 
 
