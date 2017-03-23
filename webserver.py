@@ -50,6 +50,10 @@ def rider():
 def signup():
     return render_template("signup.html")
 
+@app.route("/signupdriver")
+def signupdriver():
+    return render_template("signup-driver.html")
+
 @app.route("/login")
 def login():
     return render_template("login.html")

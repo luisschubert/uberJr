@@ -25,6 +25,7 @@ body {
    background: -webkit-linear-gradient(-45deg, #30c2d1 0%, #19225b 100%); /* Chrome10-25,Safari5.1-6 */
    background: linear-gradient(135deg, #30c2d1 0%, #19225b 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#30c2d1', endColorstr='#19225b',GradientType=1 ); /* IE6-9 fallback on horizontal gradient */
+
    &.rider,
    &.driver {
       // background: #dde3e3;
@@ -181,8 +182,12 @@ img.logo {
    text-align: center;
 
    form {
-      h2 {
+      h2, h3 {
          text-align: left;
+      }
+
+      h3 {
+         font-size: 18px;
       }
 
       input {
@@ -205,8 +210,35 @@ img.logo {
          cursor: pointer;
       }
 
+      label {
+         font-size: 18px;
+         text-align: left;
+         display: inline-block;
+         vertical-align: middle;
+         width: 100%;
+         margin-bottom: 20px;
+      }
+
+      input[type="checkbox"] {
+         width: auto;
+         vertical-align: bottom;
+         position: relative;
+         margin: 0 13px 7px 0;
+      }
+
+      select {
+         width: 100%;
+         margin-bottom: 20px;
+         font-size: 16px;
+         padding: 8px;
+      }
+
       p {
          font-size: 14px;
+      }
+
+      &.align-left {
+         text-align: left;
       }
 
       a {
