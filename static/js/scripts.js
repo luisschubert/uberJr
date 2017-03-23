@@ -13,12 +13,12 @@ var locationCenterMap = "";
 $(document).ready(function(){
    $('#wrapper').fadeIn(1200);
    //rider side bar in demo
-	$('.loc-sbmt-demo').click(function(){
-		event.preventDefault();
-		$(".overlay.destination").fadeOut();
+	$('.loc-sbmt-demo').click(function(e){
+		e.preventDefault();
+		$(".overlay.destination").hide();
 		setTimeout(function () {
 	       $("body.rider").addClass('side-bar-active');
-	    }, 600);
+	    }, 200);
 	});
 	 getLocation();
 	 $('#signupForm').submit(function(e) {

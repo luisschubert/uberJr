@@ -1,19 +1,20 @@
 .side-bar {
+   position: fixed;
+   top: 0;
+   left: -380px;
    background: #fff;
-   width: 100%;
-   max-width: 380px;
-   margin-left: -380px;
+   width: 380px;
    height: calc(100vh - 60px);
-   float: left;
-   padding: 30px 2%;
-   -webkit-transition: all 0.2s cubic-bezier(0.01, 0.39, 0.98, 0.6);
-   transition: all 0.2s cubic-bezier(0.01, 0.39, 0.98, 0.6);
+   padding: 30px;
+   -webkit-transition: all 0.5s ease-in-out;
+   transition: all 0.5s ease-in-out;
    box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.3);
-   position: relative;
    z-index: 9;
+   opacity: 0;
 
    .side-bar-active & {
-      margin-left: 0;
+      left: 0;
+      opacity: 1;
    }
 
    .divider {

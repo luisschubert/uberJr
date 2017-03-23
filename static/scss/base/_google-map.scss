@@ -4,9 +4,9 @@
    -webkit-transition: all 0.2s cubic-bezier(0.01, 0.39, 0.98, 0.6);
    transition: all 0.2s cubic-bezier(0.01, 0.39, 0.98, 0.6);
 
-   .side-bar-active & {
-      width: calc(100% - 380px);
-   }
+   // .side-bar-active & {
+   //    width: calc(100% - 380px);
+   // }
 
    #map-canvas {
       margin: 0;
