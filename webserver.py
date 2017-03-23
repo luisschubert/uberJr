@@ -14,6 +14,7 @@ app = Flask(__name__)
 # r = requests.get("https://maps.googleapis.com/maps/api/directions/json?origin=75+9th+Ave+New+York,+NY&destination=MetLife+Stadium+1+MetLife+Stadium+Dr+East+Rutherford,+NJ+07073&key=AIzaSyBSbiX832JWq30JrqzH4tj-HriK9eJhhNs")
 # if r.status_code ==200:
 #     response =r.content
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://luisschubert@localhost:5432/uberjr'
 db = SQLAlchemy(app)
 
@@ -138,8 +139,12 @@ def api_login():
     if user is not None:
         #compare hashed password to hashed password in db
         if user.password == password:
-            print 'login succeeded'
-            return "Logged in!"
+            if user.isDriver == True:
+                print 'driver login succeeded'
+                return "Driver login succeeded"
+            else:
+                print 'rider login succeeded'
+                return "Rider login succeeded"
             #here we need to create a cookie for the client and return it along with the response
         else:
             print 'users password is incorrect'

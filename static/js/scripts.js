@@ -111,6 +111,19 @@ function doLogin(){
         success: function(data, status){
             //what to do when data is returned
             console.log(status + " : "+ data)
+						var result = $.trim(data);
+						console.log(result);
+						if (result === "Driver login succeeded"){
+							window.location.replace("/driver");
+						} else if(result === "Rider login succeeded") {
+							window.location.replace("/rider");
+						} else if (result === "Invalid password!") {
+							alert("Invalid password!");
+						} else if (result === "No account by that email was found!") {
+							alert("No account by that email was found!");
+						} else {
+							alert("Unknown error!");
+						}
         }
     });
 }
