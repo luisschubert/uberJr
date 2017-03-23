@@ -1,8 +1,7 @@
 #map-canvas {
    margin: 0;
-   height: 86vh;
+   height: calc(100vh - 100px);
    width: 100%;
-   border-bottom: solid 10px #267c9d;
 }
 
 .richmarker-wrapper {

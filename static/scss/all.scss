@@ -9,6 +9,7 @@ $mobile-sm: 479px;
 @import "base/base-reset";
 @import "base/animate";
 @import "base/google-map";
+@import "base/top-bar";
 @import "base/overlay";
 
 body {
@@ -18,6 +19,91 @@ body {
    background: -webkit-linear-gradient(-45deg, #30c2d1 0%, #19225b 100%); /* Chrome10-25,Safari5.1-6 */
    background: linear-gradient(135deg, #30c2d1 0%, #19225b 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#30c2d1', endColorstr='#19225b',GradientType=1 ); /* IE6-9 fallback on horizontal gradient */
+   &.rider,
+   &.driver {
+      // background: #dde3e3;
+      background: #dde3e3;
+
+      @keyframes circles {
+         0% {
+            transform: scale3d(1, 1, 1);
+         }
+
+         25% {
+            transform: scale3d(1.05, 1.05, 1.05);
+         }
+
+         50% {
+            transform: scale3d(0, 0, 0);
+         }
+
+         75% {
+            transform: scale3d(1.05, 1.05, 1.05);
+         }
+
+         100% {
+            transform: scale3d(1, 1, 1);
+         }
+      }
+
+      .circle-main {
+         position: absolute;
+         top: 25vh;
+         left: 50%;
+         margin-left: -15vh;
+         width: 30vh;
+         height: 30vh;
+         border-radius: 50%;
+         display: flex;
+         justify-content: center;
+         text-align: center;
+         flex-direction: column;
+         background-color: #66ccff;
+         transform: scale3d(1, 1, 1);
+         animation-iteration-count: infinite;
+         animation-delay: .5s;
+         animation-name: circles;
+         animation-duration: 2.25s;
+         animation-iteration-count: infinite;
+         opacity: .04;
+      }
+
+      .circle-inner {
+         width: 20vh;
+         height: 20vh;
+         border-radius: 50%;
+         display: flex;
+         justify-content: center;
+         text-align: center;
+         margin-left: 5vh;
+         flex-direction: column;
+         background-color: #99ddff;
+         animation-delay: .25s;
+         transform: scale3d(1, 1, 1);
+         animation-name: circles;
+         animation-duration: 2.25s;
+         animation-iteration-count: infinite;
+      }
+
+      .circle-middle {
+         width: 10vh;
+         height: 10vh;
+         border-radius: 50%;
+         background-color: red;
+         display: flex;
+         justify-content: center;
+         text-align: center;
+         flex-direction: column;
+         background-color: green;
+         margin-left: 5vh;
+         background-color: #cceeff;
+         animation-duration: 2.25s;
+         transform: scale3d(1, 1, 1);
+         animation-name: circles;
+         animation-duration: 2.25s;
+         animation-iteration-count: infinite;
+      }
+   }
 }
 
 h2 {
@@ -74,6 +160,11 @@ img.logo {
       background: url("../images/map-bg.png") center;
       background-size: cover;
       opacity: .08;
+
+      .rider & {
+         opacity: .06;
+         z-index: -1;
+      }
    }
 }
 

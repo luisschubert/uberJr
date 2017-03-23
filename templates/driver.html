@@ -1,8 +1,20 @@
 {% include 'header.html' %}
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDhoFXFuPUf6BZtqoTUsssx9on-PQYxo4w"></script>
-<body>
+<body class="driver">
+  <div class="circle-main">
+    <div class="circle-inner">
+      <div class="circle-middle">
+      </div>
+    </div>
+  </div>
   <div id="wrapper" class="rider">
-    <div id="map-canvas"></div>
+    <div class="map-bg"></div>
+    <div class="map-wrapper wow zoomOutIn" data-wow-delay="3.4s" data-wow-duration="3.s">
+      <div id="map-canvas"></div>
+    </div>
+    <div class="rider-footer">
+      <img class="logo" src="/static/images/uberjr-logo-white.png" alt="uber jr logo">
+    </div>
   </div>
   <script type="text/javascript" src="/static/js/jquery-1.11.2.min.js"></script>
   <script type="text/javascript" src="/static/js/plugins.js"></script>
