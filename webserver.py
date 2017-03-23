@@ -124,6 +124,7 @@ def api_signup():
 #         #but if they exist print them here
 #         print loginCode
 #         return False
+
 @app.route("/api/login", methods=['GET'])
 def api_login():
     userEmail = request.args.get('email')

@@ -25,6 +25,10 @@ $(document).ready(function(){
 	  e.preventDefault();
 		doRegister()
 	});
+     $('#loginForm').submit(function(e) {
+      e.preventDefault();
+        doLogin()
+    });
 });
 
 function getLocation() {
@@ -82,7 +86,7 @@ function doRegister(){
 }
 
 function doLogin(){
-	var email = $('#emailField').val();
+	/*var email = $('#emailField').val();
 	var password = $('#passwordField').val();
 	$.post("/api/login",
     {
@@ -91,6 +95,23 @@ function doLogin(){
     },
     function(data, status){
         //what to do when data is returned
+    });*/
+    console.log("running");
+    var email = $('#emailField').val();
+    console.log(email);
+    var password = $('#passwordField').val();
+    console.log(password);
+        $.ajax({
+        url:"/api/login",
+        method: "GET",
+        data: {
+            email: email,
+            password: password
+        },
+        success: function(data, status){
+            //what to do when data is returned
+            console.log(status + " : "+ data)
+        }
     });
 }
 
