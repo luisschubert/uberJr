@@ -8,12 +8,20 @@ function initWow() {
 	new WOW().init();
 }
 
+var locationCenterMap = "";
+
 $(document).ready(function(){
    $('#wrapper').fadeIn(1200);
+   //rider side bar in demo
+	$('.loc-sbmt-demo').click(function(){
+		event.preventDefault();
+		$(".overlay.destination").fadeOut();
+		setTimeout(function () {
+	       $("body.rider").addClass('side-bar-active');
+	    }, 600);
+	});
 	 getLocation();
 });
-
-var locationCenterMap = "";
 
 function getLocation() {
     if (navigator.geolocation) {

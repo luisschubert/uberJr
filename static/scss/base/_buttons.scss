@@ -1,0 +1,21 @@
+a.button {
+   font-size: 12px;
+   font-weight: 600;
+   display: inline-block;
+   background: #10b8f9;
+   color: #fff;
+   padding: 8px;
+   border-radius: 3px;
+   border: solid 2px #10b8f9;
+   text-transform: uppercase;
+   margin-bottom: 20px;
+   width: 46%;
+   text-align: center;
+   cursor: pointer;
+   text-decoration: none;
+
+   &:hover {
+      background: #fff;
+      color: #10b8f9;
+   }
+}

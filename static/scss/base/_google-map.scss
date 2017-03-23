@@ -1,7 +1,19 @@
-#map-canvas {
-   margin: 0;
-   height: calc(100vh - 100px);
+.map-wrapper {
+   float: left;
    width: 100%;
+   -webkit-transition: all 0.2s cubic-bezier(0.01, 0.39, 0.98, 0.6);
+   transition: all 0.2s cubic-bezier(0.01, 0.39, 0.98, 0.6);
+
+   .side-bar-active & {
+      width: calc(100% - 380px);
+   }
+
+   #map-canvas {
+      margin: 0;
+      height: calc(100vh - 60px);
+      width: 100%;
+      max-width: 100%;
+   }
 }
 
 .richmarker-wrapper {

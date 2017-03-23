@@ -11,6 +11,12 @@ $mobile-sm: 479px;
 @import "base/google-map";
 @import "base/top-bar";
 @import "base/overlay";
+@import "base/side-bar";
+@import "base/buttons";
+
+.clear {
+   clear: both;
+}
 
 body {
    /* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#30c2d1+0,19225b+100 */
@@ -65,7 +71,7 @@ body {
          animation-name: circles;
          animation-duration: 2.25s;
          animation-iteration-count: infinite;
-         opacity: .04;
+         opacity: .2;
       }
 
       .circle-inner {
@@ -111,8 +117,6 @@ h2 {
    line-height: 1.4;
    font-weight: 300;
    margin: 0 0 30px;
-
-   // this is a test
 
    @media screen and (max-width: $mobile) {
       font-size: 26px;
@@ -198,6 +202,7 @@ img.logo {
          border-radius: 3px;
          text-transform: uppercase;
          margin-bottom: 20px;
+         cursor: pointer;
       }
 
       p {

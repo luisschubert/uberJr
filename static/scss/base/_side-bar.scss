@@ -1,0 +1,67 @@
+.side-bar {
+   background: #fff;
+   width: 100%;
+   max-width: 380px;
+   margin-left: -380px;
+   height: calc(100vh - 60px);
+   float: left;
+   padding: 30px 2%;
+   -webkit-transition: all 0.2s cubic-bezier(0.01, 0.39, 0.98, 0.6);
+   transition: all 0.2s cubic-bezier(0.01, 0.39, 0.98, 0.6);
+   box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.3);
+   position: relative;
+   z-index: 9;
+
+   .side-bar-active & {
+      margin-left: 0;
+   }
+
+   .divider {
+      height: 1px;
+      width: 100%;
+      background: #ccc;
+      margin: 20px 0;
+   }
+
+   h1 {
+      font-size: 26px;
+      font-weight: 600;
+      color: #2781a1;
+      line-height: 1.2;
+      text-transform: capitalize;
+      margin-bottom: 10px;
+   }
+
+   h2 {
+      font-size: 28px;
+      line-height: 1;
+
+      &.driver-info {
+         margin-bottom: 14px;
+      }
+   }
+
+   p {
+      font-size: 16px;
+      margin-bottom: 6px;
+      font-weight: 600;
+
+      span {
+         font-weight: 400;
+         color: #444;
+         float: right;
+      }
+
+      &.time,
+      &.cost {
+         font-size: 40px;
+         font-weight: 100;
+      }
+   }
+
+   a.button {
+      &.cancel-ride {
+         float: right;
+      }
+   }
+}
