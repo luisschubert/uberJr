@@ -5,7 +5,7 @@ import requests
 #from models import Users
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://Daniel@localhost:5432/Daniel'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://luisschubert@localhost:5432/uberjr'
 db = SQLAlchemy(app)
 
 class Users(db.Model):

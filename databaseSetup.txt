@@ -1,0 +1,134 @@
+
+
+CREATE TABLE driver (
+    driver_id integer NOT NULL,
+    license_plate text NOT NULL,
+    car_color text NOT NULL,
+    car_model text NOT NULL,
+    "isActive" boolean DEFAULT false
+);
+
+
+--
+-- Name: location; Type: TABLE; Schema: public; Owner: Daniel
+--
+
+CREATE TABLE location (
+    location_id integer NOT NULL,
+    latitude double precision,
+    longitude double precision,
+    last_updated_time time without time zone
+);
+
+
+
+--
+-- Name: rides; Type: TABLE; Schema: public; Owner: Daniel
+--
+
+CREATE TABLE rides (
+    rider_id integer,
+    driver_id integer,
+    pick_up_addr double precision NOT NULL,
+    destination_addr double precision NOT NULL,
+    distance real
+);
+
+
+
+--
+-- Name: users; Type: TABLE; Schema: public; Owner: Daniel
+--
+
+CREATE TABLE users (
+    id integer NOT NULL,
+    name text NOT NULL,
+    email text NOT NULL,
+    password text NOT NULL,
+    "isDriver" boolean DEFAULT false
+);
+
+
+
+
+--
+-- Name: users_id_seq; Type: SEQUENCE; Schema: public; Owner: Daniel
+--
+
+CREATE SEQUENCE users_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+
+--
+-- Name: users_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: Daniel
+--
+
+ALTER SEQUENCE users_id_seq OWNED BY users.id;
+
+
+--
+-- Name: users id; Type: DEFAULT; Schema: public; Owner: Daniel
+--
+
+ALTER TABLE ONLY users ALTER COLUMN id SET DEFAULT nextval('users_id_seq'::regclass);
+
+
+--
+-- Name: driver driver_pkey; Type: CONSTRAINT; Schema: public; Owner: Daniel
+--
+
+ALTER TABLE ONLY driver
+    ADD CONSTRAINT driver_pkey PRIMARY KEY (driver_id);
+
+
+--
+-- Name: location location_pkey; Type: CONSTRAINT; Schema: public; Owner: Daniel
+--
+
+ALTER TABLE ONLY location
+    ADD CONSTRAINT location_pkey PRIMARY KEY (location_id);
+
+
+--
+-- Name: users users_pkey; Type: CONSTRAINT; Schema: public; Owner: Daniel
+--
+
+ALTER TABLE ONLY users
+    ADD CONSTRAINT users_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: driver driver_id; Type: FK CONSTRAINT; Schema: public; Owner: Daniel
+--
+
+ALTER TABLE ONLY driver
+    ADD CONSTRAINT driver_id FOREIGN KEY (driver_id) REFERENCES users(id) ON DELETE CASCADE;
+
+
+--
+-- Name: rides driver_id; Type: FK CONSTRAINT; Schema: public; Owner: Daniel
+--
+
+ALTER TABLE ONLY rides
+    ADD CONSTRAINT driver_id FOREIGN KEY (driver_id) REFERENCES users(id) ON DELETE CASCADE;
+
+
+--
+-- Name: location location_id; Type: FK CONSTRAINT; Schema: public; Owner: Daniel
+--
+
+ALTER TABLE ONLY location
+    ADD CONSTRAINT location_id FOREIGN KEY (location_id) REFERENCES users(id) ON DELETE CASCADE;
+
+
+--
+-- Name: rides rider_id; Type: FK CONSTRAINT; Schema: public; Owner: Daniel
+--
+
+ALTER TABLE ONLY rides
+    ADD CONSTRAINT rider_id FOREIGN KEY (rider_id) REFERENCES users(id) ON DELETE CASCADE;
