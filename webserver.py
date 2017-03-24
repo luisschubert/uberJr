@@ -15,7 +15,7 @@ app = Flask(__name__)
 # if r.status_code ==200:
 #     response =r.content
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://luisschubert@localhost:5432/uberjr'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:uberjr@localhost:5432/uberjr'
 db = SQLAlchemy(app)
 
 class Users(db.Model):
@@ -93,17 +93,17 @@ def api_getTravelInfo():
     else:
         return "error"
 
-@app.route("/api/signup", methods=['GET'])
+@app.route("/api/signup", methods=['POST'])
 def api_signup():
-    name = request.args.get('name')
-    userEmail = request.args.get('email')
-    password = request.args.get('password')
-    confirmpassword = request.args.get('confirmpassword')
+    name = request.form.get('name')
+    userEmail = request.form.get('email')
+    password = request.form.get('password')
+    confirmpassword = request.form.get('confirmpassword')
     print "name: %s, email: %s, password: %s, confirmpassword: %s" %(name,userEmail,password, confirmpassword)
     user = Users.query.filter_by(email=userEmail).first()
     if user is None:
         if password == confirmpassword:
-            new_user = Users(name, email, password, False)
+            new_user = Users(name, userEmail, password, False)
             print new_user
             db.session.add(new_user)
             db.session.commit()
@@ -111,31 +111,10 @@ def api_signup():
     else:
         return "FAILURE"
 
-# @app.route("/api/login", methods=['POST'])
-# def api_login():
-#     email = request.json.get('email')
-#     password = request.json.get('password')
-#     loginCode = tools.login(email,password)
-#     if loginCode == "SUCCESS":
-#         print 'login succeeded'
-#         return True
-#         #here we need to create a cookie for the client and return it along with the response
-#     elif loginCode == "NONEXISTENT":
-#         print 'user email does not exist'
-#         return False
-#     elif loginCode == "INCORRECT":
-#         print 'users password is incorrect'
-#         return False
-#     else:
-#         #can't think of additional errors to be thrown
-#         #but if they exist print them here
-#         print loginCode
-#         return False
-
-@app.route("/api/login", methods=['GET'])
+@app.route("/api/login", methods=['POST'])
 def api_login():
-    userEmail = request.args.get('email')
-    password = request.args.get('password')
+    userEmail = request.form.get('email')
+    password = request.form.get('password')
     #hash password here?
     user = Users.query.filter_by(email=userEmail).first()
     if user is not None:
@@ -153,14 +132,12 @@ def api_login():
             return "Invalid password!"
     elif user is None:
         print 'user by that email does not exist'
-        return "No account by that email was found!"
+        return "No account with that email was found!"
     else:
         #can't think of additional errors to be thrown
         #but if they exist print them here
         print "No idea??"
         return "No idea??"
-
-
 
 
 if __name__ == '__main__':

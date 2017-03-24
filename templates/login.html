@@ -5,7 +5,7 @@
     <div class="overlay login wow fadeInUpMin" data-wow-delay=".2s" data-wow-duration="2.s">
       <img class="logo" src="/static/images/uberjr-logo.png" alt="uber jr logo">
       <h2>Please Log In</h2>
-      <form id="loginForm" >
+      <form id="loginForm" action="/api/login" method="POST">
         <input id="emailField" type="email" name="email" placeholder="Email">
         <input id="passwordField" type="password" name="password" placeholder="Password">
         <input type="submit" onclick="">
