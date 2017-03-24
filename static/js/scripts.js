@@ -242,7 +242,7 @@ function initMap() {
 			content: '<div class="richmarker-wrapper"><span class="pulse"></span></div>',
 			shadow: 0
 		});
-  }, 4000);
+  }, 5000);
 
 
   //To show drivers near by
