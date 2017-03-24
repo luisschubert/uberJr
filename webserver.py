@@ -96,16 +96,18 @@ def api_getTravelInfo():
 @app.route("/api/signup", methods=['GET'])
 def api_signup():
     name = request.args.get('name')
-    email = request.args.get('email')
+    userEmail = request.args.get('email')
     password = request.args.get('password')
     confirmpassword = request.args.get('confirmpassword')
-    print "name: %s, email: %s, password: %s, confirmpassword: %s" %(name,email,password, confirmpassword)
-    if password == confirmpassword:
-        new_user = Users(name, email, password, False)
-        print new_user
-        db.session.add(new_user)
-        db.session.commit()
-        return "OK"
+    print "name: %s, email: %s, password: %s, confirmpassword: %s" %(name,userEmail,password, confirmpassword)
+    user = Users.query.filter_by(email=userEmail).first()
+    if user is None:
+        if password == confirmpassword:
+            new_user = Users(name, email, password, False)
+            print new_user
+            db.session.add(new_user)
+            db.session.commit()
+            return "OK"
     else:
         return "FAILURE"
 

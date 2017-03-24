@@ -86,7 +86,7 @@ function doRegister(){
 			if (result === "OK"){
 				window.location.replace("/rider");
 			} else {
-				alert("Account creation failed!");
+				alert("An account with that email already exists!");
 			}
 		}
 	});
@@ -126,7 +126,7 @@ function doLogin(){
 							window.location.replace("/rider");
 						} else if (result === "Invalid password!") {
 							alert("Invalid password!");
-						} else if (result === "No account by that email was found!") {
+						} else if (result === "No account with that email was found!") {
 							alert("No account by that email was found!");
 						} else {
 							alert("Unknown error!");
