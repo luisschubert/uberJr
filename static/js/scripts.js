@@ -55,8 +55,8 @@ function doRegister() {
 				'confirmpassword': $('input[name=confpassword]').val()
     }
     $.ajax({
-        url: "/api/signup",
-        method: "POST",
+        url: '/api/signup',
+        method: 'POST',
         data: formData,
         success: function(data, status) {
             //what to do when data is returned

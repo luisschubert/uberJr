@@ -4,11 +4,13 @@ import json
 import tools
 from datetime import datetime
 import requests
+from flask_bcrypt import Bcrypt
 
 #gmaps = googlemaps.Client(key='AIzaSyBSbiX832JWq30JrqzH4tj-HriK9eJhhNs')
 
 apiKey = "AIzaSyBSbiX832JWq30JrqzH4tj-HriK9eJhhNs"
 app = Flask(__name__)
+bcrypt = Bcrypt(app)
 #used this to test if directions API was working as expected
 #
 # r = requests.get("https://maps.googleapis.com/maps/api/directions/json?origin=75+9th+Ave+New+York,+NY&destination=MetLife+Stadium+1+MetLife+Stadium+Dr+East+Rutherford,+NJ+07073&key=AIzaSyBSbiX832JWq30JrqzH4tj-HriK9eJhhNs")
@@ -103,7 +105,8 @@ def api_signup():
     user = Users.query.filter_by(email=userEmail).first()
     if user is None:
         if password == confirmpassword:
-            new_user = Users(name, userEmail, password, False)
+            hashedpw = bcrypt.generate_password_hash(password)
+            new_user = Users(name, userEmail, hashedpw, False)
             print new_user
             db.session.add(new_user)
             db.session.commit()
@@ -115,11 +118,10 @@ def api_signup():
 def api_login():
     userEmail = request.form.get('email')
     password = request.form.get('password')
-    #hash password here?
     user = Users.query.filter_by(email=userEmail).first()
     if user is not None:
         #compare hashed password to hashed password in db
-        if user.password == password:
+        if bcrypt.check_password_hash(user.password, password):
             if user.isDriver == True:
                 print 'driver login succeeded'
                 return "Driver login succeeded"
