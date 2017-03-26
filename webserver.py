@@ -1,4 +1,4 @@
-from flask import Flask,request,render_template, jsonify
+from flask import Flask,request,render_template,jsonify,url_for,make_response
 from flask_sqlalchemy import SQLAlchemy
 import json
 import tools
@@ -17,7 +17,7 @@ bcrypt = Bcrypt(app)
 # if r.status_code ==200:
 #     response =r.content
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://luisschubert@localhost:5432/uberjr'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:uberjr@localhost:5432/uberjr'
 db = SQLAlchemy(app)
 
 class Users(db.Model):
@@ -97,20 +97,31 @@ def api_getTravelInfo():
 
 @app.route("/api/signup", methods=['POST'])
 def api_signup():
+    print(request.form)
     name = request.form.get('name')
     userEmail = request.form.get('email')
     password = request.form.get('password')
     confirmpassword = request.form.get('confirmpassword')
     print "name: %s, email: %s, password: %s, confirmpassword: %s" %(name,userEmail,password, confirmpassword)
     user = Users.query.filter_by(email=userEmail).first()
+    isDriver = False
     if user is None:
         if password == confirmpassword:
             hashedpw = bcrypt.generate_password_hash(password)
-            new_user = Users(name, userEmail, hashedpw, False)
+            new_user = Users(name, userEmail, hashedpw, isDriver)
             print new_user
             db.session.add(new_user)
             db.session.commit()
-            return "OK"
+            if (isDriver == True):
+                print 'driver account creation succeeded'
+                resp = make_response(url_for('driver'))
+                #resp.set_cookie('loginStatus', value = 'true')
+                return resp
+            else:
+                print 'rider account creation succeeded'
+                resp = make_response(url_for('rider'))
+                #resp.set_cookie('loginStatus', value = 'true')
+                return resp
     else:
         return "FAILURE"
 
@@ -122,18 +133,22 @@ def api_login():
     if user is not None:
         #compare hashed password to hashed password in db
         if bcrypt.check_password_hash(user.password, password):
+            #here we need to create a cookie for the client and return it along with the response
             if user.isDriver == True:
                 print 'driver login succeeded'
-                return "Driver login succeeded"
+                resp = make_response(url_for('driver'))
+                #resp.set_cookie('loginStatus', value = 'true')
+                return resp
             else:
                 print 'rider login succeeded'
-                return "Rider login succeeded"
-            #here we need to create a cookie for the client and return it along with the response
+                resp = make_response(url_for('rider'))
+                #resp.set_cookie('loginStatus', value = 'true')
+                return resp
         else:
-            print 'users password is incorrect'
+            print 'user\'s password is incorrect'
             return "Invalid password!"
     elif user is None:
-        print 'user by that email does not exist'
+        print 'user with that email does not exist'
         return "No account with that email was found!"
     else:
         #can't think of additional errors to be thrown

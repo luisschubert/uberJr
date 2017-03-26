@@ -23,7 +23,17 @@ $(document).ready(function() {
     getLocation();
     $('#signupForm').submit(function(e) {
         e.preventDefault();
-        doRegister();
+        if (document.getElementById('passwordField').value == document.getElementById('confPasswordField').value) {
+          doRegister();
+        } else {
+            $("#signupForm").effect("shake");
+            document.getElementById('nameField').style.borderColor = "green";
+            document.getElementById('emailField').style.borderColor = "green";
+            document.getElementById('passwordField').style.borderColor = "red";
+            document.getElementById('passwordField').value = "";
+            document.getElementById('confPasswordField').style.borderColor = "red";
+            document.getElementById('confPasswordField').value = "";
+        }
     });
     $('#loginForm').submit(function(e) {
         e.preventDefault();
@@ -60,13 +70,18 @@ function doRegister() {
         data: formData,
         success: function(data, status) {
             //what to do when data is returned
-            console.log(status + " : " + data)
-            var result = $.trim(data);
-            console.log(result);
-            if (result === "OK") {
-                window.location.replace("/rider");
+            console.log(status + " : " + data);
+            if (data.charAt(0) === "/") {
+                window.location.href = data;
             } else {
-                alert("An account with that email already exists!");
+                $("#signupForm").effect("shake");
+                document.getElementById('nameField').style.borderColor = "green";
+                document.getElementById('emailField').style.borderColor = "red";
+                document.getElementById('emailField').value = "";
+                document.getElementById('passwordField').style.borderColor = "grey";
+                document.getElementById('passwordField').value = "";
+                document.getElementById('confPasswordField').style.borderColor = "grey";
+                document.getElementById('confPasswordField').value = "";
             }
         }
     });
@@ -84,17 +99,20 @@ function doLogin() {
         data: formData,
         success: function(data, status) {
             //what to do when data is returned
-            console.log(status + " : " + data)
-            var result = $.trim(data);
-            console.log(result);
-            if (result === "Driver login succeeded") {
-                window.location.replace("/driver");
-            } else if (result === "Rider login succeeded") {
-                window.location.replace("/rider");
-            } else if (result === "Invalid password!") {
-                alert("Invalid password!");
-            } else if (result === "No account with that email was found!") {
-                alert("No account with that email was found!");
+            console.log(status + " : " + data);
+            if (data.charAt(0) === "/") {
+                window.location.href = data;
+            } else if (data === "Invalid password!") {
+                $("#loginForm").effect("shake");
+                document.getElementById('emailField').style.borderColor = "green";
+                document.getElementById('passwordField').style.borderColor = "red";
+                document.getElementById('passwordField').value = "";
+            } else if (data === "No account with that email was found!") {
+                $("#loginForm").effect("shake");
+                document.getElementById('emailField').style.borderColor = "red";
+                document.getElementById('emailField').value = "";
+                document.getElementById('passwordField').style.borderColor = "grey";
+                document.getElementById('passwordField').value = "";
             } else {
                 alert("Unknown error!");
             }
