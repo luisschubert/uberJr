@@ -1,4 +1,4 @@
-from flask import Flask,request,render_template,jsonify,url_for,make_response
+from flask import Flask,request,render_template,jsonify,url_for,make_response,redirect,session
 from flask_sqlalchemy import SQLAlchemy
 import json
 import tools
@@ -10,6 +10,7 @@ from flask_bcrypt import Bcrypt
 
 apiKey = "AIzaSyBSbiX832JWq30JrqzH4tj-HriK9eJhhNs"
 app = Flask(__name__)
+app.secret_key = '\x9a{\xfc\x86(0\x92=Y\xaf-\xdf\x05z\x91\xadL+\xdeP\xa3w\xc0\x07'
 bcrypt = Bcrypt(app)
 #used this to test if directions API was working as expected
 #
@@ -17,7 +18,7 @@ bcrypt = Bcrypt(app)
 # if r.status_code ==200:
 #     response =r.content
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:uberjr@localhost:5432/uberjr'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://luisschubert@localhost:5432/uberjr'
 db = SQLAlchemy(app)
 
 class Users(db.Model):
@@ -39,19 +40,50 @@ class Users(db.Model):
 #ROUTES
 @app.route("/")
 def home():
-    return render_template("login.html")
+    if 'email' in session:
+        user = Users.query.filter_by(email = session['email']).first()
+        print user.isDriver
+        if user.isDriver == True:
+            return redirect(url_for('driver'))
+        else:
+            return redirect(url_for('rider'))
+    else:
+        return render_template("login.html")
 
 @app.route("/driver")
 def driver():
-    return render_template("driver.html")
+    if 'email' not in session:
+        return redirect(url_for('login'))
+    user = Users.query.filter_by(email = session['email']).first()
+    # do we need to check if an account with that email exists here? (redirect to signup page if nonexistent?)
+    # might be unnecessary since we already check for that in the login API call?
+    if user.isDriver == False:
+        return redirect(url_for('rider'))
+    else:
+        return render_template("driver.html")
 
 @app.route("/rider")
 def rider():
-    return render_template("rider.html")
+    if 'email' not in session:
+        return redirect(url_for('login'))
+    user = Users.query.filter_by(email = session['email']).first()
+    # do we need to check if an account with that email exists here? (redirect to signup page if nonexistent?)
+    # might be unnecessary since we already check for that in the login API call?
+    if user.isDriver == True:
+        return redirect(url_for('driver'))
+    else:
+        return render_template("rider.html")
 
 @app.route("/signup")
 def signup():
-    return render_template("signup.html")
+    if 'email' in session:
+        user = Users.query.filter_by(email = session['email']).first()
+        if user.isDriver == True:
+            return redirect(url_for('driver'))
+        else:
+            return redirect(url_for('rider'))
+    else:
+        return render_template("signup.html")
 
 @app.route("/signupdriver")
 def signupdriver():
@@ -59,7 +91,21 @@ def signupdriver():
 
 @app.route("/login")
 def login():
-    return render_template("login.html")
+    if 'email' in session:
+        user = Users.query.filter_by(email = session['email']).first()
+        if user.isDriver == True:
+            return redirect(url_for('driver'))
+        else:
+            return redirect(url_for('rider'))
+    else:
+        return render_template("login.html")
+
+@app.route("/logout")
+def logout():
+    if 'email' not in session:
+        return redirect(url_for('login'))
+    session.pop('email', None)
+    return redirect(url_for('home'))
 
 @app.route("/geolocationTest")
 def geolocationTest():
@@ -115,12 +161,12 @@ def api_signup():
             if (isDriver == True):
                 print 'driver account creation succeeded'
                 resp = make_response(url_for('driver'))
-                #resp.set_cookie('loginStatus', value = 'true')
+                session['email'] = new_user.userEmail
                 return resp
             else:
                 print 'rider account creation succeeded'
                 resp = make_response(url_for('rider'))
-                #resp.set_cookie('loginStatus', value = 'true')
+                session['email'] = new_user.userEmail
                 return resp
     else:
         return "FAILURE"
@@ -137,12 +183,12 @@ def api_login():
             if user.isDriver == True:
                 print 'driver login succeeded'
                 resp = make_response(url_for('driver'))
-                #resp.set_cookie('loginStatus', value = 'true')
+                session['email'] = user.email
                 return resp
             else:
                 print 'rider login succeeded'
                 resp = make_response(url_for('rider'))
-                #resp.set_cookie('loginStatus', value = 'true')
+                session['email'] = user.email
                 return resp
         else:
             print 'user\'s password is incorrect'
