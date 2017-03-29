@@ -166,7 +166,7 @@ def api_signup():
             else:
                 print 'rider account creation succeeded'
                 resp = make_response(url_for('rider'))
-                session['email'] = new_user.userEmail
+                session['email'] = new_user.email
                 return resp
     else:
         return "FAILURE"
