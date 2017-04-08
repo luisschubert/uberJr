@@ -18,10 +18,11 @@
       <img class="logo" src="/static/images/uberjr-logo-white.png" alt="uber jr logo">
     </div>
     <div class="overlay destination wow fadeInDown" data-wow-delay="4s" data-wow-duration="3.s">
-      <form>
-        <p>Please enter destination</p>
-        <input type="text" name="email" placeholder="Destination">
-        <input type="submit" value="Request Ride" class="loc-sbmt-demo">
+      <form id="riderRequest" action="/api/rider" method="POST">
+        <p>Please enter origin and destination.</p>
+        <input type="text" id="originRider" name="origin" placeholder="Origin Address" required>
+        <input type="text" id="destinationRider" name="destination" placeholder="Destination Address" required>
+        <input type="submit" value="Request Ride" class="loc-sbmt-demo" onclick="">
       </form>
     </div>
   </div>

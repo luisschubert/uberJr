@@ -5,9 +5,9 @@ import tools
 from datetime import datetime
 import requests
 from flask_bcrypt import Bcrypt
+import googlemaps
 
-#gmaps = googlemaps.Client(key='AIzaSyBSbiX832JWq30JrqzH4tj-HriK9eJhhNs')
-
+gmaps = googlemaps.Client(key='AIzaSyDhoFXFuPUf6BZtqoTUsssx9on-PQYxo4w')
 apiKey = "AIzaSyBSbiX832JWq30JrqzH4tj-HriK9eJhhNs"
 app = Flask(__name__)
 app.secret_key = '\x9a{\xfc\x86(0\x92=Y\xaf-\xdf\x05z\x91\xadL+\xdeP\xa3w\xc0\x07'
@@ -36,6 +36,19 @@ class Users(db.Model):
 
     def __repr__(self):
         return '<User %r>' % self.name
+
+class Riders(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    origin_lat = db.Column(db.Float)
+    origin_long = db.Column(db.Float)
+    destination_lat = db.Column(db.Float)
+    destination_long = db.Column(db.Float)
+
+    def __init__(self, origin_lat, origin_long, destination_lat, destination_long):
+        self.origin_lat = origin_lat
+        self.origin_long = origin_long
+        self.destination_lat = destination_lat
+        self.destination_long = destination_long
 
 #ROUTES
 @app.route("/")
@@ -202,6 +215,31 @@ def api_login():
         print "No idea??"
         return "No idea??"
 
+@app.route("/api/rider", methods=['POST'])
+def api_rider():
+    ### Origin
+    origin = request.form.get('origin')
+    geocode_origin = gmaps.geocode(origin)
+    parsed_origin = json.loads(json.dumps(geocode_origin))
+    origin_lat = parsed_origin[0][u'geometry'][u'location'][u'lat']
+    origin_long = parsed_origin[0][u'geometry'][u'location'][u'lng']
+    print(origin_lat)
+    print(origin_long)
+
+    ### Destination
+    destination = request.form.get('destination')
+    geocode_destination = gmaps.geocode(destination)
+    parsed_destination = json.loads(json.dumps(geocode_destination))
+    destination_lat = parsed_destination[0][u'geometry'][u'location'][u'lat']
+    destination_long = parsed_destination[0][u'geometry'][u'location'][u'lng']
+    print(destination_lat)
+    print(destination_long)
+
+    ride = Riders(origin_lat, origin_long, destination_lat, destination_long)
+    db.session.add(ride)
+    db.session.commit()
+
+    return redirect(url_for('rider'))
 
 if __name__ == '__main__':
     app.run(debug=True)

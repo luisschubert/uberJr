@@ -13,18 +13,15 @@ var locationCenterMap = "";
 $(document).ready(function() {
     $('#wrapper').fadeIn(1200);
     //rider side bar in demo
-    $('.loc-sbmt-demo').click(function(e) {
+    $('#riderRequest').submit(function(e) {
         e.preventDefault();
-        $(".overlay.destination").hide();
-        setTimeout(function() {
-            $("body.rider").addClass('side-bar-active');
-        }, 200);
+        requestRide();
     });
-    getLocation();
+    //getLocation();
     $('#signupForm').submit(function(e) {
         e.preventDefault();
         if (document.getElementById('passwordField').value == document.getElementById('confPasswordField').value) {
-          doRegister();
+            doRegister();
         } else {
             $("#signupForm").effect("shake");
             document.getElementById('nameField').style.borderColor = "green";
@@ -58,11 +55,11 @@ function showPosition(position) {
 
 function doRegister() {
     console.log("running");
-		var formData = {
-			  'name': $('input[name=name]').val(),
+    var formData = {
+        'name': $('input[name=name]').val(),
         'email': $('input[name=email]').val(),
         'password': $('input[name=password]').val(),
-				'confirmpassword': $('input[name=confpassword]').val()
+        'confirmpassword': $('input[name=confpassword]').val()
     }
     $.ajax({
         url: '/api/signup',
@@ -120,7 +117,140 @@ function doLogin() {
     });
 }
 
+function requestRide() {
+    console.log("requesting ride");
+    var originA = document.getElementById('originRider').value;
+    var destinationA = document.getElementById('destinationRider').value;
+    var formData = {
+        //'origin': $('input[name=origin]').val(),
+        //'destination': $('input[name=destination]').val()
+        'origin': originA,
+        'destination': destinationA
+    }
+    $.ajax({
+            url: '/api/rider',
+            type: 'POST',
+            data: formData,
+            success: function(data, status) {
+                //what to do when data is returned
+                console.log(status);
+
+                service.getDistanceMatrix({
+                  origins: [originA],
+                  destinations: [destinationA],
+                  travelMode: 'DRIVING',
+                  drivingOptions: {
+                    departureTime: currentTime,
+                    trafficModel: google.maps.TrafficModel.BEST_GUESS
+                  },
+                  unitSystem: google.maps.UnitSystem.IMPERIAL,
+                  avoidHighways: false,
+                  avoidTolls: false
+                }, function(response, status) {
+                  if (status !== 'OK') {
+                    alert('Error was: ' + status);
+                  } else {
+                    var originList = response.originAddresses;
+                    var destinationList = response.destinationAddresses;
+                    /*var outputDiv = document.getElementById('output');
+                    var priceDiv = document.getElementById('price');
+                    outputDiv.innerHTML = '';
+                    priceDiv.innerHTML = '';*/
+                    deleteMarkers(markersArray);
+
+                    var showGeocodedAddressOnMap = function(asDestination) {
+                      var icon = asDestination ? destinationIcon : originIcon;
+                      return function(results, status) {
+                        if (status === 'OK') {
+                          map.fitBounds(bounds.extend(results[0].geometry.location));
+                          markersArray.push(new google.maps.Marker({
+                            map: map,
+                            position: results[0].geometry.location,
+                            icon: icon
+                          }));
+                        } else {
+                          alert('Geocode was not successful due to: ' + status);
+                        }
+                      };
+                    };
+
+                    /*for (var i = 0; i < originList.length; i++) {
+                      var results = response.rows[i].elements;
+                      geocoder.geocode({'address': originList[i]},
+                          showGeocodedAddressOnMap(false));
+                      for (var j = 0; j < results.length; j++) {
+                        geocoder.geocode({'address': destinationList[j]},
+                            showGeocodedAddressOnMap(true));
+                        outputDiv.innerHTML += originList[i] + ' to ' + destinationList[j] +
+                            ': <b>' + results[j].distance.text + '</b> in <b>' +
+                            results[j].duration.text + '</b><br>';
+                        priceDiv.innerHTML += '<b>Estimated Value</b>: $' + calculateCost(results[j].distance.value, results[j].duration.value);
+                      }
+                    }*/
+
+                  }
+                });
+                calculateAndDisplayRoute(directionsService, directionsDisplay, originA, destinationA);
+                directionsDisplay.setMap(map);
+
+                //console.log(document.getElementsByClassName('cost')[0].value);
+                //$("#cost wrapper").text("1337");
+                $(".overlay.destination").hide(); setTimeout(function() {
+                    $("body.rider").addClass('side-bar-active');
+                }, 200);
+            }
+    });
+}
+
+function calculateCost(distance, time) {
+    var cost = 0;
+    var TAX = 0;
+    var BASE_PRICE = 5;
+    var COST_PER_MINUTE = 0.5;
+    var COST_PER_MILE = 1.05;
+    var TAX_PERCENT = 0.05;
+
+    cost = BASE_PRICE + (COST_PER_MINUTE * (time / 60)) + (COST_PER_MILE * (distance / 1000));
+    tax = (TAX_PERCENT * cost);
+
+    return (cost + tax).toFixed(2);
+}
+
+function deleteMarkers(markersArray) {
+    for (var i = 0; i < markersArray.length; i++) {
+        markersArray[i].setMap(null);
+    }
+    markersArray = [];
+}
+
+function calculateAndDisplayRoute(directionsService, directionsDisplay, theOrigin, theDestination) {
+    directionsService.route({
+        origin: theOrigin,
+        destination: theDestination,
+        travelMode: 'DRIVING'
+    }, function(response, status) {
+        if (status === 'OK') {
+            directionsDisplay.setDirections(response);
+        } else {
+            window.alert('Directions request failed due to ' + status);
+        }
+    });
+}
+
 var map;
+var bounds;
+var markersArray = [];
+
+// DirectionsRenderer
+var directionsService;
+var directionsDisplay;
+
+var currentTime = new Date();
+var destinationIcon;
+var originIcon;
+
+var geocoder;
+var service;
 
 var sjsu = new google.maps.LatLng(37.336206, -121.882491);
 
@@ -135,7 +265,6 @@ var driverslocations = [
 var MY_MAPTYPE_ID = 'custom_style';
 
 function initMap() {
-
 
     //map styles
     var featureOpts = [{
@@ -186,6 +315,18 @@ function initMap() {
         }]
     }];
 
+    bounds = new google.maps.LatLngBounds;
+
+    directionsService = new google.maps.DirectionsService;
+
+    directionsDisplay = new google.maps.DirectionsRenderer;
+
+    destinationIcon = 'https://chart.googleapis.com/chart?' +
+        'chst=d_map_pin_letter&chld=D|FF0000|000000';
+
+    originIcon = 'https://chart.googleapis.com/chart?' +
+        'chst=d_map_pin_letter&chld=O|FFFF00|000000';
+
     var mapOptions = {
         zoom: 14,
         center: sjsu,
@@ -197,6 +338,9 @@ function initMap() {
 
     map = new google.maps.Map(document.getElementById('map-canvas'),
         mapOptions);
+
+    geocoder = new google.maps.Geocoder;
+    service = new google.maps.DistanceMatrixService;
 
     var styledMapOptions = {
         name: 'Custom Style'
