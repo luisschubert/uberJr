@@ -17,7 +17,7 @@ $(document).ready(function() {
         e.preventDefault();
         requestRide();
     });
-    //getLocation();
+    getLocation();
     $('#signupForm').submit(function(e) {
         e.preventDefault();
         if (document.getElementById('passwordField').value == document.getElementById('confPasswordField').value) {
@@ -134,7 +134,6 @@ function requestRide() {
             success: function(data, status) {
                 //what to do when data is returned
                 console.log(status);
-
                 service.getDistanceMatrix({
                   origins: [originA],
                   destinations: [destinationA],
@@ -174,19 +173,19 @@ function requestRide() {
                       };
                     };
 
-                    /*for (var i = 0; i < originList.length; i++) {
+                    for (var i = 0; i < originList.length; i++) {
                       var results = response.rows[i].elements;
                       geocoder.geocode({'address': originList[i]},
                           showGeocodedAddressOnMap(false));
                       for (var j = 0; j < results.length; j++) {
                         geocoder.geocode({'address': destinationList[j]},
                             showGeocodedAddressOnMap(true));
-                        outputDiv.innerHTML += originList[i] + ' to ' + destinationList[j] +
+                        /*outputDiv.innerHTML += originList[i] + ' to ' + destinationList[j] +
                             ': <b>' + results[j].distance.text + '</b> in <b>' +
                             results[j].duration.text + '</b><br>';
-                        priceDiv.innerHTML += '<b>Estimated Value</b>: $' + calculateCost(results[j].distance.value, results[j].duration.value);
+                        priceDiv.innerHTML += '<b>Estimated Value</b>: $' + calculateCost(results[j].distance.value, results[j].duration.value);*/
                       }
-                    }*/
+                    }
 
                   }
                 });
@@ -355,7 +354,6 @@ function initMap() {
             shadow: 0
         });
     }, 5000);
-
 
     //To show drivers near by
     for (var i = 0; i < driverslocations.length; i++) {
