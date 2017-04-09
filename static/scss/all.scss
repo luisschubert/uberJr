@@ -181,6 +181,33 @@ img.logo {
    border-radius: 3px;
    text-align: center;
 
+   &.register-driver {
+      max-width: 800px;
+
+      h2 {
+         margin: 0;
+      }
+
+      h3 {
+         margin: 0 0 8px 0;
+      }
+
+      .col {
+         display: inline-block;
+         vertical-align: top;
+         width: 46%;
+         margin: 0 1%;
+
+         &.left {
+            padding-top: 29px;
+         }
+      }
+
+      input[type="submit"] {
+         max-width: 300px;
+      }
+   }
+
    form {
       h2, h3 {
          text-align: left;
