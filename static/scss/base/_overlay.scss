@@ -5,10 +5,10 @@
    margin-left: -200px;
    margin-top: -230px;
    padding: 30px 40px 20px;
-   width: 100%;
    max-width: 400px;
    background: #fff;
    border-radius: 2px;
+   box-sizing: border-box;
    box-shadow: 0 10px 16px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 
    input {
@@ -32,6 +32,12 @@
 
    &.login {
       text-align: center;
+
+      @media screen and (max-width: 440px) {
+         position: static;
+         margin: 70px 20px;
+         padding: 20px;
+      }
 
       h2 {
          margin-bottom: 20px;

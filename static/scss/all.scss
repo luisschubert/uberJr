@@ -181,8 +181,26 @@ img.logo {
    border-radius: 3px;
    text-align: center;
 
+   @media screen and (max-width: $mobile) {
+      margin: 40px 30px 20px 30px;
+   }
+
+   @media screen and (max-width: $mobile-sm) {
+      margin: 20px;
+      padding: 20px;
+   }
+
    &.register-driver {
       max-width: 800px;
+
+      @media screen and (max-width: 880px) {
+         margin: 40px 40px 20px 40px;
+      }
+
+      @media screen and (max-width: $mobile-sm) {
+         margin: 20px;
+         padding: 20px;
+      }
 
       h2 {
          margin: 0;
@@ -193,18 +211,29 @@ img.logo {
       }
 
       .col {
-         display: inline-block;
-         vertical-align: top;
-         width: 46%;
-         margin: 0 1%;
+         float: left;
+         width: 48.5%;
+         margin: 0 0 0 1.5%;
 
          &.left {
+            margin: 0 1.5% 0 0;
             padding-top: 29px;
+         }
+
+         @media screen and (max-width: 580px) {
+            width: 100%;
+            padding: 0;
+            margin: 0;
          }
       }
 
       input[type="submit"] {
          max-width: 300px;
+         margin-top: 10px;
+
+         @media screen and (max-width: $mobile-sm) {
+            width: 100%;
+         }
       }
    }
 
@@ -254,10 +283,14 @@ img.logo {
       }
 
       select {
+         -webkit-appearance: none;
+         -moz-appearance: none;
+         appearance: none;
+         border-radius: 3px;
          width: 100%;
          margin-bottom: 20px;
          font-size: 16px;
-         padding: 8px;
+         padding: 4px 8px;
       }
 
       p {
