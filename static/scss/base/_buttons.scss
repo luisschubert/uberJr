@@ -14,8 +14,26 @@ a.button {
    cursor: pointer;
    text-decoration: none;
 
+   &.logout {
+      width: 100px;
+      background: #d0cccc;
+      border: none;
+
+      &:hover {
+         background: #10b8f9;
+         color: #fff;
+      }
+   }
+
    &:hover {
       background: #fff;
       color: #10b8f9;
    }
+}
+
+.log-out-box {
+   position: absolute;
+   right: 20px;
+   top: 20px;
+   z-index: 4;
 }
