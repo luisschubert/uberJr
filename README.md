@@ -19,6 +19,9 @@ displays the signup view
 #### /login
 displays the login view
 
+#### /logout
+logs current user out and displays the login view
+
 #### /geolocationTest
 displays a button to retrieve GPS Coordinates using HTML5 API
 
@@ -44,6 +47,12 @@ displays a button to retrieve GPS Coordinates using HTML5 API
 * name
 * email
 * password
+* confpassword
+* isdriver
+* licenseplate (if driver)
+* color (if driver)
+* year (if driver)
+* make (if driver)
 
 #### login (POST) JSON
 ###### Parameters:
