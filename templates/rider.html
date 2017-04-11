@@ -1,7 +1,5 @@
 {% include 'header.html' %}
 <!--<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDhoFXFuPUf6BZtqoTUsssx9on-PQYxo4w"></script>-->
-<script async defer
-   src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCz84vlHfB46ugqIammigfZxHNn1DucCfQ&callback=initMap"></script>
 <body class="rider">
   <div class="circle-main">
     <div class="circle-inner">
@@ -12,7 +10,7 @@
   <div id="wrapper" class="rider">
     <div class="map-bg"></div>
     <div class="log-out-box">
-      <a href="" class="button logout">Log Out</a>
+      <a href="/logout" class="button logout">Log Out</a>
     </div>
     {% include 'sidebar.html' %}
     <div class="map-wrapper wow zoomOutIn" data-wow-delay="3.4s" data-wow-duration="3.s">
@@ -34,5 +32,6 @@
   <script type="text/javascript" src="/static/js/jquery-1.11.2.min.js"></script>
   <script type="text/javascript" src="/static/js/plugins.js"></script>
   <script type="text/javascript" src="/static/js/scripts.js"></script>
+  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCz84vlHfB46ugqIammigfZxHNn1DucCfQ&callback=initMap"></script>
 </body>
 </html>

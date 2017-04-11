@@ -1,5 +1,4 @@
 {% include 'header.html' %}
-<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDhoFXFuPUf6BZtqoTUsssx9on-PQYxo4w"></script>
 <body class="driver">
   <div class="circle-main">
     <div class="circle-inner">
@@ -10,7 +9,7 @@
   <div id="wrapper" class="rider">
     <div class="map-bg"></div>
     <div class="log-out-box">
-      <a href="" class="button logout">Log Out</a>
+      <a href="/logout" class="button logout">Log Out</a>
     </div>
     {% include 'sidebar.html' %}
     <div class="map-wrapper wow zoomOutIn" data-wow-delay="3.4s" data-wow-duration="3.s">
@@ -20,9 +19,17 @@
     <div class="rider-footer">
       <img class="logo" src="/static/images/uberjr-logo-white.png" alt="uber jr logo">
     </div>
+    <div class="overlay destination wow fadeInDown" data-wow-delay="4s" data-wow-duration="3.s">
+      <form id="driverReady" action="/api/drive" method="POST">
+        <p>Ready to drive?</p>
+        <input type="hidden" id="driveReadyField" name="ready" value="true">
+        <input type="submit" value="Start Driving" class="loc-sbmt-demo" onclick="">
+      </form>
+    </div>
   </div>
   <script type="text/javascript" src="/static/js/jquery-1.11.2.min.js"></script>
   <script type="text/javascript" src="/static/js/plugins.js"></script>
   <script type="text/javascript" src="/static/js/scripts.js"></script>
+  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDhoFXFuPUf6BZtqoTUsssx9on-PQYxo4w&callback=initMap"></script>
 </body>
 </html>

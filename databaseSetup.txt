@@ -1,10 +1,11 @@
 
 
-CREATE TABLE driver (
+CREATE TABLE drivers (
     driver_id integer NOT NULL,
     license_plate text NOT NULL,
     car_color text NOT NULL,
-    car_model text NOT NULL,
+    car_year text NOT NULL,
+    car_make text NOT NULL,
     "isActive" boolean DEFAULT false
 );
 
@@ -82,7 +83,7 @@ ALTER TABLE ONLY users ALTER COLUMN id SET DEFAULT nextval('users_id_seq'::regcl
 -- Name: driver driver_pkey; Type: CONSTRAINT; Schema: public; Owner: Daniel
 --
 
-ALTER TABLE ONLY driver
+ALTER TABLE ONLY drivers
     ADD CONSTRAINT driver_pkey PRIMARY KEY (driver_id);
 
 
@@ -106,7 +107,7 @@ ALTER TABLE ONLY users
 -- Name: driver driver_id; Type: FK CONSTRAINT; Schema: public; Owner: Daniel
 --
 
-ALTER TABLE ONLY driver
+ALTER TABLE ONLY drivers
     ADD CONSTRAINT driver_id FOREIGN KEY (driver_id) REFERENCES users(id) ON DELETE CASCADE;
 
 

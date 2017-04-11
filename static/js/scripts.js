@@ -12,24 +12,86 @@ var locationCenterMap = "";
 
 $(document).ready(function() {
     $('#wrapper').fadeIn(1200);
-    //rider side bar in demo
+    $('#riderUserType').change(function(){
+        selection = $(this).val();
+        switch(selection) {
+            case 'true':
+                $('#driverForm').show();
+                $('#riderForm').hide();
+                $('#driverNameField').val($('#riderNameField').val());
+                $('#driverEmailField').val($('#riderEmailField').val());
+                $('#driverPasswordField').val($('#riderPasswordField').val());
+                $('#driverConfPasswordField').val($('#riderConfPasswordField').val());
+                /*$('#driverPasswordField').val('');
+                $('#driverConfPasswordField').val('');*/
+                $('#driverUserType').val("true");
+                break;
+            default:
+                $('#driverForm').hide();
+                break;
+        }
+    });
+    $('#driverUserType').change(function(){
+        selection = $(this).val();
+        switch(selection) {
+            case 'false':
+                $('#driverForm').hide();
+                $('#riderForm').show();
+                $('#riderNameField').val($('#driverNameField').val());
+                $('#riderEmailField').val($('#driverEmailField').val());
+                $('#riderPasswordField').val($('#driverPasswordField').val());
+                $('#riderConfPasswordField').val($('#driverConfPasswordField').val());
+                /*$('#riderPasswordField').val('');
+                $('#riderConfPasswordField').val('');*/
+                $('#riderUserType').val("false");
+                break;
+            default:
+                $('#riderForm').hide();
+                break;
+        }
+    });
     $('#riderRequest').submit(function(e) {
         e.preventDefault();
         requestRide();
     });
-    getLocation();
-    $('#signupForm').submit(function(e) {
+    $('#driverReady').submit(function(e) {
         e.preventDefault();
-        if (document.getElementById('passwordField').value == document.getElementById('confPasswordField').value) {
+        readyDrive();
+    });
+    getLocation();
+    $('#signupRiderForm').submit(function(e) {
+        e.preventDefault();
+        if (document.getElementById('riderPasswordField').value == document.getElementById('riderConfPasswordField').value) {
             doRegister();
         } else {
-            $("#signupForm").effect("shake");
-            document.getElementById('nameField').style.borderColor = "green";
-            document.getElementById('emailField').style.borderColor = "green";
-            document.getElementById('passwordField').style.borderColor = "red";
-            document.getElementById('passwordField').value = "";
-            document.getElementById('confPasswordField').style.borderColor = "red";
-            document.getElementById('confPasswordField').value = "";
+            $("#signupRiderForm").effect("shake");
+            document.getElementById('riderNameField').style.borderColor = "green";
+            document.getElementById('riderEmailField').style.borderColor = "green";
+            document.getElementById('riderPasswordField').style.borderColor = "red";
+            document.getElementById('riderPasswordField').value = "";
+            document.getElementById('riderConfPasswordField').style.borderColor = "red";
+            document.getElementById('riderConfPasswordField').value = "";
+            document.getElementById('riderUserType').style.borderColor = "green";
+        }
+    });
+    $('#signupDriverForm').submit(function(e) {
+        e.preventDefault();
+        if (document.getElementById('driverPasswordField').value == document.getElementById('driverConfPasswordField').value) {
+            doRegister();
+        } else {
+            $("#signupDriverForm").effect("shake");
+            document.getElementById('driverNameField').style.borderColor = "green";
+            document.getElementById('driverEmailField').style.borderColor = "green";
+            document.getElementById('driverPasswordField').style.borderColor = "red";
+            document.getElementById('driverPasswordField').value = "";
+            document.getElementById('driverConfPasswordField').style.borderColor = "red";
+            document.getElementById('driverConfPasswordField').value = "";
+            document.getElementById('driverUserType').style.borderColor = "green";
+            document.getElementById('platesField').style.borderColor = "green";
+            document.getElementById('color').style.borderColor = "green";
+            document.getElementById('year').style.borderColor = "green";
+            document.getElementById('make').style.borderColor = "green";
+            document.getElementById('insured').style.borderColor = "green";
         }
     });
     $('#loginForm').submit(function(e) {
@@ -55,11 +117,27 @@ function showPosition(position) {
 
 function doRegister() {
     console.log("running");
-    var formData = {
-        'name': $('input[name=name]').val(),
-        'email': $('input[name=email]').val(),
-        'password': $('input[name=password]').val(),
-        'confirmpassword': $('input[name=confpassword]').val()
+    var riderVisible = $('#riderForm').is(':visible');
+    if (riderVisible == true) {
+        var formData = {
+            'name': $('#riderNameField').val(),
+            'email': $('#riderEmailField').val(),
+            'password': $('#riderPasswordField').val(),
+            'confirmpassword': $('#riderConfPasswordField').val(),
+            'isdriver': $('#riderUserType').val()
+        }
+    } else {
+        var formData = {
+            'name': $('#driverNameField').val(),
+            'email': $('#driverEmailField').val(),
+            'password': $('#driverPasswordField').val(),
+            'confirmpassword': $('#driverConfPasswordField').val(),
+            'isdriver': $('#driverUserType').val(),
+            'licenseplate': $('#platesField').val(),
+            'color': $('#color').val(),
+            'year': $('#year').val(),
+            'make': $('#make').val()
+        }
     }
     $.ajax({
         url: '/api/signup',
@@ -70,15 +148,31 @@ function doRegister() {
             console.log(status + " : " + data);
             if (data.charAt(0) === "/") {
                 window.location.href = data;
-            } else {
-                $("#signupForm").effect("shake");
-                document.getElementById('nameField').style.borderColor = "green";
-                document.getElementById('emailField').style.borderColor = "red";
-                document.getElementById('emailField').value = "";
-                document.getElementById('passwordField').style.borderColor = "grey";
-                document.getElementById('passwordField').value = "";
-                document.getElementById('confPasswordField').style.borderColor = "grey";
-                document.getElementById('confPasswordField').value = "";
+            } else if (data.charAt(0) === "f") {
+                $("#signupRiderForm").effect("shake");
+                document.getElementById('riderNameField').style.borderColor = "green";
+                document.getElementById('riderEmailField').style.borderColor = "red";
+                document.getElementById('riderEmailField').value = "";
+                document.getElementById('riderPasswordField').style.borderColor = "grey";
+                document.getElementById('riderPasswordField').value = "";
+                document.getElementById('riderConfPasswordField').style.borderColor = "grey";
+                document.getElementById('riderConfPasswordField').value = "";
+                document.getElementById('riderUserType').style.borderColor = "green";
+            } else if (data.charAt(0) === "t") {
+                $("#signupDriverForm").effect("shake");
+                document.getElementById('driverNameField').style.borderColor = "green";
+                document.getElementById('driverEmailField').style.borderColor = "red";
+                document.getElementById('driverEmailField').value = "";
+                document.getElementById('driverPasswordField').style.borderColor = "grey";
+                document.getElementById('driverPasswordField').value = "";
+                document.getElementById('driverConfPasswordField').style.borderColor = "grey";
+                document.getElementById('driverConfPasswordField').value = "";
+                document.getElementById('driverUserType').style.borderColor = "green";
+                document.getElementById('platesField').style.borderColor = "green";
+                document.getElementById('color').style.borderColor = "green";
+                document.getElementById('year').style.borderColor = "green";
+                document.getElementById('make').style.borderColor = "green";
+                document.getElementById('insured').style.borderColor = "green";
             }
         }
     });
@@ -196,8 +290,28 @@ function requestRide() {
                 //$("#cost wrapper").text("1337");
                 $(".overlay.destination").hide(); setTimeout(function() {
                     $("body.rider").addClass('side-bar-active');
+                    $("#cost wrapper").text("1337");
                 }, 200);
             }
+    });
+}
+
+function readyDrive() {
+    console.log("running");
+    var formData = {
+        'status': $('input[name=ready]').val()
+    }
+    $.ajax({
+        url: '/api/drive',
+        type: 'POST',
+        data: formData,
+        success: function(data, status) {
+            //what to do when data is returned
+            console.log(status + " : " + data);
+            $(".overlay.destination").hide(); setTimeout(function() {
+                $("body.driver").addClass('side-bar-active');
+            }, 200);
+        }
     });
 }
 
@@ -264,6 +378,11 @@ var driverslocations = [
 var MY_MAPTYPE_ID = 'custom_style';
 
 function initMap() {
+    var driverslocations = [
+        ['driverOne', 37.3495, -121.8940],
+        ['driverTwo', 37.3290, -121.8888],
+        ['driverThree', 37.3310, -121.8604]
+    ];
 
     //map styles
     var featureOpts = [{
