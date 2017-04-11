@@ -27,6 +27,7 @@ class Users(db.Model):
     email = db.Column(db.Text, unique=True)
     password = db.Column(db.Text)
     isDriver = db.Column(db.Boolean)
+    driver = db.relationship('Drivers', backref='users', lazy='dynamic')
 
     def __init__(self, name, email, password, isDriver):
         self.name = name
@@ -36,6 +37,23 @@ class Users(db.Model):
 
     def __repr__(self):
         return '<User %r>' % self.name
+
+class Drivers(db.Model):
+    driver_id = db.Column(db.Integer, db.ForeignKey('users.id'), primary_key=True)
+    license_plate = db.Column(db.Text)
+    car_color = db.Column(db.Text)
+    car_year = db.Column(db.Text)
+    car_make = db.Column(db.Text)
+    isActive = db.Column(db.Boolean)
+
+    def __init__(self, license_plate, car_color, car_year, car_make, isActive):
+        self.license_plate = license_plate
+        self.car_color = car_color
+        self.car_year = car_year
+        self.car_make = car_make
+        self.isActive = isActive
+    def __repr__(self):
+        return '<Driver %r>' % self.license_plate
 
 class Riders(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -161,20 +179,36 @@ def api_signup():
     userEmail = request.form.get('email')
     password = request.form.get('password')
     confirmpassword = request.form.get('confirmpassword')
-    print "name: %s, email: %s, password: %s, confirmpassword: %s" %(name,userEmail,password, confirmpassword)
+    status = request.form.get('isdriver')
+    if (status == 'true'):
+        licenseplate = request.form.get('licenseplate')
+        color = request.form.get('color')
+        year = request.form.get('year')
+        make = request.form.get('make')
+        print "name: %s, email: %s, password: %s, confirmpassword: %s, isdriver: %s, licenseplate: %s, color: %s, year: %s, make: %s" %(name,userEmail,password,confirmpassword,status,licenseplate,color,year,make)
+    else:
+        print "name: %s, email: %s, password: %s, confirmpassword: %s, isdriver: %s" %(name,userEmail,password,confirmpassword,status)
     user = Users.query.filter_by(email=userEmail).first()
-    isDriver = False
     if user is None:
         if password == confirmpassword:
             hashedpw = bcrypt.generate_password_hash(password)
+            if (status == 'true'):
+                isDriver = True
+            else:
+                isDriver = False
             new_user = Users(name, userEmail, hashedpw, isDriver)
             print new_user
             db.session.add(new_user)
             db.session.commit()
             if (isDriver == True):
+                isActive = False
+                new_driver = Drivers(licenseplate, color, year, make, isActive)
+                print new_driver
+                db.session.add(new_driver)
+                db.session.commit
                 print 'driver account creation succeeded'
                 resp = make_response(url_for('driver'))
-                session['email'] = new_user.userEmail
+                session['email'] = new_user.email
                 return resp
             else:
                 print 'rider account creation succeeded'
@@ -182,7 +216,7 @@ def api_signup():
                 session['email'] = new_user.email
                 return resp
     else:
-        return "FAILURE"
+        return status
 
 @app.route("/api/login", methods=['POST'])
 def api_login():
@@ -240,6 +274,15 @@ def api_rider():
     db.session.commit()
 
     return redirect(url_for('rider'))
+
+@app.route("/api/drive", methods=['POST'])
+def api_drive():
+    status = request.form.get('status')
+    if status == 'true':
+        user = Users.query.filter_by(email = session['email']).first()
+        return "added to ready to drive pool"
+    else:
+        return "not added to ready to drive pool"
 
 if __name__ == '__main__':
     app.run(debug=True)
