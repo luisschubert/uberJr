@@ -6,7 +6,7 @@ CREATE TABLE drivers (
     car_color text NOT NULL,
     car_year text NOT NULL,
     car_make text NOT NULL,
-    "isActive" boolean DEFAULT false
+    is_active boolean DEFAULT false
 );
 
 
@@ -46,7 +46,7 @@ CREATE TABLE users (
     name text NOT NULL,
     email text NOT NULL,
     password text NOT NULL,
-    "isDriver" boolean DEFAULT false
+    is_driver boolean DEFAULT false
 );
 
 
