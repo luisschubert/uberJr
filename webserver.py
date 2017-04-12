@@ -26,14 +26,14 @@ class Users(db.Model):
     name = db.Column(db.Text)
     email = db.Column(db.Text, unique=True)
     password = db.Column(db.Text)
-    isDriver = db.Column(db.Boolean)
-    driver = db.relationship('Drivers', backref='users', lazy='dynamic')
+    is_driver = db.Column(db.Boolean)
+    driver_rel = db.relationship('Drivers', backref='users', primaryjoin='Users.id == Drivers.driver_id', uselist=False)
 
-    def __init__(self, name, email, password, isDriver):
+    def __init__(self, name, email, password, is_driver):
         self.name = name
         self.email = email
         self.password = password
-        self.isDriver = isDriver
+        self.is_driver = is_driver
 
     def __repr__(self):
         return '<User %r>' % self.name
@@ -44,14 +44,15 @@ class Drivers(db.Model):
     car_color = db.Column(db.Text)
     car_year = db.Column(db.Text)
     car_make = db.Column(db.Text)
-    isActive = db.Column(db.Boolean)
+    is_active = db.Column(db.Boolean)
 
-    def __init__(self, license_plate, car_color, car_year, car_make, isActive):
+    def __init__(self, driver_id, license_plate, car_color, car_year, car_make, is_active):
+        self.driver_id = driver_id
         self.license_plate = license_plate
         self.car_color = car_color
         self.car_year = car_year
         self.car_make = car_make
-        self.isActive = isActive
+        self.is_active = is_active
     def __repr__(self):
         return '<Driver %r>' % self.license_plate
 
@@ -88,7 +89,7 @@ def driver():
     user = Users.query.filter_by(email = session['email']).first()
     # do we need to check if an account with that email exists here? (redirect to signup page if nonexistent?)
     # might be unnecessary since we already check for that in the login API call?
-    if user.isDriver == False:
+    if user.is_driver == False:
         return redirect(url_for('rider'))
     else:
         return render_template("driver.html")
@@ -100,7 +101,7 @@ def rider():
     user = Users.query.filter_by(email = session['email']).first()
     # do we need to check if an account with that email exists here? (redirect to signup page if nonexistent?)
     # might be unnecessary since we already check for that in the login API call?
-    if user.isDriver == True:
+    if user.is_driver == True:
         return redirect(url_for('driver'))
     else:
         return render_template("rider.html")
@@ -197,15 +198,14 @@ def api_signup():
             else:
                 isDriver = False
             new_user = Users(name, userEmail, hashedpw, isDriver)
-            print new_user
             db.session.add(new_user)
             db.session.commit()
             if (isDriver == True):
                 isActive = False
-                new_driver = Drivers(licenseplate, color, year, make, isActive)
-                print new_driver
+                driveid = Users.query.filter_by(email=userEmail).first().id
+                new_driver = Drivers(driveid, licenseplate, color, year, make, isActive)
                 db.session.add(new_driver)
-                db.session.commit
+                db.session.commit()
                 print 'driver account creation succeeded'
                 resp = make_response(url_for('driver'))
                 session['email'] = new_user.email
@@ -283,8 +283,6 @@ def api_drive():
         return "added to ready to drive pool"
     else:
         return "not added to ready to drive pool"
-
-
 
 if __name__ == '__main__':
     app.run(debug=True)
