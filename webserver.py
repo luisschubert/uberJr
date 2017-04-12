@@ -74,8 +74,8 @@ class Riders(db.Model):
 def home():
     if 'email' in session:
         user = Users.query.filter_by(email = session['email']).first()
-        print user.isDriver
-        if user.isDriver == True:
+        print user.is_driver
+        if user.is_driver == True:
             return redirect(url_for('driver'))
         else:
             return redirect(url_for('rider'))
@@ -110,7 +110,7 @@ def rider():
 def signup():
     if 'email' in session:
         user = Users.query.filter_by(email = session['email']).first()
-        if user.isDriver == True:
+        if user.is_driver == True:
             return redirect(url_for('driver'))
         else:
             return redirect(url_for('rider'))
@@ -125,7 +125,7 @@ def signupdriver():
 def login():
     if 'email' in session:
         user = Users.query.filter_by(email = session['email']).first()
-        if user.isDriver == True:
+        if user.is_driver == True:
             return redirect(url_for('driver'))
         else:
             return redirect(url_for('rider'))
@@ -227,7 +227,7 @@ def api_login():
         #compare hashed password to hashed password in db
         if bcrypt.check_password_hash(user.password, password):
             #here we need to create a cookie for the client and return it along with the response
-            if user.isDriver == True:
+            if user.is_driver == True:
                 print 'driver login succeeded'
                 resp = make_response(url_for('driver'))
                 session['email'] = user.email
