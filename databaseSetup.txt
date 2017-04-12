@@ -141,6 +141,7 @@ ALTER TABLE ONLY rides
 
 CREATE TABLE riders (
     id integer NOT NULL,
+    rider_id integer NOT NULL,
     origin_lat double precision,
     origin_long double precision,
     destination_lat double precision,
@@ -180,3 +181,21 @@ ALTER TABLE ONLY riders ALTER COLUMN id SET DEFAULT nextval('"Riders_id_seq"'::r
 
 ALTER TABLE ONLY riders
     ADD CONSTRAINT "Riders_pkey" PRIMARY KEY (id);
+
+
+ALTER TABLE ONLY riders
+    ADD CONSTRAINT rider_id FOREIGN KEY (rider_id) REFERENCES users(id) ON DELETE CASCADE;
+
+
+CREATE TABLE activedrivers (
+    id integer NOT NULL,
+    current_lat double precision,
+    current_long double precision,
+    paired boolean DEFAULT false
+);
+
+ALTER TABLE ONLY activedrivers
+    ADD CONSTRAINT "activedrivers_pkey" PRIMARY KEY (id);
+
+ALTER TABLE ONLY activedrivers
+    ADD CONSTRAINT id FOREIGN KEY (id) REFERENCES drivers(driver_id) ON DELETE CASCADE;

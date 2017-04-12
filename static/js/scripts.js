@@ -10,6 +10,9 @@ function initWow() {
 
 var locationCenterMap = "";
 
+var curr_lat;
+var curr_long;
+
 $(document).ready(function() {
     $('#wrapper').fadeIn(1200);
     $('#riderUserType').change(function(){
@@ -110,7 +113,9 @@ function getLocation() {
 
 function showPosition(position) {
     lat = position.coords.latitude;
+    curr_lat = position.coords.latitude;
     lng = position.coords.longitude;
+    curr_long = position.coords.longitude;
     map.setCenter(new google.maps.LatLng(lat, lng));
     locationCenterMap = new google.maps.LatLng(parseFloat(lat), parseFloat(lng));
     console.log(lat);
@@ -318,8 +323,12 @@ function requestRide() {
 
 function readyDrive() {
     console.log("running");
+    console.log(curr_lat);
+    console.log(curr_long);
     var formData = {
-        'status': $('input[name=ready]').val()
+        'status': $('input[name=ready]').val(),
+        'originLat': curr_lat,
+        'originLong': curr_long
     }
     $.ajax({
         url: '/api/drive',

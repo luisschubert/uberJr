@@ -18,7 +18,7 @@ bcrypt = Bcrypt(app)
 # if r.status_code ==200:
 #     response =r.content
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://luisschubert@localhost:5432/uberjr'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:uberjr@localhost:5432/uberjr'
 db = SQLAlchemy(app)
 
 class Users(db.Model):
@@ -45,6 +45,7 @@ class Drivers(db.Model):
     car_year = db.Column(db.Text)
     car_make = db.Column(db.Text)
     is_active = db.Column(db.Boolean)
+    active_rel = db.relationship('ActiveDrivers', backref='drivers', primaryjoin='Drivers.driver_id == ActiveDrivers.id', uselist=False)
 
     def __init__(self, driver_id, license_plate, car_color, car_year, car_make, is_active):
         self.driver_id = driver_id
@@ -53,8 +54,25 @@ class Drivers(db.Model):
         self.car_year = car_year
         self.car_make = car_make
         self.is_active = is_active
+
     def __repr__(self):
         return '<Driver %r>' % self.license_plate
+
+class ActiveDrivers(db.Model):
+    __tablename__ = 'activedrivers'
+    id = db.Column(db.Integer, db.ForeignKey('drivers.driver_id'), primary_key=True)
+    current_lat = db.Column(db.Float)
+    current_long = db.Column(db.Float)
+    paired = db.Column(db.Boolean)
+
+    def __init__(self, id, current_lat, current_long, paired):
+        self.id = id
+        self.current_lat = current_lat
+        self.current_long = current_long
+        self.paired = paired
+
+    def __repr__(self):
+        return '<ActiveDriver %r>' % self.id
 
 class Riders(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -136,8 +154,18 @@ def login():
 def logout():
     if 'email' not in session:
         return redirect(url_for('login'))
-    session.pop('email', None)
-    return redirect(url_for('home'))
+    else:
+        user = Users.query.filter_by(email = session['email']).first()
+        if user.is_driver == True:
+            # mark the driver as inactive
+            driver = Drivers.query.filter_by(driver_id = user.id).first()
+            driver.is_active = False
+            db.session.commit()
+            # remove the driver from the activedrivers table
+            activedriver = ActiveDrivers.query.filter_by(id = user.id).delete()
+            db.session.commit()
+        session.pop('email', None)
+        return redirect(url_for('home'))
 
 @app.route("/geolocationTest")
 def geolocationTest():
@@ -277,12 +305,23 @@ def api_rider():
 
 @app.route("/api/drive", methods=['POST'])
 def api_drive():
-    origin = request.form.get('origin')
+    status = request.form.get('status')
+    currentlat = request.form.get('originLat')
+    currentlong = request.form.get('originLong')
+    print(currentlat)
+    print(currentlong)
     if status == 'true':
-        user = Users.query.filter_by(email = session['email']).first()
+        # mark the driver as 'active'
+        driverid = Users.query.filter_by(email = session['email']).first().id
+        driver = Drivers.query.filter_by(driver_id = driverid).first()
+        driver.is_active = True
+        db.session.commit()
+        # add the driver to the active drivers table
+        activedriverid = Drivers.query.filter_by(driver_id = driverid).first().driver_id
+        new_active_driver = ActiveDrivers(activedriverid, currentlat, currentlong, False)
+        db.session.add(new_active_driver)
+        db.session.commit()
         return "added to ready to drive pool"
-    else:
-        return "not added to ready to drive pool"
 
 if __name__ == '__main__':
     app.run(debug=True)
