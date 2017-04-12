@@ -28,6 +28,7 @@ class Users(db.Model):
     password = db.Column(db.Text)
     is_driver = db.Column(db.Boolean)
     driver_rel = db.relationship('Drivers', backref='users', primaryjoin='Users.id == Drivers.driver_id', uselist=False)
+    rider_rel = db.relationship('Riders', backref='users', primaryjoin='Users.id == Riders.rider_id', uselist=False)
 
     def __init__(self, name, email, password, is_driver):
         self.name = name
@@ -76,12 +77,14 @@ class ActiveDrivers(db.Model):
 
 class Riders(db.Model):
     id = db.Column(db.Integer, primary_key=True)
+    rider_id = db.Column(db.Integer, db.ForeignKey('users.id'))
     origin_lat = db.Column(db.Float)
     origin_long = db.Column(db.Float)
     destination_lat = db.Column(db.Float)
     destination_long = db.Column(db.Float)
 
-    def __init__(self, origin_lat, origin_long, destination_lat, destination_long):
+    def __init__(self, rider_id, origin_lat, origin_long, destination_lat, destination_long):
+        self.rider_id = rider_id
         self.origin_lat = origin_lat
         self.origin_long = origin_long
         self.destination_lat = destination_lat
@@ -228,8 +231,10 @@ def api_signup():
             new_user = Users(name, userEmail, hashedpw, isDriver)
             db.session.add(new_user)
             db.session.commit()
+            # if user is a driver, create an entry with car details in drivers table
             if (isDriver == True):
                 isActive = False
+                # driver_id = corresponding user account's id (as a foreign key)
                 driveid = Users.query.filter_by(email=userEmail).first().id
                 new_driver = Drivers(driveid, licenseplate, color, year, make, isActive)
                 db.session.add(new_driver)
@@ -287,7 +292,6 @@ def api_rider():
     origin_long = parsed_origin[0][u'geometry'][u'location'][u'lng']
     print(origin_lat)
     print(origin_long)
-
     ### Destination
     destination = request.form.get('destination')
     geocode_destination = gmaps.geocode(destination)
@@ -296,12 +300,13 @@ def api_rider():
     destination_long = parsed_destination[0][u'geometry'][u'location'][u'lng']
     print(destination_lat)
     print(destination_long)
-
-    ride = Riders(origin_lat, origin_long, destination_lat, destination_long)
+    # rider_id = corresponding user account's id (as a foreign key)
+    riderid = Users.query.filter_by(email = session['email']).first().id
+    # add ride request to riders table
+    ride = Riders(riderid, origin_lat, origin_long, destination_lat, destination_long)
     db.session.add(ride)
     db.session.commit()
-
-    return redirect(url_for('rider'))
+    return "added ride request to table"
 
 @app.route("/api/drive", methods=['POST'])
 def api_drive():
