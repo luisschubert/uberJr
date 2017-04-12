@@ -113,6 +113,9 @@ function showPosition(position) {
     lng = position.coords.longitude;
     map.setCenter(new google.maps.LatLng(lat, lng));
     locationCenterMap = new google.maps.LatLng(parseFloat(lat), parseFloat(lng));
+    console.log(lat);
+    console.log(lng);
+    getCurrentAddress(lat,lng);
 }
 
 function doRegister() {
@@ -210,8 +213,24 @@ function doLogin() {
         }
     });
 }
+function requestDriver(origin,destination){
+  $.ajax({
+    url:'api/requestDriver',
+    type: 'POST',
+    data:{
+      'origin': origin,
+      'destination': destination,
+    },
+    success: function(data,status){
+      console.log(status);
+      console.log(data);
+    }
+  })
+
+}
 
 function requestRide() {
+    //requestDriver()
     console.log("requesting ride");
     var originA = document.getElementById('originRider').value;
     var destinationA = document.getElementById('destinationRider').value;
@@ -228,6 +247,7 @@ function requestRide() {
             success: function(data, status) {
                 //what to do when data is returned
                 console.log(status);
+                console.log(data);
                 service.getDistanceMatrix({
                   origins: [originA],
                   destinations: [destinationA],
@@ -376,6 +396,7 @@ var driverslocations = [
 
 
 var MY_MAPTYPE_ID = 'custom_style';
+var curMarkers = [];
 
 function initMap() {
     var driverslocations = [
@@ -476,7 +497,7 @@ function initMap() {
 
     //To show drivers near by
     for (var i = 0; i < driverslocations.length; i++) {
-        curMarker = new RichMarker({
+        curMarkers[i] = new RichMarker({
             position: new google.maps.LatLng(driverslocations[i][1], driverslocations[i][2]),
             map: map,
             content: '<div class="richmarker-wrapper"><span class="uber-car"></span></div>',

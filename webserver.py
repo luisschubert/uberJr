@@ -277,12 +277,14 @@ def api_rider():
 
 @app.route("/api/drive", methods=['POST'])
 def api_drive():
-    status = request.form.get('status')
+    origin = request.form.get('origin')
     if status == 'true':
         user = Users.query.filter_by(email = session['email']).first()
         return "added to ready to drive pool"
     else:
         return "not added to ready to drive pool"
+
+
 
 if __name__ == '__main__':
     app.run(debug=True)
