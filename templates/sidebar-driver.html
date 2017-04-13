@@ -1,18 +1,24 @@
 <div class="side-bar driver">
-	<!-- <div class="driver-status">
-      <div class="question">
-        <p>Status</p>
-      </div>
-      <div class="switch">
-        <input type="checkbox" id="driver-status-toggle" class="cmn-toggle cmn-toggle-round">
-        <label for="cmn-toggle-1"></label>
-      </div>
-    </div> -->
-    <div class="rider-request">
+
+   <!-- Toggle "active" class to enable different states -->
+
+    <!-- driver waitting for request -->
+	<div id="waitting-state" class="active">
+		<h2 class="driver-info">Welcome!</h4>
+		<div class="divider"></div>
+		<div class="loader">
+		  <span class="inner1"></span>
+		  <span class="inner2"></span>
+		  <span class="inner3"></span>
+		</div>
+		<p class="lght">Waitting for rider's request</p>
+	</div>
+    
+    <div id="ride-request" class="">
 		<h1>New Rider Request!</h1>
 		<div class="divider"></div>
-		<h2 class="driver-info">Rider's Information</h4>
-		<p>Name: <span class="driver-name">John Doe</span></p>
+		<h2 class="rider-info">Rider's Information</h4>
+		<p>Name: <span class="rider-name">John Doe</span></p>
 		<p>Location: <span class=""></span></p>
 		<div class="divider"></div>
 		<p>Estimated Time of Arrival:</p>
@@ -24,7 +30,21 @@
 		<a href="" class="button cancel-ride">Decline</a>
 		<br>
 	</div>
-	<div class="directions">
-		<!-- directions will go here -->
+
+    <!-- directions to pickup rider-->
+	<div id="directions-to-rider" class="">
+
+
+		<div class="divider"></div>
+		<a href="" class="button">Ready to pick up</a>
 	</div>
+
+    <!-- directions to rider destination -->
+	<div id="directions-to-destination" class="">
+
+		<div class="divider"></div>
+		<a href="" class="button">Ride Completed</a>
+	</div>
+
+
 </div>

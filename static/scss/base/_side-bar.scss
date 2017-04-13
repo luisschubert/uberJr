@@ -27,6 +27,28 @@
             margin-bottom: 4px;
          }
       }
+
+      #waitting-state,
+      #directions-to-rider,
+      #ride-request,
+      #directions-to-rider,
+      #directions-to-destination {
+         display: none;
+
+         &.active {
+            display: block;
+         }
+      }
+
+      .loader {
+         margin-top: 30vh;
+      }
+   }
+
+   p.lght {
+      font-weight: 400;
+      text-align: center;
+      color: #b1b0b0;
    }
 
    .side-bar-active & {
@@ -55,7 +77,8 @@
       font-size: 28px;
       line-height: 1;
 
-      &.driver-info {
+      &.driver-info,
+      &.rider-info {
          margin-bottom: 14px;
       }
    }
@@ -85,92 +108,58 @@
    }
 }
 
-.settings .question,
-.settings .switch {
-   display: table-cell;
-   vertical-align: middle;
-   padding: 10px;
-}
+$size: 1em;
+$duration: 0.75s;
+$border-radius: $size;
+$bg-color: lightgray;
 
-/* ============================================================
-  COMMON
-============================================================ */
-.cmn-toggle {
-   position: absolute;
-   margin-left: -9999px;
-   visibility: hidden;
-}
-
-.cmn-toggle + label {
+.loader {
    display: block;
-   position: relative;
-   cursor: pointer;
-   outline: none;
-   -webkit-user-select: none;
-   -moz-user-select: none;
-   -ms-user-select: none;
-   user-select: none;
+   width: 60px;
+   margin: 10% auto;
 }
 
-/* ============================================================
-  SWITCH 1 - ROUND
-============================================================ */
-input.cmn-toggle-round + label {
-   padding: 2px;
-   width: 80px;
-   height: 30px;
-   background-color: #dddddd;
-   -webkit-border-radius: 60px;
-   -moz-border-radius: 60px;
-   -ms-border-radius: 60px;
-   -o-border-radius: 60px;
-   border-radius: 60px;
+@-webkit-keyframes rotate {
+   0% {
+      -webkit-transform: translateY(0%);
+   }
+
+   30% {
+      -webkit-transform: translateY(-$size / 4);
+   }
+
+   50% {
+      -webkit-transform: translateY(0%);
+   }
+
+   70% {
+      -webkit-transform: translateY($size / 4);
+   }
 }
 
-input.cmn-toggle-round + label:before, input.cmn-toggle-round + label:after {
+.loader {
    display: block;
-   position: absolute;
-   top: 1px;
-   left: 1px;
-   bottom: 1px;
-   content: "";
-}
 
-input.cmn-toggle-round + label:before {
-   right: 1px;
-   background-color: #f1f1f1;
-   -webkit-border-radius: 60px;
-   -moz-border-radius: 60px;
-   -ms-border-radius: 60px;
-   -o-border-radius: 60px;
-   border-radius: 60px;
-   -webkit-transition: background 0.4s;
-   -moz-transition: background 0.4s;
-   -o-transition: background 0.4s;
-   transition: background 0.4s;
-}
+   .inner1, .inner2, .inner3 {
+      display: inline-block;
+      margin: $size * 0.125;
+      width: $size / 2;
+      height: $size / 2;
+      border: 1px solid $bg-color;
+      border-radius: $border-radius;
+      background-color: $bg-color;
+      -webkit-transform-origin: 50%;
+      -webkit-animation-duration: $duration;
+      -webkit-animation-name: rotate;
+      -webkit-animation-iteration-count: infinite;
+      -webkit-animation-timing-function: linear;
+   }
 
-input.cmn-toggle-round + label:after {
-   width: 28px;
-   background-color: #fff;
-   -webkit-border-radius: 100%;
-   -moz-border-radius: 100%;
-   -ms-border-radius: 100%;
-   -o-border-radius: 100%;
-   border-radius: 100%;
-   -webkit-box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
-   -moz-box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
-   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
-   -webkit-transition: margin 0.4s;
-   -moz-transition: margin 0.4s;
-   -o-transition: margin 0.4s;
-   transition: margin 0.4s;
-}
+   .inner2 {
+      -webkit-animation-delay: $duration * 0.25;
+   }
 
-input.cmn-toggle-round:checked + label:before {
-   background-color: #10b8f9;
-}
-
-input.cmn-toggle-round:checked + label:after {
-   margin-left: 50px;
+   .inner3 {
+      -webkit-animation-delay: $duration * 0.5;
+   }
 }
