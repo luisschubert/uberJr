@@ -11,8 +11,9 @@ function toggleFoundDriver(driverName, carModel, carColor, plates, pickupTime) {
 }
 
 function toggleRideCompleted() {
-    $(".overlay.destination").show();
     $("body.rider").removeClass('side-bar-active');
+    //$("destinationRider").val("");
+    $(".overlay.destination").show();
     getLocation();
 }
 

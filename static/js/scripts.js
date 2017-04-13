@@ -56,10 +56,6 @@ function showPosition(position) {
 }
 
 
-
-
-
-
 function calculateCost(distance, time) {
     var cost = 0;
     var TAX = 0;
