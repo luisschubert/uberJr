@@ -1,5 +1,7 @@
 var isActive = false;
 var driverCoordinates;
+var theLat = 0;
+var theLong = 0;
 
 
 $(document).ready(function() {
@@ -9,8 +11,8 @@ $(document).ready(function() {
 
 function updateLocation(position){
   var lat = position.coords.latitude;
-  var lng = position.coords.latitude;
-  driverCoordinates = new google.maps.LatLng(lat, lng);
+  var lng = position.coords.longitude;
+  driverCoordinates ={lat:lat, lng:lng};
   //to insure that the location isn't update before the driver becomes active
   if(isActive){
     $.ajax({
@@ -40,41 +42,30 @@ function trackPosition() {
 function toggleFoundRider(rider){
   console.log(rider);
   console.log(driverCoordinates);
-  var driverAddress;
-  var riderAddress;
   console.log("found Rider and updating view");
   $('#waitting-state').removeClass('active');
   $('#ride-request').addClass('active');
   $('.rider-name').html(rider.rider_name);
-  var riderCoordinates = new google.maps.LatLng(rider.pickup_lat, rider.pickup_long);
+  var riderCoordinates = {lat:rider.pickup_lat, lng:rider.pickup_long};
   console.log(riderCoordinates);
-  geocoder.geocode({'location': riderCoordinates}, function(results, status) {
-    if (status === 'OK') {
-      if (results[1]) {
-        riderAddress = results[1].formatted_address;
-      } else {
-        window.alert('No results found');
-      }
-    } else {
-      window.alert('Geocoder failed due to: ' + status);
-    }
-  });
-  geocoder.geocode({'location': driverCoordinates}, function(results, status) {
-    if (status === 'OK') {
-      if (results[1]) {
-        driverAddress = results[1].formatted_address;
-      } else {
-        window.alert('No results found');
-      }
-    } else {
-      window.alert('Geocoder failed due to: ' + status);
-    }
-  });
-  console.log(driverAddress);
-  console.log(riderAddress);
 
-  calculateAndDisplayRoute(directionsService,directionsDisplay,driverAddress,riderAddress);
+  calculateAndDisplayRoute(directionsService,directionsDisplay,driverCoordinates,riderCoordinates);
+  directionsDisplay.setMap(map);
 }
+
+// function calculateAndDisplayDriverRoute(directionsService, directionsDisplay, theOrigin, theDestination) {
+//     directionsService.route({
+//         origin: {lat:driverLat,lng:driverLng},
+//         destination: {lat:riderLat,lng:riderLng},
+//         travelMode: 'DRIVING'
+//     }, function(response, status) {
+//         if (status === 'OK') {
+//             directionsDisplay.setDirections(response);
+//         } else {
+//             window.alert('Directions request failed due to ' + status);
+//         }
+//     });
+// }
 
 
 
@@ -90,7 +81,7 @@ function checkForRider(){
       if(data == 'none'){
         console.log('no match yet');
       }else{
-        foundMatch = true;
+        foundRider = true;
         console.log(data.pickup_lat);
         console.log(data.pickup_long);
         console.log(data.rider_name);
