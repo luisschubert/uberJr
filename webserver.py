@@ -192,6 +192,9 @@ def logout():
             # remove the driver from the activedrivers table
             ActiveDrivers.query.filter_by(id = user.id).delete()
             db.session.commit()
+        else:
+            Riders.query.filter_by(rider_id=user.id).delete()
+            db.session.commit()
         session.pop('email', None)
         return redirect(url_for('home'))
 
@@ -461,6 +464,9 @@ def api_requestdriver():
     timeToRider = 1000000;
     closestDriver = ActiveDrivers.query.filter_by(paired=False).first()
     if closestDriver is None:
+        riderid = Users.query.filter_by(email = session['email']).first().id
+        Riders.query.filter_by(rider_id=riderid).delete()
+        db.session.commit()
         return "No drivers available. Check back later!"
     else:
         availdrivers = ActiveDrivers.query.filter_by(paired=False).all()

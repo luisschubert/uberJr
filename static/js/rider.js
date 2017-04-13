@@ -10,6 +10,11 @@ function toggleFoundDriver(driverName, carModel, carColor, plates, pickupTime) {
   //$('.cost').html(cost);
 }
 
+function toggleNoDrivers() {
+    $('.sidebar-state').removeClass('active'); //disables any active
+    $('#no-drivers').addClass('active');
+}
+
 function toggleRideCompleted() {
     $("body.rider").removeClass('side-bar-active');
     //$("destinationRider").val("");
@@ -24,7 +29,6 @@ function updateDriverMarkers(){
       console.log(curMarkers[i]);
       driverslocations[i][1] = driverslocations[i][1]+0.005;
       driverslocations[i][2] = driverslocations[i][2]+0.005;
-
       curMarkers[i].setPosition(new google.maps.LatLng(driverslocations[i][1], driverslocations[i][2]))
   }
   counter = counter +1;
@@ -102,24 +106,25 @@ function requestDriver(origin, destination) {
         'destination': destination
       },
       success: function(data,status) {
-        rideCompleted = false;
-        checkRideCompleted();
-        console.log(status);
-        console.log(data);
-        toggleFoundDriver(data.name, data.make, data.color, data.license_plate, data.pickup_eta);
+        if (data == 'No drivers available. Check back later!') {
+            toggleNoDrivers();
+        } else {
+            rideCompleted = false;
+            checkRideCompleted();
+            console.log(status);
+            console.log(data);
+            toggleFoundDriver(data.name, data.make, data.color, data.license_plate, data.pickup_eta);
+        }
       }
     });
 }
 
 
 function requestRide() {
-    //requestDriver()
     console.log("requesting ride");
     var originA = document.getElementById('originRider').value;
     var destinationA = document.getElementById('destinationRider').value;
     var formData = {
-        //'origin': $('input[name=origin]').val(),
-        //'destination': $('input[name=destination]').val()
         'origin': originA,
         'destination': destinationA
     }

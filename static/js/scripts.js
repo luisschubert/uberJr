@@ -31,6 +31,11 @@ $(document).ready(function() {
         e.preventDefault();
         completeRide();
     });
+    $('#retry-ride-request').click( function(e) {
+        e.preventDefault();
+        $("body.rider").removeClass('side-bar-active');
+        $(".overlay.destination").show();
+    });
     getLocation();
 });
 
