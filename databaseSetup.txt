@@ -181,7 +181,12 @@ CREATE TABLE rides (
     pickup_lat double precision NOT NULL,
     pickup_long double precision NOT NULL,
     dest_lat double precision NOT NULL,
-    dest_long double precision NOT NULL
+    dest_long double precision NOT NULL,
+    rideAccepted boolean DEFAULT false,
+    pickedUp boolean DEFAULT false,
+    complete boolean DEFAULT false
+
+
 );
 
 
