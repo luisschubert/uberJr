@@ -1,5 +1,12 @@
 var isActive = false;
 var driverCoordinates;
+
+
+$(document).ready(function() {
+    trackPosition();
+    checkForRider();
+});
+
 function updateLocation(position){
   var lat = position.coords.latitude;
   var lng = position.coords.latitude;
@@ -29,10 +36,6 @@ function trackPosition() {
     }
 }
 
-$(document).ready(function() {
-    trackPosition();
-    checkForRider();
-});
 
 function toggleFoundRider(rider){
   console.log(rider);
