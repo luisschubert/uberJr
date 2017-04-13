@@ -505,7 +505,7 @@ def api_requestdriver():
         driverinfo = Drivers.query.filter_by(driver_id = closestdriverid).first()
         # calculate ETA
         pickup_eta = datetime.now() + timedelta(seconds=timeToRider)
-        info = {'name': drivername, 'license_plate': driverinfo.license_plate, 'color': driverinfo.car_color, 'make': driverinfo.car_make, 'pickup_eta': pickup_eta.strftime("%H:%M %p")}
+        info = {'name': drivername, 'license_plate': driverinfo.license_plate, 'color': driverinfo.car_color, 'make': driverinfo.car_make, 'pickup_eta': pickup_eta.strftime("%I:%M %p").lstrip("0").replace(" 0", " ")}
         return jsonify(info)
 
 if __name__ == '__main__':

@@ -7,7 +7,7 @@ var destCoordinates;
 
 $(document).ready(function() {
     trackPosition();
-    checkForRider();
+    //checkForRider();
 });
 
 function updateLocation(position){
@@ -144,6 +144,7 @@ function readyDrive() {
         data: formData,
         success: function(data, status) {
             //what to do when data is returned
+            checkForRider();
             console.log(status + " : " + data);
             $(".overlay.destination").hide(); setTimeout(function() {
                 $("body.driver").addClass('side-bar-active');
