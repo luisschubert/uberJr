@@ -47,6 +47,21 @@ function showPosition(position) {
     showAvailableDrivers(lat,lng);
 }
 
+<<<<<<< HEAD
+function requestDriver(origin,destination){
+  $.ajax({
+    url:'api/requestDriver',
+    type: 'POST',
+    data:{
+      'origin': origin,
+      'destination': destination,
+    },
+    success: function(data,status){
+      console.log(status);
+      console.log(data);
+    }
+  })
+=======
 function requestDriver(origin, destination) {
     $.ajax({
       url:'api/requestdriver',
@@ -60,6 +75,7 @@ function requestDriver(origin, destination) {
         console.log(data);
       }
     });
+>>>>>>> 3c1ddd3019a3ba764c18f9aedd183773dd76b319
 }
 
 function requestRide() {
