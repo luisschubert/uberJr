@@ -11,11 +11,11 @@
 		  <span class="inner2"></span>
 		  <span class="inner3"></span>
 		</div>
-		<p class="lght">Waitting for rider's request</p>
+		<p class="lght">Waiting for ride request</p>
 	</div>
 
     <div id="ride-request" class="sidebar-state">
-		<h1>New Rider Request!</h1>
+		<h1>New Ride Request!</h1>
 		<div class="divider"></div>
 		<h2 class="rider-info">Rider's Information</h4>
 		<p>Name: <span class="rider-name">John Doe</span></p>
@@ -32,6 +32,7 @@
     <!-- directions to pickup rider-->
 	<div id="directions-to-rider" class="sidebar-state">
 
+		<div class="divider"></div>
 		<!--<a href="" class="button">Ready to pick up</a>-->
 		<form id="pickupReady" action="/api/pickup" method="POST">
 			<input type="hidden" id="pickupReadyField" name="ready" value="true">
@@ -44,7 +45,11 @@
 	<div id="directions-to-destination" class="sidebar-state">
 
 		<div class="divider"></div>
-		<a href="" class="button">Ride Completed</a>
+		<!--<a href="" class="button">Ride Completed</a>-->
+		<form id="rideCompleted" action="/api/completeRide" method="POST">
+			<input type="hidden" id="rideCompletedField" name="completed" value="true">
+			<input type="submit" value="Ride Completed" class="button" onclick="">
+		</form>
 	</div>
 
 

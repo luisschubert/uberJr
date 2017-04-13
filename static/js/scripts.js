@@ -27,6 +27,10 @@ $(document).ready(function() {
         e.preventDefault();
         pickup();
     });
+    $('#rideCompleted').submit(function(e) {
+        e.preventDefault();
+        completeRide();
+    });
     getLocation();
 });
 

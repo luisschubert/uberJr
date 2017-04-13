@@ -190,7 +190,7 @@ def logout():
             driver.is_active = False
             db.session.commit()
             # remove the driver from the activedrivers table
-            activedriver = ActiveDrivers.query.filter_by(id = user.id).delete()
+            ActiveDrivers.query.filter_by(id = user.id).delete()
             db.session.commit()
         session.pop('email', None)
         return redirect(url_for('home'))
@@ -388,6 +388,25 @@ def api_pickup():
         else:
             return "none"
 
+@app.route("/api/completeRide", methods=['POST'])
+def api_completeRide():
+    status = request.form.get('status')
+    if status == 'true':
+        driverid = Users.query.filter_by(email = session['email']).first().id
+        ride = Rides.query.filter_by(driver_id = driverid).first()
+        if ride is not None:
+            # remove ride request
+            Riders.query.filter_by(rider_id = ride.rider_id).delete()
+            # remove paired ride
+            Rides.query.filter_by(driver_id = driverid).delete()
+            #db.session.commit()
+            # set driver to not paired
+            driver = ActiveDrivers.query.filter_by(id = driverid).first()
+            driver.paired = False
+            db.session.commit()
+            return "ride request completed; driver is no longer paired"
+        else:
+            return "none"
 
 @app.route("/api/drive", methods=['POST'])
 def api_drive():

@@ -80,6 +80,14 @@ function togglePickedupRider(coords) {
     directionsDisplay.setPanel(document.getElementById("directions-to-destination"));
 }
 
+function toggleCompletedRide() {
+    $('#directions-to-destination').removeClass('active');
+    $('#waitting-state').addClass('active');
+    foundRider = false;
+    trackPosition();
+    checkForRider();
+}
+
 // function calculateAndDisplayDriverRoute(directionsService, directionsDisplay, theOrigin, theDestination) {
 //     directionsService.route({
 //         origin: {lat:driverLat,lng:driverLng},
@@ -93,9 +101,6 @@ function togglePickedupRider(coords) {
 //         }
 //     });
 // }
-
-
-
 
 var foundRider = false;
 function checkForRider(){
@@ -164,6 +169,27 @@ function pickup() {
                 console.log(data.dest_lat);
                 console.log(data.dest_long);
                 togglePickedupRider(data);
+            }
+        }
+    });
+}
+
+function completeRide() {
+    console.log("running");
+    var formData = {
+        'status': $('input[name=completed]').val()
+    }
+    $.ajax({
+        url: '/api/completeRide',
+        type: 'POST',
+        data: formData,
+        success: function(data, status) {
+            //what to do when data is returned
+            if (data == 'none') {
+                console.log('ride not completed');
+            } else {
+                console.log(data);
+                toggleCompletedRide();
             }
         }
     });
