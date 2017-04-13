@@ -486,7 +486,10 @@ def api_requestdriver():
         new_ride = Rides(riderid, closestdriverid, rider_origin_lat, rider_origin_long, rider_dest_lat, rider_dest_long, False, False, False)
         db.session.add(new_ride)
         db.session.commit()
-        return "found"
+        drivername = Users.query.filter_by(id = closestdriverid).first().name
+        driverinfo = Drivers.query.filter_by(driver_id = closestdriverid).first()
+        info = {'name': drivername, 'license_plate': driverinfo.license_plate, 'color': driverinfo.car_color, 'make': driverinfo.car_make}
+        return jsonify(info)
 
 if __name__ == '__main__':
     app.run(debug=True)

@@ -1,4 +1,7 @@
-function updateDriverInfo(driverName, carModel, carColor,plates, arrivalTime,cost){
+//function updateDriverInfo(driverName, carModel, carColor,plates, arrivalTime,cost){
+function toggleFoundDriver(driverName, carModel, carColor, plates) {
+  $('#waitting-state').removeClass('active');
+  $('#ride-request').addClass('active');
   $('.driver-name').html(driverName);
   $('.car-model').html(carModel);
   $('.car-color').html(carColor);
@@ -64,6 +67,7 @@ function requestDriver(origin, destination) {
       success: function(data,status) {
         console.log(status);
         console.log(data);
+        toggleFoundDriver(data.name, data.make, data.color, data.license_plate);
       }
     });
 }
