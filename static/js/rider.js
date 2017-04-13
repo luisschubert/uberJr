@@ -9,6 +9,13 @@ function toggleFoundDriver(driverName, carModel, carColor, plates, pickupTime) {
   $('.time').html(pickupTime);
   //$('.cost').html(cost);
 }
+
+function toggleRideCompleted() {
+    $(".overlay.destination").show();
+    $("body.rider").removeClass('side-bar-active');
+    getLocation();
+}
+
 var counter = 1;
 function updateDriverMarkers(){
   console.log("updating location " + counter);
@@ -23,6 +30,28 @@ function updateDriverMarkers(){
   setTimeout(updateDriverMarkers,5000);
 }
 
+var rideCompleted;
+function checkRideCompleted(){
+  $.ajax({
+    url:'api/checkRideCompleted',
+    type: 'POST',
+    success: function(data,status){
+      console.log(status);
+      console.log(data);
+      if(data == 'true'){
+        rideCompleted = true;
+        console.log("ride completed")
+        toggleRideCompleted();
+      }else{
+        console.log("ride is still in progress")
+      }
+    }
+  })
+  if(!rideCompleted){
+    setTimeout(checkRideCompleted, 10000);
+  }
+}
+
 function getCurrentAddress(lat,lng){
   $.ajax({
     url:'https://maps.googleapis.com/maps/api/geocode/json?latlng='+lat+','+lng+'&key=AIzaSyBnXUp2Txy1C2OyYp0crd8iyaIDSb-N8oU',
@@ -35,7 +64,6 @@ function getCurrentAddress(lat,lng){
       $('#originRider').val(address);
       //removes the placeholder text
       //$('#originRider').removeAttr('placeholder');
-
     }
   });
 }
@@ -55,6 +83,14 @@ function showAvailableDrivers(lat,lng){
   })
 }
 
+function trackPosition() {
+    if (navigator.geolocation) {
+        navigator.geolocation.watchPosition(updateLocation);
+    } else {
+        console.log("Geolocation is not supported by this browser.");
+    }
+}
+
 function requestDriver(origin, destination) {
   console.log("called requestDriver")
     $.ajax({
@@ -65,6 +101,8 @@ function requestDriver(origin, destination) {
         'destination': destination
       },
       success: function(data,status) {
+        rideCompleted = false;
+        checkRideCompleted();
         console.log(status);
         console.log(data);
         toggleFoundDriver(data.name, data.make, data.color, data.license_plate, data.pickup_eta);
@@ -155,7 +193,6 @@ function requestRide() {
                 //$("#cost wrapper").text("1337");
                 $(".overlay.destination").hide(); setTimeout(function() {
                     $("body.rider").addClass('side-bar-active');
-                    $("#cost wrapper").text("1337");
                 }, 200);
             }
     });

@@ -374,6 +374,15 @@ def api_checkForRider():
     else:
         return "none"
 
+@app.route("/api/checkRideCompleted", methods=['POST'])
+def api_checkRideCompleted():
+    riderid = Users.query.filter_by(email = session['email']).first().id
+    rider_ride = Riders.query.filter_by(rider_id=riderid).first()
+    if rider_ride is None:
+        return "true"
+    else:
+        return "false"
+
 @app.route("/api/pickup", methods=['POST'])
 def api_pickup():
     status = request.form.get('status')
