@@ -46,20 +46,19 @@ function showPosition(position) {
     getCurrentAddress(lat,lng);
 }
 
-function requestDriver(origin,destination){
-  $.ajax({
-    url:'api/requestDriver',
-    type: 'POST',
-    data:{
-      'origin': origin,
-      'destination': destination,
-    },
-    success: function(data,status){
-      console.log(status);
-      console.log(data);
-    }
-  })
-
+function requestDriver(origin, destination) {
+    $.ajax({
+      url:'api/requestdriver',
+      type: 'POST',
+      data:{
+        'origin': origin,
+        'destination': destination
+      },
+      success: function(data,status) {
+        console.log(status);
+        console.log(data);
+      }
+    });
 }
 
 function requestRide() {
@@ -79,6 +78,7 @@ function requestRide() {
             data: formData,
             success: function(data, status) {
                 //what to do when data is returned
+                requestDriver(originA, destinationA);
                 console.log(status);
                 console.log(data);
                 service.getDistanceMatrix({
