@@ -450,7 +450,7 @@ def api_requestdriver():
         riderid = Users.query.filter_by(email = session['email']).first().id
         print("riderid:", riderid)
         closestdriverid = ActiveDrivers.query.filter_by(id=closestDriver.id).first().id
-        new_ride = Rides(riderid, closestdriverid, rider_origin_lat, rider_origin_long, rider_dest_lat, rider_dest_long)
+        new_ride = Rides(riderid, closestdriverid, rider_origin_lat, rider_origin_long, rider_dest_lat, rider_dest_long, False, False, False)
         db.session.add(new_ride)
         db.session.commit()
         return "found"
