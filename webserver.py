@@ -100,14 +100,20 @@ class Rides(db.Model):
     pickup_long = db.Column(db.Float)
     dest_lat = db.Column(db.Float)
     dest_long = db.Column(db.Float)
+    accepted = db.Column(db.Boolean)
+    pickedup = db.Column(db.Boolean)
+    complete = db.Column(db.Boolean)
 
-    def __init__(self, rider_id, driver_id, pickup_lat, pickup_long, dest_lat, dest_long):
+    def __init__(self, rider_id, driver_id, pickup_lat, pickup_long, dest_lat, dest_long, accepted, pickedup, complete):
         self.rider_id = rider_id
         self.driver_id = driver_id
         self.pickup_lat = pickup_lat
         self.pickup_long = pickup_long
         self.dest_lat = dest_lat
         self.dest_long = dest_long
+        self.accepted = accepted
+        self.pickedup = pickedup
+        self.complete = complete
 
 #ROUTES
 @app.route("/")
