@@ -1,9 +1,9 @@
 var isActive = false;
-var driverLocation;
+var driverCoordinates;
 function updateLocation(position){
   var lat = position.coords.latitude;
   var lng = position.coords.latitude;
-  var driverLocation = new google.maps.LatLng(lat, lng);
+  driverCoordinates = new google.maps.LatLng(lat, lng);
   //to insure that the location isn't update before the driver becomes active
   if(isActive){
     $.ajax({
@@ -35,12 +35,42 @@ $(document).ready(function() {
 });
 
 function toggleFoundRider(rider){
+  console.log(rider);
+  console.log(driverCoordinates);
+  var driverAddress;
+  var riderAddress;
   console.log("found Rider and updating view");
   $('#waitting-state').removeClass('active');
   $('#ride-request').addClass('active');
   $('.rider-name').html(rider.rider_name);
-  var riderLocation = new google.maps.LatLng(rider.pickup_lat, rider.pickup_long);
-  calculateAndDisplayRoute(directionsService,directionsDisplay,driverLocation,riderLocation);
+  var riderCoordinates = new google.maps.LatLng(rider.pickup_lat, rider.pickup_long);
+  console.log(riderCoordinates);
+  geocoder.geocode({'location': riderCoordinates}, function(results, status) {
+    if (status === 'OK') {
+      if (results[1]) {
+        riderAddress = results[1].formatted_address;
+      } else {
+        window.alert('No results found');
+      }
+    } else {
+      window.alert('Geocoder failed due to: ' + status);
+    }
+  });
+  geocoder.geocode({'location': driverCoordinates}, function(results, status) {
+    if (status === 'OK') {
+      if (results[1]) {
+        driverAddress = results[1].formatted_address;
+      } else {
+        window.alert('No results found');
+      }
+    } else {
+      window.alert('Geocoder failed due to: ' + status);
+    }
+  });
+  console.log(driverAddress);
+  console.log(riderAddress);
+
+  calculateAndDisplayRoute(directionsService,directionsDisplay,driverAddress,riderAddress);
 }
 
 
