@@ -47,6 +47,17 @@ function toggleFoundRider(rider){
   $('#ride-request').addClass('active');
   $('.rider-name').html(rider.rider_name);
   var riderCoordinates = {lat:rider.pickup_lat, lng:rider.pickup_long};
+  geocoder.geocode({'location': riderCoordinates}, function(results, status) {
+      if (status === 'OK') {
+          if (results[0]) {
+              $('.rider-location').html(results[0].formatted_address);
+          } else {
+              window.alert('No results found');
+          }
+      } else {
+          window.alert('Geocoder failed due to: ' + status);
+      }
+  });
   console.log(riderCoordinates);
 
   calculateAndDisplayRoute(directionsService,directionsDisplay,driverCoordinates,riderCoordinates);
