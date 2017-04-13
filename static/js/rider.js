@@ -1,7 +1,7 @@
 //function updateDriverInfo(driverName, carModel, carColor,plates, arrivalTime,cost){
 function toggleFoundDriver(driverName, carModel, carColor, plates) {
-  $('#waitting-state').removeClass('active');
-  $('#ride-request').addClass('active');
+  $('.sidebar-state').removeClass('active'); //disables any active
+  $('#driver-found').addClass('active');
   $('.driver-name').html(driverName);
   $('.car-model').html(carModel);
   $('.car-color').html(carColor);

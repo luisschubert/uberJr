@@ -27,22 +27,18 @@
             margin-bottom: 4px;
          }
       }
+   }
 
-      #waitting-state,
-      #directions-to-rider,
-      #ride-request,
-      #directions-to-rider,
-      #directions-to-destination {
-         display: none;
+   .sidebar-state {
+      display: none;
 
-         &.active {
-            display: block;
-         }
+      &.active {
+         display: block;
       }
+   }
 
-      .loader {
-         margin-top: 30vh;
-      }
+   .loader {
+      margin-top: 30vh;
    }
 
    p.lght {
