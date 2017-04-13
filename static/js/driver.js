@@ -44,7 +44,8 @@ function toggleFoundRider(rider){
   console.log(driverCoordinates);
   console.log("found Rider and updating view");
   $('#waitting-state').removeClass('active');
-  $('#ride-request').addClass('active');
+  //$('#ride-request').addClass('active');
+  $('#directions-to-rider').addClass('active');
   $('.rider-name').html(rider.rider_name);
   var riderCoordinates = {lat:rider.pickup_lat, lng:rider.pickup_long};
   geocoder.geocode({'location': riderCoordinates}, function(results, status) {
@@ -62,6 +63,7 @@ function toggleFoundRider(rider){
 
   calculateAndDisplayRoute(directionsService,directionsDisplay,driverCoordinates,riderCoordinates);
   directionsDisplay.setMap(map);
+  directionsDisplay.setPanel(document.getElementById("directions-to-rider"));
 }
 
 // function calculateAndDisplayDriverRoute(directionsService, directionsDisplay, theOrigin, theDestination) {
