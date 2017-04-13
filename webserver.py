@@ -18,7 +18,7 @@ bcrypt = Bcrypt(app)
 # if r.status_code ==200:
 #     response =r.content
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://luisschubert@localhost:5432/uberjr'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres@localhost:5432/uberjr'
 db = SQLAlchemy(app)
 
 class Users(db.Model):
