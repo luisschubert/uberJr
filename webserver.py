@@ -174,6 +174,14 @@ def logout():
 def geolocationTest():
     return render_template("geolocationTest.html")
 
+#return all available drivers in your area
+@app.route("/api/getDrivers", methods=['POST'])
+def getDrivers():
+    lng = request.form.get('lng')
+    lat = request.form.get('lat')
+
+    return "no available driver"
+
 #API for the frontend to request estimate travel time/cost based on user GPS location and destination Address
 @app.route("/api/getTravelTime", methods=['POST'])
 def api_getTravelInfo():
