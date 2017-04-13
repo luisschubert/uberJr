@@ -100,9 +100,9 @@ class Rides(db.Model):
     dest_lat = db.Column(db.Float)
     dest_long = db.Column(db.Float)
 
-    def __init__(self, driver_id, rider_id, pickup_lat, pickup_long, dest_lat, dest_long):
-        self.driver_id = driver_id
+    def __init__(self, rider_id, driver_id, pickup_lat, pickup_long, dest_lat, dest_long):
         self.rider_id = rider_id
+        self.driver_id = driver_id
         self.pickup_lat = pickup_lat
         self.pickup_long = pickup_long
         self.dest_lat = dest_lat
@@ -398,35 +398,38 @@ def api_requestdriver():
     # for each active driver that hasn't been paired
     timeToRider = 1000000;
     closestDriver = ActiveDrivers.query.filter_by(paired=False).first()
-    availdrivers = ActiveDrivers.query.filter_by(paired=False).all()
-    for availdriver in availdrivers:
-        # compute their current location's gps coords
-        driverOriginGPS = "%s,%s" % (availdriver.current_lat,availdriver.current_long)
-        print(driverOriginGPS)
-        # find closest driver in terms of travel time
-        r = requests.get("https://maps.googleapis.com/maps/api/distancematrix/json?units=imperial&origins=%s&destinations=%s&key=%s&departure_time=%s" % (driverOriginGPS,riderOriginGPS,apiKey,departureTime))
-        print r
-        if r.status_code == 200:
-            response = r.content
-            parsed_response = json.loads(response)
-            travelTime = parsed_response[u'rows'][0][u'elements'][0][u'duration'][u'value']
-            print "Travel time is", travelTime/60, "minutes."
-            # if driver is within a range of 15 minutes away
-            #if travelTime < 900:
-            if travelTime < timeToRider:
-                timeToRider = travelTime
-                closestDriver = availdriver
-    # mark the closest driver as paired
-    # broken here
-    closestDriver.paired = True
-    db.session.commit()
-    # pair the rider + driver
-    riderid = Users.query.filter_by(email = session['email']).first().id
-    closestdriverid = ActiveDrivers.query.filter_by(id=closestDriver.id).first().id
-    new_ride = Rides(riderid, closestdriverid, rider_origin_lat, rider_origin_long, rider_dest_lat, rider_dest_long)
-    db.session.add(new_ride)
-    db.session.commit()
-    return "found"
+    if closestDriver is None:
+        return "No drivers available. Check back later!"
+    else:
+        availdrivers = ActiveDrivers.query.filter_by(paired=False).all()
+        for availdriver in availdrivers:
+            # compute their current location's gps coords
+            driverOriginGPS = "%s,%s" % (availdriver.current_lat,availdriver.current_long)
+            print(driverOriginGPS)
+            # find closest driver in terms of travel time
+            r = requests.get("https://maps.googleapis.com/maps/api/distancematrix/json?units=imperial&origins=%s&destinations=%s&key=%s&departure_time=%s" % (driverOriginGPS,riderOriginGPS,apiKey,departureTime))
+            print r
+            if r.status_code == 200:
+                response = r.content
+                parsed_response = json.loads(response)
+                travelTime = parsed_response[u'rows'][0][u'elements'][0][u'duration'][u'value']
+                print "Travel time is", travelTime/60, "minutes."
+                # if driver is within a range of 15 minutes away
+                #if travelTime < 900:
+                if travelTime < timeToRider:
+                    timeToRider = travelTime
+                    closestDriver = availdriver
+        # mark the closest driver as paired
+        closestDriver.paired = True
+        db.session.commit()
+        # pair the rider + driver
+        riderid = Users.query.filter_by(email = session['email']).first().id
+        print("riderid:", riderid)
+        closestdriverid = ActiveDrivers.query.filter_by(id=closestDriver.id).first().id
+        new_ride = Rides(riderid, closestdriverid, rider_origin_lat, rider_origin_long, rider_dest_lat, rider_dest_long)
+        db.session.add(new_ride)
+        db.session.commit()
+        return "found"
 
 if __name__ == '__main__':
     app.run(debug=True)
