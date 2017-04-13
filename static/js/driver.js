@@ -1,7 +1,9 @@
 var isActive = false;
+var driverLocation;
 function updateLocation(position){
   var lat = position.coords.latitude;
   var lng = position.coords.latitude;
+  var driverLocation = new google.maps.LatLng(lat, lng);
   //to insure that the location isn't update before the driver becomes active
   if(isActive){
     $.ajax({
@@ -32,6 +34,15 @@ $(document).ready(function() {
     checkForRider();
 });
 
+function toggleFoundRider(rider){
+  console.log("found Rider and updating view");
+  $('#waitting-state').removeClass('active');
+  $('#ride-request').addClass('active');
+  $('.rider-name').html(rider.rider_name);
+  var riderLocation = new google.maps.LatLng(rider.pickup_lat, rider.pickup_long);
+  calculateAndDisplayRoute(directionsService,directionsDisplay,driverLocation,riderLocation);
+}
+
 
 
 
@@ -50,6 +61,7 @@ function checkForRider(){
         console.log(data.pickup_lat);
         console.log(data.pickup_long);
         console.log(data.rider_name);
+        toggleFoundRider(data);
       }
     }
   })
