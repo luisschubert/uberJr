@@ -34,6 +34,9 @@ function getCurrentAddress(lat,lng){
       //$('#originRider').removeAttr('placeholder');
 
     }
-});
+  });
+}
 
+function showAvailableDrivers(lat,lng){
+  
 }

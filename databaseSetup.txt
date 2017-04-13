@@ -24,20 +24,6 @@ CREATE TABLE location (
 
 
 --
--- Name: rides; Type: TABLE; Schema: public; Owner: Daniel
---
-
-CREATE TABLE rides (
-    rider_id integer,
-    driver_id integer,
-    pick_up_addr double precision NOT NULL,
-    destination_addr double precision NOT NULL,
-    distance real
-);
-
-
-
---
 -- Name: users; Type: TABLE; Schema: public; Owner: Daniel
 --
 
@@ -112,27 +98,11 @@ ALTER TABLE ONLY drivers
 
 
 --
--- Name: rides driver_id; Type: FK CONSTRAINT; Schema: public; Owner: Daniel
---
-
-ALTER TABLE ONLY rides
-    ADD CONSTRAINT driver_id FOREIGN KEY (driver_id) REFERENCES users(id) ON DELETE CASCADE;
-
-
---
 -- Name: location location_id; Type: FK CONSTRAINT; Schema: public; Owner: Daniel
 --
 
 ALTER TABLE ONLY location
     ADD CONSTRAINT location_id FOREIGN KEY (location_id) REFERENCES users(id) ON DELETE CASCADE;
-
-
---
--- Name: rides rider_id; Type: FK CONSTRAINT; Schema: public; Owner: Daniel
---
-
-ALTER TABLE ONLY rides
-    ADD CONSTRAINT rider_id FOREIGN KEY (rider_id) REFERENCES users(id) ON DELETE CASCADE;
 
 
 --
@@ -199,3 +169,24 @@ ALTER TABLE ONLY activedrivers
 
 ALTER TABLE ONLY activedrivers
     ADD CONSTRAINT id FOREIGN KEY (id) REFERENCES drivers(driver_id) ON DELETE CASCADE;
+
+
+--
+-- Name: rides; Type: TABLE; Schema: public; Owner: Daniel
+--
+
+CREATE TABLE rides (
+    rider_id integer NOT NULL,
+    driver_id integer NOT NULL,
+    pickup_lat double precision NOT NULL,
+    pickup_long double precision NOT NULL,
+    dest_lat double precision NOT NULL,
+    dest_long double precision NOT NULL
+);
+
+
+ALTER TABLE ONLY rides
+    ADD CONSTRAINT driver_id FOREIGN KEY (driver_id) REFERENCES activedrivers(id) ON DELETE CASCADE;
+
+ALTER TABLE ONLY rides
+    ADD CONSTRAINT rides_pkey PRIMARY KEY (driver_id);

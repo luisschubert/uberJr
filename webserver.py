@@ -18,7 +18,7 @@ bcrypt = Bcrypt(app)
 # if r.status_code ==200:
 #     response =r.content
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres@localhost:5432/uberjr'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://luisschubert@localhost:5432/uberjr'
 db = SQLAlchemy(app)
 
 class Users(db.Model):
@@ -65,6 +65,7 @@ class ActiveDrivers(db.Model):
     current_lat = db.Column(db.Float)
     current_long = db.Column(db.Float)
     paired = db.Column(db.Boolean)
+    paired_rel = db.relationship('Rides', backref='activedrivers', primaryjoin='ActiveDrivers.id == Rides.driver_id', uselist=False)
 
     def __init__(self, id, current_lat, current_long, paired):
         self.id = id
@@ -89,6 +90,23 @@ class Riders(db.Model):
         self.origin_long = origin_long
         self.destination_lat = destination_lat
         self.destination_long = destination_long
+
+class Rides(db.Model):
+    __tablename__ = 'rides'
+    rider_id = db.Column(db.Integer)
+    driver_id = db.Column(db.Integer, db.ForeignKey('activedrivers.id'), primary_key=True)
+    pickup_lat = db.Column(db.Float)
+    pickup_long = db.Column(db.Float)
+    dest_lat = db.Column(db.Float)
+    dest_long = db.Column(db.Float)
+
+    def __init__(self, driver_id, rider_id, pickup_lat, pickup_long, dest_lat, dest_long):
+        self.driver_id = driver_id
+        self.rider_id = rider_id
+        self.pickup_lat = pickup_lat
+        self.pickup_long = pickup_long
+        self.dest_lat = dest_lat
+        self.dest_long = dest_long
 
 #ROUTES
 @app.route("/")
@@ -173,6 +191,15 @@ def logout():
 @app.route("/geolocationTest")
 def geolocationTest():
     return render_template("geolocationTest.html")
+
+
+#return all available drivers in your area
+@app.route("/api/getDrivers", methods=['POST'])
+def getDrivers():
+    lng = request.form.get('lng')
+    lat = request.form.get('lat')
+
+    return "no available driver"
 
 #API for the frontend to request estimate travel time/cost based on user GPS location and destination Address
 @app.route("/api/getTravelTime", methods=['POST'])
@@ -327,6 +354,59 @@ def api_drive():
         db.session.add(new_active_driver)
         db.session.commit()
         return "added to ready to drive pool"
+
+@app.route("/api/requestdriver", methods=['POST'])
+def api_requestdriver():
+    # origin of rider
+    rider_origin = request.form.get('origin')
+    print(rider_origin)
+    rider_dest = request.form.get('destination')
+    print(rider_dest)
+    # calculate rider's current location gps coords
+    geocode_rider_origin = gmaps.geocode(rider_origin)
+    parsed_rider_origin = json.loads(json.dumps(geocode_rider_origin))
+    rider_origin_lat = parsed_rider_origin[0][u'geometry'][u'location'][u'lat']
+    rider_origin_long = parsed_rider_origin[0][u'geometry'][u'location'][u'lng']
+    riderOriginGPS = "%s,%s" % (rider_origin_lat,rider_origin_long)
+
+    geocode_rider_dest = gmaps.geocode(rider_dest)
+    parsed_rider_dest = json.loads(json.dumps(geocode_rider_dest))
+    rider_dest_lat = parsed_rider_dest[0][u'geometry'][u'location'][u'lat']
+    rider_dest_long = parsed_rider_dest[0][u'geometry'][u'location'][u'lng']
+    departureTime = "now"
+
+    # for each active driver that hasn't been paired
+    timeToRider = 1000000;
+    closestDriver = ActiveDrivers.query.filter_by(paired=False).first()
+    availdrivers = ActiveDrivers.query.filter_by(paired=False).all()
+    for availdriver in availdrivers:
+        # compute their current location's gps coords
+        driverOriginGPS = "%s,%s" % (availdriver.current_lat,availdriver.current_long)
+        print(driverOriginGPS)
+        # find closest driver in terms of travel time
+        r = requests.get("https://maps.googleapis.com/maps/api/distancematrix/json?units=imperial&origins=%s&destinations=%s&key=%s&departure_time=%s" % (driverOriginGPS,riderOriginGPS,apiKey,departureTime))
+        print r
+        if r.status_code == 200:
+            response = r.content
+            parsed_response = json.loads(response)
+            travelTime = parsed_response[u'rows'][0][u'elements'][0][u'duration'][u'value']
+            print "Travel time is", travelTime/60, "minutes."
+            # if driver is within a range of 15 minutes away
+            #if travelTime < 900:
+            if travelTime < timeToRider:
+                timeToRider = travelTime
+                closestDriver = availdriver
+    # mark the closest driver as paired
+    # broken here
+    closestDriver.paired = True
+    db.session.commit()
+    # pair the rider + driver
+    riderid = Users.query.filter_by(email = session['email']).first().id
+    closestdriverid = ActiveDrivers.query.filter_by(id=closestDriver.id).first().id
+    new_ride = Rides(riderid, closestdriverid, rider_origin_lat, rider_origin_long, rider_dest_lat, rider_dest_long)
+    db.session.add(new_ride)
+    db.session.commit()
+    return "found"
 
 if __name__ == '__main__':
     app.run(debug=True)
