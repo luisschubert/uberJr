@@ -38,5 +38,16 @@ function getCurrentAddress(lat,lng){
 }
 
 function showAvailableDrivers(lat,lng){
-  
+  $.ajax({
+    url:'api/getDrivers',
+    type: 'POST',
+    data:{
+      'lat': lat,
+      'lng': lng,
+    },
+    success: function(data,status){
+      console.log(status);
+      console.log(data);
+    }
+  })
 }

@@ -179,8 +179,28 @@ def geolocationTest():
 def getDrivers():
     lng = request.form.get('lng')
     lat = request.form.get('lat')
+    #get all available drivers
+    allDrivers = ActiveDrivers.query.filter_by(paired=False).all()
+    #get all drivers who are some distance from rider
+    for driver in allDrivers:
+        print driver
+        print driver.current_lat
+        print driver.current_long
+        print "\n"
 
-    return "no available driver"
+    #calculate average pickup time
+    return "check it"
+
+@app.route("/api/updateDriverLocation",methods=['POST'])
+def updateDriverLocation():
+    driver = Users.query.filter_by(email = session['email']).first()
+    lng = request.form.get('lng')
+    lat = request.form.get('lat')
+    activeDriver = ActiveDrivers.query.filter_by(id= driver.id).first()
+    activeDriver.current_long = lng
+    activeDriver.current_lat = lat
+    db.session.commit()
+    return "updated driver\'s location"
 
 #API for the frontend to request estimate travel time/cost based on user GPS location and destination Address
 @app.route("/api/getTravelTime", methods=['POST'])

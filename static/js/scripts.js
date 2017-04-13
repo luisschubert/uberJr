@@ -44,6 +44,7 @@ function showPosition(position) {
     console.log(lat);
     console.log(lng);
     getCurrentAddress(lat,lng);
+    showAvailableDrivers(lat,lng);
 }
 
 function requestDriver(origin,destination){
@@ -59,7 +60,6 @@ function requestDriver(origin,destination){
       console.log(data);
     }
   })
-
 }
 
 function requestRide() {
@@ -151,6 +151,7 @@ function requestRide() {
 
 function readyDrive() {
     console.log("running");
+    isActive = true;
     console.log(curr_lat);
     console.log(curr_long);
     var formData = {
