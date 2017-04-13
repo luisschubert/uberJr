@@ -1,13 +1,13 @@
 //function updateDriverInfo(driverName, carModel, carColor,plates, arrivalTime,cost){
-function toggleFoundDriver(driverName, carModel, carColor, plates) {
+function toggleFoundDriver(driverName, carModel, carColor, plates, pickupTime) {
   $('.sidebar-state').removeClass('active'); //disables any active
   $('#driver-found').addClass('active');
   $('.driver-name').html(driverName);
   $('.car-model').html(carModel);
   $('.car-color').html(carColor);
   $('.car-plates').html(plates);
-  $('.time').html(arrivalTime);
-  $('.cost').html(cost);
+  $('.time').html(pickupTime);
+  //$('.cost').html(cost);
 }
 var counter = 1;
 function updateDriverMarkers(){
@@ -67,7 +67,7 @@ function requestDriver(origin, destination) {
       success: function(data,status) {
         console.log(status);
         console.log(data);
-        toggleFoundDriver(data.name, data.make, data.color, data.license_plate);
+        toggleFoundDriver(data.name, data.make, data.color, data.license_plate, data.pickup_eta);
       }
     });
 }

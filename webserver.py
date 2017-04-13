@@ -2,7 +2,7 @@ from flask import Flask,request,render_template,jsonify,url_for,make_response,re
 from flask_sqlalchemy import SQLAlchemy
 import json
 import tools
-from datetime import datetime
+from datetime import datetime, timedelta
 import requests
 from flask_bcrypt import Bcrypt
 import googlemaps
@@ -488,7 +488,9 @@ def api_requestdriver():
         db.session.commit()
         drivername = Users.query.filter_by(id = closestdriverid).first().name
         driverinfo = Drivers.query.filter_by(driver_id = closestdriverid).first()
-        info = {'name': drivername, 'license_plate': driverinfo.license_plate, 'color': driverinfo.car_color, 'make': driverinfo.car_make}
+        # calculate ETA
+        pickup_eta = datetime.now() + timedelta(seconds=timeToRider)
+        info = {'name': drivername, 'license_plate': driverinfo.license_plate, 'color': driverinfo.car_color, 'make': driverinfo.car_make, 'pickup_eta': pickup_eta.strftime("%H:%M %p")}
         return jsonify(info)
 
 if __name__ == '__main__':
