@@ -8,7 +8,8 @@ from flask_bcrypt import Bcrypt
 import googlemaps
 
 gmaps = googlemaps.Client(key='AIzaSyDhoFXFuPUf6BZtqoTUsssx9on-PQYxo4w')
-apiKey = "AIzaSyBSbiX832JWq30JrqzH4tj-HriK9eJhhNs"
+luis_apiKey = "AIzaSyBSbiX832JWq30JrqzH4tj-HriK9eJhhNs"
+apiKey = "AIzaSyClW4QIap2zcaZ_QaZJFndMO6HvB2Ts4bY"
 app = Flask(__name__)
 app.secret_key = '\x9a{\xfc\x86(0\x92=Y\xaf-\xdf\x05z\x91\xadL+\xdeP\xa3w\xc0\x07'
 bcrypt = Bcrypt(app)
@@ -355,6 +356,19 @@ def api_rider():
     db.session.commit()
     return "added ride request to table"
 
+@app.route("/api/checkForRider", methods=['POST'])
+def api_checkForRider():
+    # return response with rider's origin coords + rider's name
+    driverid = Users.query.filter_by(email = session['email']).first().id
+    driver_ride = Rides.query.filter_by(driver_id=driverid).first()
+    if driver_ride is not None:
+        ridername = Users.query.filter_by(id = driver_ride.rider_id).first().name
+        info = {'pickup_lat': driver_ride.pickup_lat, 'pickup_long': driver_ride.pickup_long, 'rider_name': ridername}
+        return jsonify(info)
+    else:
+        return "none"
+
+
 @app.route("/api/drive", methods=['POST'])
 def api_drive():
     status = request.form.get('status')
@@ -407,12 +421,16 @@ def api_requestdriver():
             driverOriginGPS = "%s,%s" % (availdriver.current_lat,availdriver.current_long)
             print(driverOriginGPS)
             # find closest driver in terms of travel time
-            r = requests.get("https://maps.googleapis.com/maps/api/distancematrix/json?units=imperial&origins=%s&destinations=%s&key=%s&departure_time=%s" % (driverOriginGPS,riderOriginGPS,apiKey,departureTime))
-            print r
-            if r.status_code == 200:
-                response = r.content
-                parsed_response = json.loads(response)
-                travelTime = parsed_response[u'rows'][0][u'elements'][0][u'duration'][u'value']
+            #hardcoded below
+            #r = requests.get("https://maps.googleapis.com/maps/api/distancematrix/json?units=imperial&origins=%s&destinations=%s&key=%s&departure_time=%s" % (driverOriginGPS,riderOriginGPS,apiKey,departureTime))
+            #print r
+            #if r.status_code == 200:
+            if True:
+                #response = r.content
+                #parsed_response = json.loads(response)
+                #print parsed_response
+                #travelTime = parsed_response[u'rows'][0][u'elements'][0][u'duration'][u'value']
+                travelTime = 921
                 print "Travel time is", travelTime/60, "minutes."
                 # if driver is within a range of 15 minutes away
                 #if travelTime < 900:
