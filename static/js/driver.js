@@ -2,7 +2,8 @@ var isActive = false;
 var driverCoordinates;
 var theLat = 0;
 var theLong = 0;
-
+var pickupCoordinates;
+var destCoordinates;
 
 $(document).ready(function() {
     trackPosition();
@@ -47,8 +48,8 @@ function toggleFoundRider(rider){
   //$('#ride-request').addClass('active');
   $('#directions-to-rider').addClass('active');
   $('.rider-name').html(rider.rider_name);
-  var riderCoordinates = {lat:rider.pickup_lat, lng:rider.pickup_long};
-  geocoder.geocode({'location': riderCoordinates}, function(results, status) {
+  pickupCoordinates = {lat:rider.pickup_lat, lng:rider.pickup_long};
+  geocoder.geocode({'location': pickupCoordinates}, function(results, status) {
       if (status === 'OK') {
           if (results[0]) {
               $('.rider-location').html(results[0].formatted_address);
@@ -59,11 +60,24 @@ function toggleFoundRider(rider){
           window.alert('Geocoder failed due to: ' + status);
       }
   });
-  console.log(riderCoordinates);
+  console.log(pickupCoordinates);
 
-  calculateAndDisplayRoute(directionsService,directionsDisplay,driverCoordinates,riderCoordinates);
+  calculateAndDisplayRoute(directionsService,directionsDisplay,driverCoordinates,pickupCoordinates);
   directionsDisplay.setMap(map);
   directionsDisplay.setPanel(document.getElementById("directions-to-rider"));
+}
+
+function togglePickedupRider(coords) {
+    console.log(coords);
+    console.log(pickupCoordinates);
+    console.log("picked up Rider and updating view");
+    $('#directions-to-rider').removeClass('active');
+    $('#directions-to-destination').addClass('active');
+    destCoordinates = {lat:coords.dest_lat, lng:coords.dest_long};
+    console.log("destCoordinates:" + destCoordinates);
+    calculateAndDisplayRoute(directionsService,directionsDisplay,pickupCoordinates,destCoordinates);
+    directionsDisplay.setMap(map);
+    directionsDisplay.setPanel(document.getElementById("directions-to-destination"));
 }
 
 // function calculateAndDisplayDriverRoute(directionsService, directionsDisplay, theOrigin, theDestination) {
@@ -99,6 +113,8 @@ function checkForRider(){
         console.log(data.pickup_long);
         console.log(data.rider_name);
         toggleFoundRider(data);
+        console.log("foundRider = " + foundRider);
+        foundRider = true;
       }
     }
   })
@@ -109,7 +125,7 @@ function checkForRider(){
 
 function readyDrive() {
     console.log("running");
-    isActive = true;
+    pickedUp = true;
     console.log(curr_lat);
     console.log(curr_long);
     var formData = {
@@ -127,6 +143,28 @@ function readyDrive() {
             $(".overlay.destination").hide(); setTimeout(function() {
                 $("body.driver").addClass('side-bar-active');
             }, 200);
+        }
+    });
+}
+
+function pickup() {
+    console.log("running");
+    var formData = {
+        'status': $('input[name=ready]').val()
+    }
+    $.ajax({
+        url: '/api/pickup',
+        type: 'POST',
+        data: formData,
+        success: function(data, status) {
+            //what to do when data is returned
+            if (data == 'none') {
+                console.log('pickup coords not found??');
+            } else {
+                console.log(data.dest_lat);
+                console.log(data.dest_long);
+                togglePickedupRider(data);
+            }
         }
     });
 }

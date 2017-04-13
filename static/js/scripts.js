@@ -23,6 +23,10 @@ $(document).ready(function() {
         e.preventDefault();
         readyDrive();
     });
+    $('#pickupReady').submit(function(e) {
+        e.preventDefault();
+        pickup();
+    });
     getLocation();
 });
 

@@ -374,6 +374,20 @@ def api_checkForRider():
     else:
         return "none"
 
+@app.route("/api/pickup", methods=['POST'])
+def api_pickup():
+    status = request.form.get('status')
+    if status == 'true':
+        driverid = Users.query.filter_by(email = session['email']).first().id
+        ride = Rides.query.filter_by(driver_id = driverid).first()
+        if ride is not None:
+            ride.pickedup = True
+            db.session.commit()
+            info = {'dest_lat': ride.dest_lat, 'dest_long': ride.dest_long}
+            return jsonify(info)
+        else:
+            return "none"
+
 
 @app.route("/api/drive", methods=['POST'])
 def api_drive():
