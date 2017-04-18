@@ -19,7 +19,7 @@ bcrypt = Bcrypt(app)
 # if r.status_code ==200:
 #     response =r.content
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://luisschubert@localhost:5432/uberjr'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://nityamshrestha@localhost:5432/uberjr2'
 db = SQLAlchemy(app)
 
 class Users(db.Model):
@@ -232,8 +232,10 @@ def getDrivers():
     #calculate average pickup time
     return "check it"
 
+#doesn't seems to be called
 @app.route("/api/updateDriverLocation",methods=['POST'])
 def updateDriverLocation():
+    print ("Inside updateDriverLocation...")
     driver = Users.query.filter_by(email = session['email']).first()
     lng = request.form.get('lng')
     lat = request.form.get('lat')
@@ -451,6 +453,16 @@ def api_drive():
         db.session.add(new_active_driver)
         db.session.commit()
         return "added to ready to drive pool"
+
+#nityam's update
+@app.route("/api/activeDriverUpdate", methods=['POST'])
+def api_activeDriverUpdate():
+    status = request.form.get('status')
+    currentlat = request.form.get('originLat')
+    currentlong = request.form.get('originLong')
+    print('Updated: ',currentlat)
+    print('Updated: ', currentlong)
+    return "Driver's location updated on the database"
 
 @app.route("/api/acceptDeclineRide", methods=['POST'])
 def api_acceptDeclineRide():

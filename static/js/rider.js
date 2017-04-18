@@ -29,7 +29,7 @@ function updateDriverMarkers() {
         console.log(curMarkers[i]);
         driverslocations[i][1] = driverslocations[i][1] + 0.005;
         driverslocations[i][2] = driverslocations[i][2] + 0.005;
-        curMarkers[i].setPosition(new google.maps.LatLng(driverslocations[i][1], driverslocations[i][2]))
+        curMarkers[i].setPosition(new google.maps.LatLng(driverslocations[i][1], driverslocations[i][2]));
     }
     counter = counter + 1;
     setTimeout(updateDriverMarkers, 5000);
@@ -63,7 +63,7 @@ function showAvailableDrivers(lat, lng) {
           console.log(status);
           console.log(data);
         }
-    })
+    });
 }
 
 function trackPosition() {
@@ -75,7 +75,7 @@ function trackPosition() {
 }
 
 function requestDriver(origin, destination) {
-    console.log("called requestDriver")
+    console.log("called requestDriver");
     $.ajax({
         url:'api/requestdriver',
         type: 'POST',
@@ -113,7 +113,7 @@ function checkRideCompleted(){
               console.log("ride is still in progress");
           }
         }
-    })
+    });
     if (!rideCompleted) {
         clearTimeout(rideCompletedTimeout);
         rideCompletedTimeout = setTimeout(checkRideCompleted, 10000);
@@ -127,7 +127,7 @@ function requestRide() {
     var formData = {
         'origin': originA,
         'destination': destinationA
-    }
+    };
     $.ajax({
         url: '/api/rider',
         type: 'POST',

@@ -4,17 +4,23 @@ var theLat = 0;
 var theLong = 0;
 var pickupCoordinates;
 var destCoordinates;
+var drivingStatus = false;
 
 $(document).ready(function() {
     trackPosition();
 });
 
 function updateLocation(position) {
+  console.log("updateLocation rightnow");
   var lat = position.coords.latitude;
   var lng = position.coords.longitude;
   driverCoordinates = {lat:lat, lng:lng};
+  console.log(driverCoordinates);
   //to ensure that the location isn't updated before the driver becomes active
   if (isActive) {
+    console.log("isActive? yes it is...");
+    //never called??
+    // need to add log here
       $.ajax({
           url:'api/updateDriverLocation',
           type: 'POST',
@@ -25,11 +31,34 @@ function updateLocation(position) {
           success: function(data) {
               console.log(data);
           }
-      })
+      });
   }
+  /*
+  if(drivingStatus){
+    // update the location on the database named ActiveDrivers
+    //    api/activeDriverUpdate
+    var formData ={
+      'status':
+    }
+    $.ajax({
+        url: '/api/activeDriverUpdate',
+        type: 'POST',
+        data: formData,
+        success: function(data, status) {
+            foundRider = false;
+            checkForRider();
+            console.log(status + " : " + data);
+            $(".overlay.destination").hide(); setTimeout(function() {
+                $("body.driver").addClass('side-bar-active');
+            }, 200);
+        }
+    });
+  }
+  */
 }
 
 function trackPosition() {
+  console.log("trackPosition rightnow: ");
     if (navigator.geolocation) {
         navigator.geolocation.watchPosition(updateLocation);
     } else {
@@ -38,6 +67,7 @@ function trackPosition() {
 }
 
 function toggleInactive() {
+    isActive = false;
     $('#driverInactive').hide();
     $("body.driver").removeClass('side-bar-active');
     $(".overlay.destination").show();
@@ -116,7 +146,7 @@ function checkForRider() {
                 toggleFoundRider(data);
             }
         }
-    })
+    });
     if (!foundRider) {
         clearTimeout(checkForRiderTimeout);
         checkForRiderTimeout = setTimeout(checkForRider, 10000);
@@ -124,6 +154,7 @@ function checkForRider() {
 }
 
 function setInactive() {
+    isActive = false;
     $.ajax({
         url: '/api/inactive',
         type: 'POST',
@@ -137,6 +168,8 @@ function setInactive() {
 }
 
 function readyDrive() {
+  console.log("readyDrive function right now");
+    isActive = true;
     pickedUp = true;
     console.log(curr_lat);
     console.log(curr_long);
@@ -144,7 +177,7 @@ function readyDrive() {
         'status': $('input[name=ready]').val(),
         'originLat': curr_lat,
         'originLong': curr_long
-    }
+    };
     $.ajax({
         url: '/api/drive',
         type: 'POST',
@@ -163,7 +196,7 @@ function readyDrive() {
 function acceptDeclineRide(val) {
     var formData = {
         'status': val
-    }
+    };
     $.ajax({
         url: '/api/acceptDeclineRide',
         type: 'POST',
@@ -185,7 +218,7 @@ function acceptDeclineRide(val) {
 function pickup() {
     var formData = {
         'status': $('input[name=ready]').val()
-    }
+    };
     $.ajax({
         url: '/api/pickup',
         type: 'POST',
@@ -205,7 +238,7 @@ function pickup() {
 function completeRide() {
     var formData = {
         'status': $('input[name=completed]').val()
-    }
+    };
     $.ajax({
         url: '/api/completeRide',
         type: 'POST',
