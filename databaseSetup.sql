@@ -109,52 +109,6 @@ ALTER TABLE ONLY location
 -- Name: riders; Type: TABLE; Schema: public; Owner: Daniel
 --
 
-CREATE TABLE riders (
-    id integer NOT NULL,
-    rider_id integer NOT NULL,
-    origin_lat double precision,
-    origin_long double precision,
-    destination_lat double precision,
-    destination_long double precision
-);
-
-
---
--- Name: Riders_id_seq; Type: SEQUENCE; Schema: public; Owner: Daniel
---
-
-CREATE SEQUENCE "Riders_id_seq"
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: Riders_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: Daniel
---
-
-ALTER SEQUENCE "Riders_id_seq" OWNED BY riders.id;
-
-
---
--- Name: riders id; Type: DEFAULT; Schema: public; Owner: Daniel
---
-
-ALTER TABLE ONLY riders ALTER COLUMN id SET DEFAULT nextval('"Riders_id_seq"'::regclass);
-
-
---
--- Name: riders Riders_pkey; Type: CONSTRAINT; Schema: public; Owner: Daniel
---
-
-ALTER TABLE ONLY riders
-    ADD CONSTRAINT "Riders_pkey" PRIMARY KEY (id);
-
-
-ALTER TABLE ONLY riders
-    ADD CONSTRAINT rider_id FOREIGN KEY (rider_id) REFERENCES users(id) ON DELETE CASCADE;
 
 
 CREATE TABLE activedrivers (
@@ -195,3 +149,53 @@ ALTER TABLE ONLY rides
 
 ALTER TABLE ONLY rides
     ADD CONSTRAINT rides_pkey PRIMARY KEY (driver_id);
+
+
+
+CREATE TABLE riders (
+    id integer NOT NULL,
+    rider_id integer NOT NULL,
+    origin_lat double precision,
+    origin_long double precision,
+    destination_lat double precision,
+    destination_long double precision,
+    paired boolean DEFAULT false
+);
+
+
+--
+-- Name: Riders_id_seq; Type: SEQUENCE; Schema: public; Owner: Daniel
+--
+
+CREATE SEQUENCE "Riders_id_seq"
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: Riders_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: Daniel
+--
+
+ALTER SEQUENCE "Riders_id_seq" OWNED BY riders.id;
+
+
+--
+-- Name: riders id; Type: DEFAULT; Schema: public; Owner: Daniel
+--
+
+ALTER TABLE ONLY riders ALTER COLUMN id SET DEFAULT nextval('"Riders_id_seq"'::regclass);
+
+
+--
+-- Name: riders Riders_pkey; Type: CONSTRAINT; Schema: public; Owner: Daniel
+--
+
+ALTER TABLE ONLY riders
+    ADD CONSTRAINT "Riders_pkey" PRIMARY KEY (id);
+
+
+ALTER TABLE ONLY riders
+    ADD CONSTRAINT rider_id FOREIGN KEY (rider_id) REFERENCES users(id) ON DELETE CASCADE;

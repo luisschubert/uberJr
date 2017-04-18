@@ -37,6 +37,11 @@ $(document).ready(function() {
         $("body.rider").removeClass('side-bar-active');
         $(".overlay.destination").show();
     });
+    $('#acceptDeclineRide input[type=submit]').click(function(e) {
+        var val = $(this).attr('value');
+        e.preventDefault();
+        acceptDeclineRide(val);
+    });
     $('#driverInactive').submit(function(e) {
         e.preventDefault();
         setInactive();

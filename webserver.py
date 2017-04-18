@@ -452,6 +452,15 @@ def api_drive():
         db.session.commit()
         return "added to ready to drive pool"
 
+@app.route("/api/acceptDeclineRide", methods=['POST'])
+def api_acceptDeclineRide():
+    status = request.form.get('status')
+    if status == 'accept':
+        # placeholder
+        return 'ride accepted. driver and riders paired.'
+    else:
+        return 'ride declined. driver marked inactive, and rider returned to ride request pool'
+
 @app.route("/api/requestdriver", methods=['POST'])
 def api_requestdriver():
     # origin of rider

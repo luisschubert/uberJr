@@ -17,15 +17,17 @@
     <div id="ride-request" class="sidebar-state">
 		<h1>New Ride Request!</h1>
 		<div class="divider"></div>
-		<h2 class="rider-info">Rider's Information</h4>
+		<h2 class="rider-info">Rider Information</h4>
 		<p>Name: <span class="rider-name">John Doe</span></p>
 		<p>Location: <span class="rider-location"></span></p>
 		<div class="divider"></div>
-		<p>Estimated Time of Arrival:</p>
+		<p>Estimated Pickup Time:</p>
 		<p class="time">5:15pm</p>
 		<div class="divider"></div>
-		<a href="" class="button">Accept</a>
-		<a href="" class="button cancel-ride">Decline</a>
+		<form id="acceptDeclineRide" action="/api/acceptDeclineRide" method="POST">
+			<input type="submit" value="accept" id="acceptRide" class="button" onclick="">
+			<input type="submit" value="decline" id="declineRide" class="button" onclick="">
+		</form>
 		<br>
 	</div>
 

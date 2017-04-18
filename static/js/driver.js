@@ -49,8 +49,7 @@ function toggleFoundRider(rider){
   console.log(driverCoordinates);
   console.log("found Rider and updating view");
   $('#waitting-state').removeClass('active');
-  //$('#ride-request').addClass('active');
-  $('#directions-to-rider').addClass('active');
+  $('#ride-request').addClass('active');
   $('.rider-name').html(rider.rider_name);
   pickupCoordinates = {lat:rider.pickup_lat, lng:rider.pickup_long};
   geocoder.geocode({'location': pickupCoordinates}, function(results, status) {
@@ -68,6 +67,12 @@ function toggleFoundRider(rider){
   calculateAndDisplayRoute(directionsService,directionsDisplay,driverCoordinates,pickupCoordinates);
   directionsDisplay.setMap(map);
   directionsDisplay.setPanel(document.getElementById("directions-to-rider"));
+}
+
+function toggleAcceptRide() {
+    console.log("accepted ride and updating view");
+    $('#ride-request').removeClass('active');
+    $('#directions-to-rider').addClass('active');
 }
 
 function togglePickedupRider(coords) {
@@ -151,6 +156,28 @@ function readyDrive() {
             $(".overlay.destination").hide(); setTimeout(function() {
                 $("body.driver").addClass('side-bar-active');
             }, 200);
+        }
+    });
+}
+
+function acceptDeclineRide(val) {
+    var formData = {
+        'status': val
+    }
+    $.ajax({
+        url: '/api/acceptDeclineRide',
+        type: 'POST',
+        data: formData,
+        success: function(data, status) {
+            console.log(data);
+            if (data == 'ride declined. driver marked inactive, and rider returned to ride request pool') {
+                foundRider = true;
+                clearTimeout(checkForRiderTimeout);
+                toggleInactive();
+            } else {
+                foundRider = true;
+                toggleAcceptRide();
+            }
         }
     });
 }

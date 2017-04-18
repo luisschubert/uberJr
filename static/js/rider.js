@@ -13,11 +13,11 @@ function toggleFoundDriver(driverName, carModel, carColor, plates, pickupTime) {
 function toggleNoDrivers() {
     $('.sidebar-state').removeClass('active'); //disables any active
     $('#no-drivers').addClass('active');
+    directionsDisplay.setMap(null);
 }
 
 function toggleRideCompleted() {
     $("body.rider").removeClass('side-bar-active');
-    //$("destinationRider").val("");
     $(".overlay.destination").show();
     directionsDisplay.setMap(null);
 }
