@@ -88,6 +88,7 @@ function toggleCompletedRide() {
     $('#waitting-state').addClass('active');
     foundRider = false;
     trackPosition();
+    directionsDisplay.setMap(null);
     checkForRider();
 }
 

@@ -110,8 +110,6 @@ var directionsService;
 var directionsDisplay;
 
 var currentTime = new Date();
-//var destinationIcon;
-//var originIcon;
 
 var geocoder;
 var service;
@@ -190,12 +188,6 @@ function initMap() {
     directionsService = new google.maps.DirectionsService;
 
     directionsDisplay = new google.maps.DirectionsRenderer;
-
-    /*destinationIcon = 'https://chart.googleapis.com/chart?' +
-        'chst=d_map_pin_letter&chld=D|FF0000|000000';
-
-    originIcon = 'https://chart.googleapis.com/chart?' +
-        'chst=d_map_pin_letter&chld=O|FFFF00|000000';*/
 
     var mapOptions = {
         zoom: 14,
