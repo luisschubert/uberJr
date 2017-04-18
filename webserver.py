@@ -84,13 +84,15 @@ class Riders(db.Model):
     origin_long = db.Column(db.Float)
     destination_lat = db.Column(db.Float)
     destination_long = db.Column(db.Float)
+    paired = db.Column(db.Boolean)
 
-    def __init__(self, rider_id, origin_lat, origin_long, destination_lat, destination_long):
+    def __init__(self, rider_id, origin_lat, origin_long, destination_lat, destination_long, paired):
         self.rider_id = rider_id
         self.origin_lat = origin_lat
         self.origin_long = origin_long
         self.destination_lat = destination_lat
         self.destination_long = destination_long
+        self.paired = paired
 
 class Rides(db.Model):
     __tablename__ = 'rides'
@@ -187,16 +189,26 @@ def logout():
         if user.is_driver == True:
             # mark the driver as inactive
             driver = Drivers.query.filter_by(driver_id = user.id).first()
-            driver.is_active = False
-            db.session.commit()
-            # remove the driver from the activedrivers table
-            ActiveDrivers.query.filter_by(id = user.id).delete()
-            db.session.commit()
+            if driver.is_active == True:
+                driver.is_active = False
+                # remove the driver from the activedrivers table
+                ActiveDrivers.query.filter_by(id = user.id).delete()
         else:
             Riders.query.filter_by(rider_id=user.id).delete()
-            db.session.commit()
+        db.session.commit()
         session.pop('email', None)
         return redirect(url_for('home'))
+
+@app.route("/api/inactive", methods=['POST'])
+def api_inactive():
+    user = Users.query.filter_by(email = session['email']).first()
+    # mark the driver as inactive
+    driver = Drivers.query.filter_by(driver_id = user.id).first()
+    driver.is_active = False
+    # remove the driver from the activedrivers table
+    ActiveDrivers.query.filter_by(id = user.id).delete()
+    db.session.commit()
+    return "driver marked inactive."
 
 @app.route("/geolocationTest")
 def geolocationTest():
@@ -360,7 +372,7 @@ def api_rider():
     # rider_id = corresponding user account's id (as a foreign key)
     riderid = Users.query.filter_by(email = session['email']).first().id
     # add ride request to riders table
-    ride = Riders(riderid, origin_lat, origin_long, destination_lat, destination_long)
+    ride = Riders(riderid, origin_lat, origin_long, destination_lat, destination_long, False)
     db.session.add(ride)
     db.session.commit()
     return "added ride request to table"
@@ -463,8 +475,8 @@ def api_requestdriver():
     # for each active driver that hasn't been paired
     timeToRider = 1000000;
     closestDriver = ActiveDrivers.query.filter_by(paired=False).first()
+    riderid = Users.query.filter_by(email = session['email']).first().id
     if closestDriver is None:
-        riderid = Users.query.filter_by(email = session['email']).first().id
         Riders.query.filter_by(rider_id=riderid).delete()
         db.session.commit()
         return "No drivers available. Check back later!"
@@ -493,9 +505,8 @@ def api_requestdriver():
                     closestDriver = availdriver
         # mark the closest driver as paired
         closestDriver.paired = True
-        db.session.commit()
+        #db.session.commit()
         # pair the rider + driver
-        riderid = Users.query.filter_by(email = session['email']).first().id
         print("riderid:", riderid)
         closestdriverid = ActiveDrivers.query.filter_by(id=closestDriver.id).first().id
         new_ride = Rides(riderid, closestdriverid, rider_origin_lat, rider_origin_long, rider_dest_lat, rider_dest_long, False, False, False)

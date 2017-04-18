@@ -22,6 +22,7 @@ $(document).ready(function() {
     $('#driverReady').submit(function(e) {
         e.preventDefault();
         readyDrive();
+        $('#driverInactive').show();
     });
     $('#pickupReady').submit(function(e) {
         e.preventDefault();
@@ -35,6 +36,10 @@ $(document).ready(function() {
         e.preventDefault();
         $("body.rider").removeClass('side-bar-active');
         $(".overlay.destination").show();
+    });
+    $('#driverInactive').submit(function(e) {
+        e.preventDefault();
+        setInactive();
     });
     getLocation();
 });
@@ -105,8 +110,8 @@ var directionsService;
 var directionsDisplay;
 
 var currentTime = new Date();
-var destinationIcon;
-var originIcon;
+//var destinationIcon;
+//var originIcon;
 
 var geocoder;
 var service;
@@ -186,11 +191,11 @@ function initMap() {
 
     directionsDisplay = new google.maps.DirectionsRenderer;
 
-    destinationIcon = 'https://chart.googleapis.com/chart?' +
+    /*destinationIcon = 'https://chart.googleapis.com/chart?' +
         'chst=d_map_pin_letter&chld=D|FF0000|000000';
 
     originIcon = 'https://chart.googleapis.com/chart?' +
-        'chst=d_map_pin_letter&chld=O|FFFF00|000000';
+        'chst=d_map_pin_letter&chld=O|FFFF00|000000';*/
 
     var mapOptions = {
         zoom: 14,

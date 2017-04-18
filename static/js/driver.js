@@ -7,27 +7,25 @@ var destCoordinates;
 
 $(document).ready(function() {
     trackPosition();
-    //checkForRider();
 });
 
-function updateLocation(position){
+function updateLocation(position) {
   var lat = position.coords.latitude;
   var lng = position.coords.longitude;
-  driverCoordinates ={lat:lat, lng:lng};
-  //to insure that the location isn't update before the driver becomes active
-  if(isActive){
-    $.ajax({
-      url:'api/updateDriverLocation',
-      type: 'POST',
-      data:{
-        'lat': lat,
-        'lng': lng,
-      },
-      success: function(data,status){
-        console.log(status);
-        console.log(data);
-      }
-    })
+  driverCoordinates = {lat:lat, lng:lng};
+  //to ensure that the location isn't updated before the driver becomes active
+  if (isActive) {
+      $.ajax({
+          url:'api/updateDriverLocation',
+          type: 'POST',
+          data:{
+            'lat': lat,
+            'lng': lng,
+          },
+          success: function(data) {
+              console.log(data);
+          }
+      })
   }
 }
 
@@ -39,6 +37,12 @@ function trackPosition() {
     }
 }
 
+function toggleInactive() {
+    $('#driverInactive').hide();
+    $("body.driver").removeClass('side-bar-active');
+    $(".overlay.destination").show();
+    directionsDisplay.setMap(null);
+}
 
 function toggleFoundRider(rider){
   console.log(rider);
@@ -61,7 +65,6 @@ function toggleFoundRider(rider){
       }
   });
   console.log(pickupCoordinates);
-
   calculateAndDisplayRoute(directionsService,directionsDisplay,driverCoordinates,pickupCoordinates);
   directionsDisplay.setMap(map);
   directionsDisplay.setPanel(document.getElementById("directions-to-rider"));
@@ -88,48 +91,46 @@ function toggleCompletedRide() {
     checkForRider();
 }
 
-// function calculateAndDisplayDriverRoute(directionsService, directionsDisplay, theOrigin, theDestination) {
-//     directionsService.route({
-//         origin: {lat:driverLat,lng:driverLng},
-//         destination: {lat:riderLat,lng:riderLng},
-//         travelMode: 'DRIVING'
-//     }, function(response, status) {
-//         if (status === 'OK') {
-//             directionsDisplay.setDirections(response);
-//         } else {
-//             window.alert('Directions request failed due to ' + status);
-//         }
-//     });
-// }
-
-var foundRider = false;
-function checkForRider(){
-  $.ajax({
-    url:'api/checkForRider',
-    type: 'POST',
-    success: function(data,status){
-      console.log(status);
-      console.log(data);
-      if(data == 'none'){
-        console.log('no match yet');
-      }else{
-        foundRider = true;
-        console.log(data.pickup_lat);
-        console.log(data.pickup_long);
-        console.log(data.rider_name);
-        toggleFoundRider(data);
-        console.log("foundRider = " + foundRider);
-        foundRider = true;
-      }
+var foundRider;
+var checkForRiderTimeout;
+function checkForRider() {
+    $.ajax({
+        url: 'api/checkForRider',
+        type: 'POST',
+        success: function(data) {
+            console.log(data);
+            if (data == 'none') {
+                console.log('no match yet');
+            } else {
+                console.log(data.pickup_lat);
+                console.log(data.pickup_long);
+                console.log(data.rider_name);
+                foundRider = true;
+                clearTimeout(checkForRiderTimeout);
+                toggleFoundRider(data);
+            }
+        }
+    })
+    if (!foundRider) {
+        clearTimeout(checkForRiderTimeout);
+        checkForRiderTimeout = setTimeout(checkForRider, 10000);
     }
-  })
-  if(!foundRider){
-    setTimeout(checkForRider, 10000);
-  }
+}
+
+function setInactive() {
+    $.ajax({
+        url: '/api/inactive',
+        type: 'POST',
+        success: function(data) {
+            console.log(data);
+            foundRider = true;
+            clearTimeout(checkForRiderTimeout);
+            toggleInactive();
+        }
+    });
 }
 
 function readyDrive() {
-    console.log("running");
     pickedUp = true;
     console.log(curr_lat);
     console.log(curr_long);
@@ -143,7 +144,7 @@ function readyDrive() {
         type: 'POST',
         data: formData,
         success: function(data, status) {
-            //what to do when data is returned
+            foundRider = false;
             checkForRider();
             console.log(status + " : " + data);
             $(".overlay.destination").hide(); setTimeout(function() {
@@ -154,7 +155,6 @@ function readyDrive() {
 }
 
 function pickup() {
-    console.log("running");
     var formData = {
         'status': $('input[name=ready]').val()
     }
@@ -163,7 +163,6 @@ function pickup() {
         type: 'POST',
         data: formData,
         success: function(data, status) {
-            //what to do when data is returned
             if (data == 'none') {
                 console.log('pickup coords not found??');
             } else {
@@ -176,7 +175,6 @@ function pickup() {
 }
 
 function completeRide() {
-    console.log("running");
     var formData = {
         'status': $('input[name=completed]').val()
     }
@@ -185,7 +183,6 @@ function completeRide() {
         type: 'POST',
         data: formData,
         success: function(data, status) {
-            //what to do when data is returned
             if (data == 'none') {
                 console.log('ride not completed');
             } else {
