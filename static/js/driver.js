@@ -91,7 +91,6 @@ function togglePickedupRider(coords) {
 function toggleCompletedRide() {
     $('#directions-to-destination').removeClass('active');
     $('#waitting-state').addClass('active');
-    foundRider = false;
     trackPosition();
     directionsDisplay.setMap(null);
     checkForRider();
@@ -129,6 +128,7 @@ function setInactive() {
         type: 'POST',
         success: function(data) {
             console.log(data);
+            isActive = false;
             foundRider = true;
             clearTimeout(checkForRiderTimeout);
             toggleInactive();
@@ -137,7 +137,6 @@ function setInactive() {
 }
 
 function readyDrive() {
-    pickedUp = true;
     console.log(curr_lat);
     console.log(curr_long);
     var formData = {
@@ -150,6 +149,7 @@ function readyDrive() {
         type: 'POST',
         data: formData,
         success: function(data, status) {
+            isActive = true;
             foundRider = false;
             checkForRider();
             console.log(status + " : " + data);
@@ -171,9 +171,7 @@ function acceptDeclineRide(val) {
         success: function(data, status) {
             console.log(data);
             if (data == 'ride declined. driver marked inactive, and rider returned to ride request pool') {
-                foundRider = true;
-                clearTimeout(checkForRiderTimeout);
-                toggleInactive();
+                setInactive();
             } else {
                 foundRider = true;
                 toggleAcceptRide();
@@ -215,6 +213,7 @@ function completeRide() {
                 console.log('ride not completed');
             } else {
                 console.log(data);
+                foundRider = false;
                 toggleCompletedRide();
             }
         }
