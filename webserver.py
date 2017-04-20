@@ -354,15 +354,18 @@ def api_drive():
 
 @app.route("/api/checkForRider", methods=['GET'])
 def api_checkForRider():
-    # return response with rider's origin coords + rider's name
     driverid = Users.query.filter_by(email = session['email']).first().id
-    driver_ride = Rides.query.filter_by(driver_id=driverid).first()
-    if driver_ride is not None:
-        ridername = Users.query.filter_by(id = driver_ride.rider_id).first().name
-        info = {'pickup_lat': driver_ride.pickup_lat, 'pickup_long': driver_ride.pickup_long, 'rider_name': ridername}
+    ride = Rides.query.filter_by(driver_id=driverid).first()
+    # if ride request has been paired
+    if ride is not None:
+        # calculate ETA to rider's location here with distance matrix?
+        pickup_eta = pickup_eta = datetime.now() + timedelta(seconds=921)
+        # return response with rider's name, pickup location, and estimated pickup time
+        ridername = Users.query.filter_by(id = ride.rider_id).first().name
+        info = {'pickup_lat': ride.pickup_lat, 'pickup_long': ride.pickup_long, 'rider_name': ridername, 'pickup_eta': pickup_eta.strftime("%I:%M %p").lstrip("0").replace(" 0", " ")}
         return jsonify(info)
     else:
-        return "none"
+        return "ride request not paired yet"
 
 @app.route("/api/rider", methods=['POST'])
 def api_rider():
@@ -392,78 +395,116 @@ def api_rider():
 
 @app.route("/api/requestdriver", methods=['POST'])
 def api_requestdriver():
-    # origin of rider
-    rider_origin = request.form.get('origin')
-    print(rider_origin)
-    rider_dest = request.form.get('destination')
-    print(rider_dest)
-    # calculate rider's current location gps coords
-    geocode_rider_origin = gmaps.geocode(rider_origin)
-    parsed_rider_origin = json.loads(json.dumps(geocode_rider_origin))
-    rider_origin_lat = parsed_rider_origin[0][u'geometry'][u'location'][u'lat']
-    rider_origin_long = parsed_rider_origin[0][u'geometry'][u'location'][u'lng']
-    riderOriginGPS = "%s,%s" % (rider_origin_lat,rider_origin_long)
-
-    geocode_rider_dest = gmaps.geocode(rider_dest)
-    parsed_rider_dest = json.loads(json.dumps(geocode_rider_dest))
-    rider_dest_lat = parsed_rider_dest[0][u'geometry'][u'location'][u'lat']
-    rider_dest_long = parsed_rider_dest[0][u'geometry'][u'location'][u'lng']
-    departureTime = "now"
-
-    # for each active driver that hasn't been paired
-    timeToRider = 1000000;
-    closestDriver = ActiveDrivers.query.filter_by(paired=False).first()
     riderid = Users.query.filter_by(email = session['email']).first().id
-    if closestDriver is None:
-        Riders.query.filter_by(rider_id=riderid).delete()
-        db.session.commit()
-        return "No drivers available. Check back later!"
+    riderequest = Riders.query.filter_by(rider_id=riderid).first()
+    if riderequest.paired == False:
+        # origin of rider
+        rider_origin = request.form.get('origin')
+        print(rider_origin)
+        rider_dest = request.form.get('destination')
+        print(rider_dest)
+        # calculate rider's current location gps coords
+        geocode_rider_origin = gmaps.geocode(rider_origin)
+        parsed_rider_origin = json.loads(json.dumps(geocode_rider_origin))
+        rider_origin_lat = parsed_rider_origin[0][u'geometry'][u'location'][u'lat']
+        rider_origin_long = parsed_rider_origin[0][u'geometry'][u'location'][u'lng']
+        riderOriginGPS = "%s,%s" % (rider_origin_lat,rider_origin_long)
+
+        geocode_rider_dest = gmaps.geocode(rider_dest)
+        parsed_rider_dest = json.loads(json.dumps(geocode_rider_dest))
+        rider_dest_lat = parsed_rider_dest[0][u'geometry'][u'location'][u'lat']
+        rider_dest_long = parsed_rider_dest[0][u'geometry'][u'location'][u'lng']
+        departureTime = "now"
+
+        # for each active driver that hasn't been paired
+        timeToRider = 1000000;
+        closestDriver = ActiveDrivers.query.filter_by(paired=False).first()
+        if closestDriver is None:
+            Riders.query.filter_by(rider_id=riderid).delete()
+            db.session.commit()
+            return "No drivers available. Check back later!"
+        else:
+            availdrivers = ActiveDrivers.query.filter_by(paired=False).all()
+            for availdriver in availdrivers:
+                # compute their current location's gps coords
+                driverOriginGPS = "%s,%s" % (availdriver.current_lat,availdriver.current_long)
+                print(driverOriginGPS)
+                # find closest driver in terms of travel time
+                #hardcoded below
+                #r = requests.get("https://maps.googleapis.com/maps/api/distancematrix/json?units=imperial&origins=%s&destinations=%s&key=%s&departure_time=%s" % (driverOriginGPS,riderOriginGPS,apiKey,departureTime))
+                #print r
+                #if r.status_code == 200:
+                if True:
+                    #response = r.content
+                    #parsed_response = json.loads(response)
+                    #print parsed_response
+                    #travelTime = parsed_response[u'rows'][0][u'elements'][0][u'duration'][u'value']
+                    travelTime = 921
+                    print "Travel time is", travelTime/60, "minutes."
+                    # if driver is within a range of 15 minutes away
+                    #if travelTime < 900:
+                    if travelTime < timeToRider:
+                        timeToRider = travelTime
+                        closestDriver = availdriver
+            # mark the closest driver as paired
+            closestDriver.paired = True
+            # mark the ride request as paired
+            riderequest.paired = True
+            # pair the rider + driver & insert to rides table
+            closestdriverid = ActiveDrivers.query.filter_by(id=closestDriver.id).first().id
+            new_ride = Rides(riderid, closestdriverid, rider_origin_lat, rider_origin_long, rider_dest_lat, rider_dest_long, False, False, False)
+            db.session.add(new_ride)
+            db.session.commit()
+            info = {'travelTime': timeToRider}
+            return jsonify(info)
     else:
-        availdrivers = ActiveDrivers.query.filter_by(paired=False).all()
-        for availdriver in availdrivers:
-            # compute their current location's gps coords
-            driverOriginGPS = "%s,%s" % (availdriver.current_lat,availdriver.current_long)
-            print(driverOriginGPS)
-            # find closest driver in terms of travel time
-            #hardcoded below
-            #r = requests.get("https://maps.googleapis.com/maps/api/distancematrix/json?units=imperial&origins=%s&destinations=%s&key=%s&departure_time=%s" % (driverOriginGPS,riderOriginGPS,apiKey,departureTime))
-            #print r
-            #if r.status_code == 200:
-            if True:
-                #response = r.content
-                #parsed_response = json.loads(response)
-                #print parsed_response
-                #travelTime = parsed_response[u'rows'][0][u'elements'][0][u'duration'][u'value']
-                travelTime = 921
-                print "Travel time is", travelTime/60, "minutes."
-                # if driver is within a range of 15 minutes away
-                #if travelTime < 900:
-                if travelTime < timeToRider:
-                    timeToRider = travelTime
-                    closestDriver = availdriver
-        # mark the closest driver as paired
-        closestDriver.paired = True
-        #db.session.commit()
-        # pair the rider + driver
-        print("riderid:", riderid)
-        closestdriverid = ActiveDrivers.query.filter_by(id=closestDriver.id).first().id
-        new_ride = Rides(riderid, closestdriverid, rider_origin_lat, rider_origin_long, rider_dest_lat, rider_dest_long, False, False, False)
-        db.session.add(new_ride)
-        db.session.commit()
-        drivername = Users.query.filter_by(id = closestdriverid).first().name
-        driverinfo = Drivers.query.filter_by(driver_id = closestdriverid).first()
-        # calculate ETA
-        pickup_eta = datetime.now() + timedelta(seconds=timeToRider)
-        info = {'name': drivername, 'license_plate': driverinfo.license_plate, 'color': driverinfo.car_color, 'make': driverinfo.car_make, 'pickup_eta': pickup_eta.strftime("%I:%M %p").lstrip("0").replace(" 0", " ")}
-        return jsonify(info)
+        return "can't request another ride! rider is already paired??"
+
+@app.route("/api/checkRideAccepted", methods=['POST'])
+def api_checkRideAccepted():
+    riderid = Users.query.filter_by(email = session['email']).first().id
+    riderequest = Riders.query.filter_by(rider_id=riderid).first()
+    if riderequest is not None:
+        if riderequest.paired == True:
+            ride = Rides.query.filter_by(rider_id=riderid).first()
+            if ride.accepted == True:
+                timeToRider = request.form.get('timeToRider')
+                timeToRider = int(timeToRider)
+                drivername = Users.query.filter_by(id = ride.driver_id).first().name
+                driverinfo = Drivers.query.filter_by(driver_id = ride.driver_id).first()
+                pickup_eta = datetime.now() + timedelta(seconds=timeToRider)
+                info = {'name': drivername, 'license_plate': driverinfo.license_plate, 'color': driverinfo.car_color, 'make': driverinfo.car_make, 'pickup_eta': pickup_eta.strftime("%I:%M %p").lstrip("0").replace(" 0", " ")}
+                return jsonify(info)
+            else:
+                return "ride request not accepted yet"
+        else:
+            return "ride request hasn't been paired yet or has been declined"
+    else:
+        return "ride request can't be checked for acceptance because no drivers available"
 
 @app.route("/api/acceptDeclineRide", methods=['POST'])
 def api_acceptDeclineRide():
     status = request.form.get('status')
+    driverid = Users.query.filter_by(email = session['email']).first().id
+    ride = Rides.query.filter_by(driver_id=driverid).first()
+    riderid = ride.rider_id
     if status == 'accept':
-        # placeholder
-        return 'ride accepted. driver and riders paired.'
+        ride.accepted = True
+        db.session.commit()
+        info = {'pickup_lat': ride.pickup_lat, 'pickup_long': ride.pickup_long}
+        return jsonify(info)
     else:
+        # mark driver inactive
+        driver = Drivers.query.filter_by(driver_id=driverid).first()
+        driver.is_active = False
+        # remove driver from the activedrivers table
+        ActiveDrivers.query.filter_by(id=driverid).delete()
+        # return rider to ride request pool
+        Rides.query.filter_by(driver_id=driverid).delete
+        # set ride request to unpaired
+        riderequest = Riders.query.filter_by(rider_id=riderid).first()
+        riderequest.paired = False
+        db.session.commit()
         return 'ride declined. driver marked inactive, and rider returned to ride request pool'
 
 @app.route("/api/checkRideCompleted", methods=['GET'])

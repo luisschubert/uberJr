@@ -34,6 +34,7 @@ $(document).ready(function() {
     });
     $('#retry-ride-request').click( function(e) {
         e.preventDefault();
+        $('.sidebar-state').removeClass('active');
         $("body.rider").removeClass('side-bar-active');
         $(".overlay.destination").show();
     });
