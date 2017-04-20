@@ -77,7 +77,7 @@ function toggleActive() {
 function checkForRider() {
     $.ajax({
         url: '/api/checkForRider',
-        type: 'POST',
+        type: 'GET',
         success: function(data) {
             if (data == 'none') {
                 console.log('no match yet');
@@ -171,7 +171,7 @@ function togglePickedupRider(coords) {
     $('#directions-to-rider').removeClass('active');
     $('#directions-to-destination').addClass('active');
     destCoordinates = {lat:coords.dest_lat, lng:coords.dest_long};
-    console.log("destCoordinates:" + destCoordinates);
+    //console.log("destCoordinates:" + destCoordinates);
     calculateAndDisplayRoute(directionsService,directionsDisplay,pickupCoordinates,destCoordinates);
     directionsDisplay.setMap(map);
     directionsDisplay.setPanel(document.getElementById("directions-to-destination"));

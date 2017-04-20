@@ -161,7 +161,7 @@ function toggleNoDrivers() {
 function checkRideCompleted() {
     $.ajax({
         url:'api/checkRideCompleted',
-        type: 'POST',
+        type: 'GET',
         success: function(data, status) {
           if (data == 'true') {
               rideCompleted = true;

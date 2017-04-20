@@ -352,7 +352,7 @@ def api_drive():
         db.session.commit()
         return "added to ready to drive pool"
 
-@app.route("/api/checkForRider", methods=['POST'])
+@app.route("/api/checkForRider", methods=['GET'])
 def api_checkForRider():
     # return response with rider's origin coords + rider's name
     driverid = Users.query.filter_by(email = session['email']).first().id
@@ -466,7 +466,7 @@ def api_acceptDeclineRide():
     else:
         return 'ride declined. driver marked inactive, and rider returned to ride request pool'
 
-@app.route("/api/checkRideCompleted", methods=['POST'])
+@app.route("/api/checkRideCompleted", methods=['GET'])
 def api_checkRideCompleted():
     riderid = Users.query.filter_by(email = session['email']).first().id
     rider_ride = Riders.query.filter_by(rider_id=riderid).first()
