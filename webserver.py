@@ -400,37 +400,31 @@ def api_checkRideCompleted():
 
 @app.route("/api/pickup", methods=['POST'])
 def api_pickup():
-    status = request.form.get('status')
-    if status == 'true':
-        driverid = Users.query.filter_by(email = session['email']).first().id
-        ride = Rides.query.filter_by(driver_id = driverid).first()
-        if ride is not None:
-            ride.pickedup = True
-            db.session.commit()
-            info = {'dest_lat': ride.dest_lat, 'dest_long': ride.dest_long}
-            return jsonify(info)
-        else:
-            return "none"
+    driverid = Users.query.filter_by(email = session['email']).first().id
+    ride = Rides.query.filter_by(driver_id = driverid).first()
+    if ride is not None:
+        ride.pickedup = True
+        db.session.commit()
+        info = {'dest_lat': ride.dest_lat, 'dest_long': ride.dest_long}
+        return jsonify(info)
+    else:
+        return "pickup failed; no ride found??"
 
 @app.route("/api/completeRide", methods=['POST'])
 def api_completeRide():
-    status = request.form.get('status')
-    if status == 'true':
-        driverid = Users.query.filter_by(email = session['email']).first().id
-        ride = Rides.query.filter_by(driver_id = driverid).first()
-        if ride is not None:
-            # remove ride request
-            Riders.query.filter_by(rider_id = ride.rider_id).delete()
-            # remove paired ride
-            Rides.query.filter_by(driver_id = driverid).delete()
-            #db.session.commit()
-            # set driver to not paired
-            driver = ActiveDrivers.query.filter_by(id = driverid).first()
-            driver.paired = False
-            db.session.commit()
-            return "ride request completed; driver is no longer paired"
-        else:
-            return "none"
+    driverid = Users.query.filter_by(email = session['email']).first().id
+    ride = Rides.query.filter_by(driver_id = driverid).first()
+    if ride is not None:
+        # remove ride request
+        Riders.query.filter_by(rider_id = ride.rider_id).delete()
+        # remove paired ride
+        Rides.query.filter_by(driver_id = driverid).delete()
+        driver = ActiveDrivers.query.filter_by(id = driverid).first()
+        driver.paired = False
+        db.session.commit()
+        return "ride request completed; driver is no longer paired"
+    else:
+        return "completing ride request failed; no ride found??"
 
 @app.route("/api/drive", methods=['POST'])
 def api_drive():
