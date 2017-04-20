@@ -4,6 +4,8 @@ var counter = 1;
 var travelTime;
 var rideAccepted;
 var rideAcceptedTimeout;
+var pickedUp;
+var pickedUpTimeout;
 var rideCompleted;
 var rideCompletedTimeout;
 
@@ -203,6 +205,26 @@ function toggleNoDrivers() {
     $('.sidebar-state').removeClass('active'); //disables any active
     $('#no-drivers').addClass('active');
     directionsDisplay.setMap(null);
+}
+
+function checkPickedUp() {
+    $.ajax({
+        url: '/api/checkPickedUp',
+        type: 'GET',
+        success: function(data, status) {
+            pickedUp = true;
+            clearTimeout(pickedUpTimeout);
+            togglePickedUp();
+        }
+    });
+    if (!pickedUp) {
+        clearTimeout(pickedUpTimeout);
+        pickedUpTimeout = setTimeout(checkPickedUp, 10000);
+    }
+}
+
+function togglePickedUp() {
+
 }
 
 function checkRideCompleted() {
