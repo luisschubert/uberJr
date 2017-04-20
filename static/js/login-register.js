@@ -81,7 +81,6 @@ $(document).ready(function() {
 });
 
 function doRegister() {
-    console.log("running");
     var riderVisible = $('#riderForm').is(':visible');
     if (riderVisible == true) {
         var formData = {
@@ -109,8 +108,7 @@ function doRegister() {
         method: 'POST',
         data: formData,
         success: function(data, status) {
-            //what to do when data is returned
-            console.log(status + " : " + data);
+            console.log(status + " : registered and logged in as " + data);
             if (data.charAt(0) === "/") {
                 window.location.href = data;
             } else if (data.charAt(0) === "f") {
@@ -144,7 +142,6 @@ function doRegister() {
 }
 
 function doLogin() {
-    console.log("running");
     var formData = {
         'email': $('input[name=email]').val(),
         'password': $('input[name=password]').val()
@@ -154,8 +151,7 @@ function doLogin() {
         type: 'POST',
         data: formData,
         success: function(data, status) {
-            //what to do when data is returned
-            console.log(status + " : " + data);
+            console.log(status + " : logged in as " + data);
             if (data.charAt(0) === "/") {
                 window.location.href = data;
             } else if (data === "Invalid password!") {

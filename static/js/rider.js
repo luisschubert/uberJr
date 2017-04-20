@@ -1,28 +1,22 @@
-//function updateDriverInfo(driverName, carModel, carColor,plates, arrivalTime,cost){
-function toggleFoundDriver(driverName, carModel, carColor, plates, pickupTime) {
-    $('.sidebar-state').removeClass('active'); //disables any active
-    $('#driver-found').addClass('active');
-    $('.driver-name').html(driverName);
-    $('.car-model').html(carModel);
-    $('.car-color').html(carColor);
-    $('.car-plates').html(plates);
-    $('.time').html(pickupTime);
-    //$('.cost').html(cost);
-}
-
-function toggleNoDrivers() {
-    $('.sidebar-state').removeClass('active'); //disables any active
-    $('#no-drivers').addClass('active');
-    directionsDisplay.setMap(null);
-}
-
-function toggleRideCompleted() {
-    $("body.rider").removeClass('side-bar-active');
-    $(".overlay.destination").show();
-    directionsDisplay.setMap(null);
-}
-
 var counter = 1;
+var rideCompleted;
+var rideCompletedTimeout;
+
+function showAvailableDrivers(lat, lng) {
+    $.ajax({
+        url:'api/getDrivers',
+        type: 'POST',
+        data:{
+          'lat': lat,
+          'lng': lng,
+        },
+        success: function(data, status) {
+          console.log(status);
+          console.log(data);
+        }
+    })
+}
+
 function updateDriverMarkers() {
     console.log("updating location " + counter);
     for (var i = 0; i < curMarkers.length; i++) {
@@ -49,75 +43,6 @@ function getCurrentAddress(lat, lng) {
           //$('#originRider').removeAttr('placeholder');
         }
     });
-}
-
-function showAvailableDrivers(lat, lng) {
-    $.ajax({
-        url:'api/getDrivers',
-        type: 'POST',
-        data:{
-          'lat': lat,
-          'lng': lng,
-        },
-        success: function(data, status) {
-          console.log(status);
-          console.log(data);
-        }
-    })
-}
-
-function trackPosition() {
-    if (navigator.geolocation) {
-        navigator.geolocation.watchPosition(updateLocation);
-    } else {
-        console.log("Geolocation is not supported by this browser.");
-    }
-}
-
-function requestDriver(origin, destination) {
-    console.log("called requestDriver")
-    $.ajax({
-        url:'api/requestdriver',
-        type: 'POST',
-        data: {
-          'origin': origin,
-          'destination': destination
-        },
-        success: function(data, status) {
-          if (data == 'No drivers available. Check back later!') {
-              toggleNoDrivers();
-          } else {
-              rideCompleted = false;
-              checkRideCompleted();
-              console.log(status);
-              console.log(data);
-              toggleFoundDriver(data.name, data.make, data.color, data.license_plate, data.pickup_eta);
-          }
-        }
-    });
-}
-
-var rideCompleted;
-var rideCompletedTimeout;
-function checkRideCompleted(){
-    $.ajax({
-        url:'api/checkRideCompleted',
-        type: 'POST',
-        success: function(data, status) {
-          if (data == 'true') {
-              clearTimeout(rideCompletedTimeout);
-              rideCompleted = true;
-              console.log("ride completed");
-              toggleRideCompleted();
-          } else {
-              console.log("ride is still in progress");
-          }
-        }
-    })
-    if (!rideCompleted) {
-        clearTimeout(rideCompletedTimeout);
-        rideCompletedTimeout = setTimeout(checkRideCompleted, 10000);
-    }
 }
 
 function requestRide() {
@@ -191,4 +116,71 @@ function requestRide() {
             }, 200);
         }
     });
+}
+
+function requestDriver(origin, destination) {
+    console.log("called requestDriver")
+    $.ajax({
+        url:'api/requestdriver',
+        type: 'POST',
+        data: {
+          'origin': origin,
+          'destination': destination
+        },
+        success: function(data, status) {
+          if (data == 'No drivers available. Check back later!') {
+              toggleNoDrivers();
+          } else {
+              rideCompleted = false;
+              checkRideCompleted();
+              console.log(data);
+              toggleFoundDriver(data.name, data.make, data.color, data.license_plate, data.pickup_eta);
+          }
+        }
+    });
+}
+
+//function updateDriverInfo(driverName, carModel, carColor,plates, arrivalTime,cost){
+function toggleFoundDriver(driverName, carModel, carColor, plates, pickupTime) {
+    $('.sidebar-state').removeClass('active'); //disables any active
+    $('#driver-found').addClass('active');
+    $('.driver-name').html(driverName);
+    $('.car-model').html(carModel);
+    $('.car-color').html(carColor);
+    $('.car-plates').html(plates);
+    $('.time').html(pickupTime);
+    //$('.cost').html(cost);
+}
+
+function toggleNoDrivers() {
+    $('.sidebar-state').removeClass('active'); //disables any active
+    $('#no-drivers').addClass('active');
+    directionsDisplay.setMap(null);
+}
+
+function checkRideCompleted() {
+    $.ajax({
+        url:'api/checkRideCompleted',
+        type: 'POST',
+        success: function(data, status) {
+          if (data == 'true') {
+              rideCompleted = true;
+              clearTimeout(rideCompletedTimeout);
+              console.log("ride completed");
+              toggleRideCompleted();
+          } else {
+              console.log("ride is still in progress");
+          }
+        }
+    })
+    if (!rideCompleted) {
+        clearTimeout(rideCompletedTimeout);
+        rideCompletedTimeout = setTimeout(checkRideCompleted, 10000);
+    }
+}
+
+function toggleRideCompleted() {
+    $("body.rider").removeClass('side-bar-active');
+    $(".overlay.destination").show();
+    directionsDisplay.setMap(null);
 }
