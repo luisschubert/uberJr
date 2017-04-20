@@ -9,9 +9,9 @@
   <div id="wrapper" class="rider">
     <div class="map-bg"></div>
     <div class="log-out-box">
-      <form id="driverInactive" action="/api/inactive" style="display:none;" method="POST">
+      <!-- <form id="driverInactive" action="/api/inactive" style="display:none;" method="POST">
   			<input type="submit" value="Inactive" id="inactive" class="button inactive" onclick="">
-  		</form>
+  		</form> -->
       <a href="/logout" class="button logout">Log Out</a>
     </div>
     {% include 'sidebar-driver.html' %}
@@ -22,13 +22,13 @@
     <div class="rider-footer">
       <img class="logo" src="/static/images/uberjr-logo-white.png" alt="uber jr logo">
     </div>
-    <div class="overlay destination wow fadeInDown" data-wow-delay="3.4s" data-wow-duration="3.s">
+    <!-- <div class="overlay destination wow fadeInDown" data-wow-delay="3.4s" data-wow-duration="3.s">
       <form id="driverReady" action="/api/drive" method="POST">
         <p>Ready to drive?</p>
         <input type="hidden" id="driveReadyField" name="ready" value="true">
         <input type="submit" value="Start Driving" class="loc-sbmt-demo" onclick="">
       </form>
-    </div>
+    </div> -->
   </div>
   <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDhoFXFuPUf6BZtqoTUsssx9on-PQYxo4w&callback=initMap"></script>
   <script type="text/javascript" src="/static/js/jquery-1.11.2.min.js"></script>

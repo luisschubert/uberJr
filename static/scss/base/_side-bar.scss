@@ -12,9 +12,18 @@
    z-index: 9;
    opacity: 0;
 
+   .sidebar-header {
+      h4 {
+         font-size: 28px;
+         font-weight: 100;
+         margin: 0;
+         display: inline-block;
+      }
+   }
+
    &.driver {
-      // left: 0;
-      // opacity: 1;
+      left: 0;
+      opacity: 1;
       padding: 30px 30px 20px;
 
       .driver-status {
@@ -26,6 +35,25 @@
             font-size: 14px;
             margin-bottom: 4px;
          }
+      }
+
+      #driverReady,
+      #driverInactive {
+         position: absolute;
+         top: -200px;
+      }
+   }
+
+   .driver-welcome {
+      margin-top: 30vh;
+      text-align: center;
+
+      h4 {
+         margin-top: 30%;
+         font-size: 32px;
+         font-weight: 100;
+         margin: 0;
+         display: inline-block;
       }
    }
 

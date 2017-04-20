@@ -222,3 +222,29 @@ function toggleInactive() {
     $(".overlay.destination").show();
     directionsDisplay.setMap(null);
 }
+
+
+//driver status toggle
+$('#switch-toggle').click(function(){
+  if ($('#switch-toggle').is(':checked')) {
+    $('.loc-sbmt-demo').click();
+    $('#waitting-state').toggleClass('active');
+    $('.driver-welcome').hide();
+  }
+  else {
+    $('.inactive').click();
+    $('#waitting-state').toggleClass('active');
+  }
+});
+
+
+
+
+
+
+
+
+
+
+
+

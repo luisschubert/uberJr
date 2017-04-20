@@ -1,11 +1,33 @@
-<div class="side-bar driver mCustomScrollbar">
+<div class="side-bar driver mCustomScrollbar wow fadeInLeft" data-wow-duration="1s" data-wow-delay="4s">
 
-   <!-- Toggle "active" class to enable different states -->
+    <form id="driverReady" action="/api/drive" method="POST">
+	    <p>Ready to drive?</p>
+	    <input type="hidden" id="driveReadyField" name="ready" value="true">
+	    <input type="submit" value="Start Driving" class="loc-sbmt-demo" onclick="">
+	</form>
+    <form id="driverInactive" action="/api/inactive" style="display:none;" method="POST">
+		<input type="submit" value="Inactive" id="inactive" class="button inactive" onclick="">
+	</form>
+
+    <div class="sidebar-header">
+     <h4>Driver Status</h4>
+     <div class="switch-wrapper">
+	     <label class="switch">
+		    <input type="checkbox" id="switch-toggle" class="switch-input">
+		    <span class="switch-label" data-on="Active" data-off="Inactive"></span>
+		    <span class="switch-handle"></span>
+		 </label>
+	 </div>
+    <div class="divider"></div>
+    </div>
+
+    <div class="driver-welcome wow fadeOut" data-wow-duration="1s" data-wow-delay="8s">
+    	<h4>Welcome!</h4>
+    	<p>Please update your status</p>
+    </div>
 
     <!-- driver waitting for request -->
-	<div id="waitting-state" class="sidebar-state active">
-		<h2 class="driver-info">Welcome!</h4>
-		<div class="divider"></div>
+	<div id="waitting-state" class="sidebar-state">
 		<div class="loader">
 		  <span class="inner1"></span>
 		  <span class="inner2"></span>
