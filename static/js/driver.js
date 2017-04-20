@@ -10,23 +10,23 @@ $(document).ready(function() {
 });
 
 function updateLocation(position) {
-  var lat = position.coords.latitude;
-  var lng = position.coords.longitude;
-  driverCoordinates = {lat:lat, lng:lng};
-  // to ensure that the location isn't updated before the driver becomes active
-  if (isActive) {
-      $.ajax({
-          url:'/api/updateDriverLocation',
-          type: 'POST',
-          data:{
-            'lat': lat,
-            'lng': lng,
-          },
-          success: function(data) {
-              console.log(data);
-          }
-      })
-  }
+    var lat = position.coords.latitude;
+    var lng = position.coords.longitude;
+    driverCoordinates = {lat:lat, lng:lng};
+    // to ensure that the location isn't updated before the driver becomes active
+    if (isActive) {
+        $.ajax({
+            url:'/api/updateDriverLocation',
+            type: 'POST',
+            data: {
+              'lat': lat,
+              'lng': lng
+            },
+            success: function(data) {
+                console.log(data);
+            }
+        })
+    }
 }
 
 function errorHandler(err) {
@@ -63,6 +63,7 @@ function readyDrive() {
             isActive = true;
             foundRider = false;
             checkForRider();
+            $('#waitting-state').addClass('active');
             toggleActive();
         }
     });
@@ -100,11 +101,11 @@ function checkForRider() {
 }
 
 function toggleFoundRider(rider) {
-    //console.log(rider);
-    //console.log(driverCoordinates);
     console.log("found rider and updating view with details");
     $('#waitting-state').removeClass('active');
+    $('#ride-title').html("New Ride Request!");
     $('#ride-request').addClass('active');
+    $('#specifics').addClass('active');
     $('.rider-name').html(rider.rider_name);
     pickupCoordinates = {lat:rider.pickup_lat, lng:rider.pickup_long};
     geocoder.geocode({'location': pickupCoordinates}, function(results, status) {
@@ -119,16 +120,14 @@ function toggleFoundRider(rider) {
         }
     });
     $('.time').html(rider.pickup_eta);
-    //console.log(pickupCoordinates);
     calculateAndDisplayRoute(directionsService,directionsDisplay,driverCoordinates,pickupCoordinates);
     directionsDisplay.setMap(map);
-    //directionsDisplay.setPanel(document.getElementById("directions-to-rider"));
 }
 
 function acceptDeclineRide(val) {
     var formData = {
         'status': val
-    }
+    };
     $.ajax({
         url: '/api/acceptDeclineRide',
         type: 'POST',
@@ -140,22 +139,19 @@ function acceptDeclineRide(val) {
                 setInactive();
             } else {
               // if driver accepted ride request
-                console.log("Pickup latitude: " + data.pickup_lat);
-                console.log("Pickup longitude: " + data.pickup_long);
                 foundRider = true;
-                toggleAcceptRide(data);
+                toggleAcceptRide();
             }
         }
     });
 }
 
-function toggleAcceptRide(rider) {
+function toggleAcceptRide() {
     console.log("accepted ride and updating view");
-    $('#ride-request').removeClass('active');
+    $('#ride-title').html("Enroute to Pickup");
+    $('#specifics').removeClass('active');
     $('#directions-to-rider').addClass('active');
-    pickupCoordinates = {lat:rider.pickup_lat, lng:rider.pickup_long};
-    //calculateAndDisplayRoute(directionsService,directionsDisplay,driverCoordinates,pickupCoordinates);
-    directionsDisplay.setPanel(document.getElementById("directions-to-rider"));
+    directionsDisplay.setPanel(document.getElementById("directions-rider"));
 }
 
 function pickup() {
@@ -178,13 +174,14 @@ function togglePickedupRider(coords) {
     console.log(coords);
     console.log(pickupCoordinates);
     console.log("picked up Rider and updating view");
+    $('#ride-title').html("Enroute to Destination");
     $('#directions-to-rider').removeClass('active');
     $('#directions-to-destination').addClass('active');
+    $("#sidebar-driver").mCustomScrollbar("scrollTo", "#ride-request");
     destCoordinates = {lat:coords.dest_lat, lng:coords.dest_long};
-    //console.log("destCoordinates:" + destCoordinates);
     calculateAndDisplayRoute(directionsService,directionsDisplay,pickupCoordinates,destCoordinates);
     directionsDisplay.setMap(map);
-    directionsDisplay.setPanel(document.getElementById("directions-to-destination"));
+    directionsDisplay.setPanel(document.getElementById("directions-dest"));
 }
 
 function completeRide() {
@@ -229,7 +226,6 @@ function setInactive() {
 function toggleInactive() {
     $('#driverInactive').hide();
     $('.sidebar-state').removeClass('active');
-    $('#waitting-state').addClass('active');
     $("body.driver").removeClass('side-bar-active');
     $(".overlay.destination").show();
     directionsDisplay.setMap(null);

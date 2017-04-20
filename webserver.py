@@ -491,8 +491,7 @@ def api_acceptDeclineRide():
     if status == 'accept':
         ride.accepted = True
         db.session.commit()
-        info = {'pickup_lat': ride.pickup_lat, 'pickup_long': ride.pickup_long}
-        return jsonify(info)
+        return "ride accepted. ride marked accepted."
     else:
         # mark driver inactive
         driver = Drivers.query.filter_by(driver_id=driverid).first()

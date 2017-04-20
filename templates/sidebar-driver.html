@@ -1,4 +1,4 @@
-<div class="side-bar driver mCustomScrollbar">
+<div id="sidebar-driver" class="side-bar driver mCustomScrollbar">
 
    <!-- Toggle "active" class to enable different states -->
 
@@ -11,39 +11,41 @@
 		  <span class="inner2"></span>
 		  <span class="inner3"></span>
 		</div>
-		<p class="lght">Waiting for ride request..</p>
+		<p class="lght">Searching for ride request..</p>
 	</div>
 
     <div id="ride-request" class="sidebar-state">
-		<h1>New Ride Request!</h1>
-		<div class="divider"></div>
-		<h2 class="rider-info">Rider Information</h4>
-		<p>Name: <span class="rider-name">John Doe</span></p>
-		<p>Location: <span class="rider-location"></span></p>
-		<div class="divider"></div>
-		<p>Estimated Pickup Time:</p>
-		<p class="time">5:15pm</p>
-		<div class="divider"></div>
-		<form id="acceptDeclineRide" action="/api/acceptDeclineRide" method="POST">
-			<input type="submit" value="accept" id="acceptRide" class="button" onclick="">
-			<input type="submit" value="decline" id="declineRide" class="button" onclick="">
-		</form>
-		<br>
-	</div>
+			<h1 id="ride-title">New Ride Request!</h1>
+			<div class="divider"></div>
+			<h2 class="rider-info">Rider Information</h4>
+			<p>Name: <span class="rider-name">John Doe</span></p>
+			<p>Location: <span class="rider-location"></span></p>
+			<div id="specifics" class="sidebar-state">
+				<div class="divider"></div>
+				<p>Estimated Pickup Time:</p>
+				<p class="time">5:15pm</p>
+				<div class="divider"></div>
+				<form id="acceptDeclineRide" action="/api/acceptDeclineRide" method="POST">
+					<input type="submit" value="accept" id="acceptRide" class="button" onclick="">
+					<input type="submit" value="decline" id="declineRide" class="button" onclick="">
+				</form>
+			</div>
+			<br>
+			<div class="divider"></div>
+		</div>
 
     <!-- directions to pickup rider-->
 	<div id="directions-to-rider" class="sidebar-state">
-
+		<div id="directions-rider"></div>
 		<div class="divider"></div>
 		<form id="pickupReady" action="/api/pickup" method="POST">
 			<input type="submit" value="Ready to Pick Up" class="button" onclick="">
 		</form>
-		<div class="divider"></div>
 	</div>
 
     <!-- directions to rider destination -->
 	<div id="directions-to-destination" class="sidebar-state">
-
+		<div id="directions-dest"></div>
 		<div class="divider"></div>
 		<form id="rideCompleted" action="/api/completeRide" method="POST">
 			<input type="submit" value="Ride Completed" class="button" onclick="">

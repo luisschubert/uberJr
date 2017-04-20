@@ -116,8 +116,8 @@ function requestRide() {
             calculateAndDisplayRoute(directionsService, directionsDisplay, originA, destinationA);
             directionsDisplay.setMap(map);
             $(".overlay.destination").hide();
+            $('#waitting-state').addClass('active');
             setTimeout(function() {
-                //$('#waitting-state').addClass('active');
                 $("body.rider").addClass('side-bar-active');
             }, 200);
         }
@@ -138,7 +138,7 @@ function requestDriver(origin, destination) {
             if (data == "No drivers available. Check back later!") {
                 toggleNoDrivers();
             } else {
-                $('#waitting-state').addClass('active');
+                //$('#waitting-state').addClass('active');
                 travelTime = data.travelTime;
                 rideAccepted = false;
                 console.log("called checkRideAccepted in requestDriver");
