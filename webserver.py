@@ -135,8 +135,6 @@ def driver():
     if 'email' not in session:
         return redirect(url_for('login'))
     user = Users.query.filter_by(email = session['email']).first()
-    # do we need to check if an account with that email exists here? (redirect to signup page if nonexistent?)
-    # might be unnecessary since we already check for that in the login API call?
     if user.is_driver == False:
         return redirect(url_for('rider'))
     else:
@@ -147,8 +145,6 @@ def rider():
     if 'email' not in session:
         return redirect(url_for('login'))
     user = Users.query.filter_by(email = session['email']).first()
-    # do we need to check if an account with that email exists here? (redirect to signup page if nonexistent?)
-    # might be unnecessary since we already check for that in the login API call?
     if user.is_driver == True:
         return redirect(url_for('driver'))
     else:
@@ -199,21 +195,9 @@ def logout():
         session.pop('email', None)
         return redirect(url_for('home'))
 
-@app.route("/api/inactive", methods=['POST'])
-def api_inactive():
-    user = Users.query.filter_by(email = session['email']).first()
-    # mark the driver as inactive
-    driver = Drivers.query.filter_by(driver_id = user.id).first()
-    driver.is_active = False
-    # remove the driver from the activedrivers table
-    ActiveDrivers.query.filter_by(id = user.id).delete()
-    db.session.commit()
-    return "driver marked inactive."
-
 @app.route("/geolocationTest")
 def geolocationTest():
     return render_template("geolocationTest.html")
-
 
 #return all available drivers in your area
 @app.route("/api/getDrivers", methods=['POST'])
@@ -346,10 +330,39 @@ def api_login():
         print 'user with that email does not exist'
         return "No account with that email was found!"
     else:
-        #can't think of additional errors to be thrown
-        #but if they exist print them here
-        print "No idea??"
         return "No idea??"
+
+@app.route("/api/drive", methods=['POST'])
+def api_drive():
+    status = request.form.get('status')
+    currentlat = request.form.get('originLat')
+    currentlong = request.form.get('originLong')
+    print(currentlat)
+    print(currentlong)
+    if status == 'true':
+        # mark the driver as 'active'
+        driverid = Users.query.filter_by(email = session['email']).first().id
+        driver = Drivers.query.filter_by(driver_id = driverid).first()
+        driver.is_active = True
+        db.session.commit()
+        # add the driver to the active drivers table
+        activedriverid = Drivers.query.filter_by(driver_id = driverid).first().driver_id
+        new_active_driver = ActiveDrivers(activedriverid, currentlat, currentlong, False)
+        db.session.add(new_active_driver)
+        db.session.commit()
+        return "added to ready to drive pool"
+
+@app.route("/api/checkForRider", methods=['POST'])
+def api_checkForRider():
+    # return response with rider's origin coords + rider's name
+    driverid = Users.query.filter_by(email = session['email']).first().id
+    driver_ride = Rides.query.filter_by(driver_id=driverid).first()
+    if driver_ride is not None:
+        ridername = Users.query.filter_by(id = driver_ride.rider_id).first().name
+        info = {'pickup_lat': driver_ride.pickup_lat, 'pickup_long': driver_ride.pickup_long, 'rider_name': ridername}
+        return jsonify(info)
+    else:
+        return "none"
 
 @app.route("/api/rider", methods=['POST'])
 def api_rider():
@@ -376,84 +389,6 @@ def api_rider():
     db.session.add(ride)
     db.session.commit()
     return "added ride request to table"
-
-@app.route("/api/checkForRider", methods=['POST'])
-def api_checkForRider():
-    # return response with rider's origin coords + rider's name
-    driverid = Users.query.filter_by(email = session['email']).first().id
-    driver_ride = Rides.query.filter_by(driver_id=driverid).first()
-    if driver_ride is not None:
-        ridername = Users.query.filter_by(id = driver_ride.rider_id).first().name
-        info = {'pickup_lat': driver_ride.pickup_lat, 'pickup_long': driver_ride.pickup_long, 'rider_name': ridername}
-        return jsonify(info)
-    else:
-        return "none"
-
-@app.route("/api/checkRideCompleted", methods=['POST'])
-def api_checkRideCompleted():
-    riderid = Users.query.filter_by(email = session['email']).first().id
-    rider_ride = Riders.query.filter_by(rider_id=riderid).first()
-    if rider_ride is None:
-        return "true"
-    else:
-        return "false"
-
-@app.route("/api/pickup", methods=['POST'])
-def api_pickup():
-    driverid = Users.query.filter_by(email = session['email']).first().id
-    ride = Rides.query.filter_by(driver_id = driverid).first()
-    if ride is not None:
-        ride.pickedup = True
-        db.session.commit()
-        info = {'dest_lat': ride.dest_lat, 'dest_long': ride.dest_long}
-        return jsonify(info)
-    else:
-        return "pickup failed; no ride found??"
-
-@app.route("/api/completeRide", methods=['POST'])
-def api_completeRide():
-    driverid = Users.query.filter_by(email = session['email']).first().id
-    ride = Rides.query.filter_by(driver_id = driverid).first()
-    if ride is not None:
-        # remove ride request
-        Riders.query.filter_by(rider_id = ride.rider_id).delete()
-        # remove paired ride
-        Rides.query.filter_by(driver_id = driverid).delete()
-        driver = ActiveDrivers.query.filter_by(id = driverid).first()
-        driver.paired = False
-        db.session.commit()
-        return "ride request completed; driver is no longer paired"
-    else:
-        return "completing ride request failed; no ride found??"
-
-@app.route("/api/drive", methods=['POST'])
-def api_drive():
-    status = request.form.get('status')
-    currentlat = request.form.get('originLat')
-    currentlong = request.form.get('originLong')
-    print(currentlat)
-    print(currentlong)
-    if status == 'true':
-        # mark the driver as 'active'
-        driverid = Users.query.filter_by(email = session['email']).first().id
-        driver = Drivers.query.filter_by(driver_id = driverid).first()
-        driver.is_active = True
-        db.session.commit()
-        # add the driver to the active drivers table
-        activedriverid = Drivers.query.filter_by(driver_id = driverid).first().driver_id
-        new_active_driver = ActiveDrivers(activedriverid, currentlat, currentlong, False)
-        db.session.add(new_active_driver)
-        db.session.commit()
-        return "added to ready to drive pool"
-
-@app.route("/api/acceptDeclineRide", methods=['POST'])
-def api_acceptDeclineRide():
-    status = request.form.get('status')
-    if status == 'accept':
-        # placeholder
-        return 'ride accepted. driver and riders paired.'
-    else:
-        return 'ride declined. driver marked inactive, and rider returned to ride request pool'
 
 @app.route("/api/requestdriver", methods=['POST'])
 def api_requestdriver():
@@ -521,6 +456,63 @@ def api_requestdriver():
         pickup_eta = datetime.now() + timedelta(seconds=timeToRider)
         info = {'name': drivername, 'license_plate': driverinfo.license_plate, 'color': driverinfo.car_color, 'make': driverinfo.car_make, 'pickup_eta': pickup_eta.strftime("%I:%M %p").lstrip("0").replace(" 0", " ")}
         return jsonify(info)
+
+@app.route("/api/acceptDeclineRide", methods=['POST'])
+def api_acceptDeclineRide():
+    status = request.form.get('status')
+    if status == 'accept':
+        # placeholder
+        return 'ride accepted. driver and riders paired.'
+    else:
+        return 'ride declined. driver marked inactive, and rider returned to ride request pool'
+
+@app.route("/api/checkRideCompleted", methods=['POST'])
+def api_checkRideCompleted():
+    riderid = Users.query.filter_by(email = session['email']).first().id
+    rider_ride = Riders.query.filter_by(rider_id=riderid).first()
+    if rider_ride is None:
+        return "true"
+    else:
+        return "false"
+
+@app.route("/api/pickup", methods=['POST'])
+def api_pickup():
+    driverid = Users.query.filter_by(email = session['email']).first().id
+    ride = Rides.query.filter_by(driver_id = driverid).first()
+    if ride is not None:
+        ride.pickedup = True
+        db.session.commit()
+        info = {'dest_lat': ride.dest_lat, 'dest_long': ride.dest_long}
+        return jsonify(info)
+    else:
+        return "pickup failed; no ride found??"
+
+@app.route("/api/completeRide", methods=['POST'])
+def api_completeRide():
+    driverid = Users.query.filter_by(email = session['email']).first().id
+    ride = Rides.query.filter_by(driver_id = driverid).first()
+    if ride is not None:
+        # remove ride request
+        Riders.query.filter_by(rider_id = ride.rider_id).delete()
+        # remove paired ride
+        Rides.query.filter_by(driver_id = driverid).delete()
+        driver = ActiveDrivers.query.filter_by(id = driverid).first()
+        driver.paired = False
+        db.session.commit()
+        return "ride request completed; driver is no longer paired"
+    else:
+        return "completing ride request failed; no ride found??"
+
+@app.route("/api/inactive", methods=['POST'])
+def api_inactive():
+    user = Users.query.filter_by(email = session['email']).first()
+    # mark the driver as inactive
+    driver = Drivers.query.filter_by(driver_id = user.id).first()
+    driver.is_active = False
+    # remove the driver from the activedrivers table
+    ActiveDrivers.query.filter_by(id = user.id).delete()
+    db.session.commit()
+    return "driver marked inactive."
 
 if __name__ == '__main__':
     app.run(debug=True)
