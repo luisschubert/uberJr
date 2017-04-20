@@ -1,5 +1,6 @@
 //function updateDriverInfo(driverName, carModel, carColor,plates, arrivalTime,cost){
 function toggleFoundDriver(driverName, carModel, carColor, plates, pickupTime) {
+    console.log("toggleFoundDriver right now");
     $('.sidebar-state').removeClass('active'); //disables any active
     $('#driver-found').addClass('active');
     $('.driver-name').html(driverName);
@@ -8,22 +9,57 @@ function toggleFoundDriver(driverName, carModel, carColor, plates, pickupTime) {
     $('.car-plates').html(plates);
     $('.time').html(pickupTime);
     //$('.cost').html(cost);
+
+    // remove dummy drivers here...
 }
 
 function toggleNoDrivers() {
+  console.log("toggleNoDrivers right now");
     $('.sidebar-state').removeClass('active'); //disables any active
     $('#no-drivers').addClass('active');
     directionsDisplay.setMap(null);
 }
 
 function toggleRideCompleted() {
+  console.log("toggleRideCompleted right now");
     $("body.rider").removeClass('side-bar-active');
     $(".overlay.destination").show();
     directionsDisplay.setMap(null);
 }
 
 var counter = 1;
+var d_lat;
+var d_lng;
 function updateDriverMarkers() {
+  console.log("<NITYAM> .. updateDriverMarkers right now");
+  // remove the current marker
+  // check database(rides table) here by ajax
+  $.ajax({
+      url: '/api/checkDriverLocation',
+      type: 'POST',
+      // data: formData, // formdata notDefined
+      success: function(data) {
+          if (data == 'none') {
+              console.log('Driver coords not found... check the RIDERS table connection');
+          } else {
+            console.log("Inside updateDriverMarkers' Ajax command");
+            d_lat = data.dest_lat;
+            d_lng = data.dest_long;
+          }
+      }
+  });
+  if (typeof(d_lat) == "undefined"){
+    console.log("UNDEFINED DRIVER's LOCATION");
+  }else {
+    console.log("driver lat outside :", d_lat);
+    console.log("driver lng outside:", d_lng);
+  }
+  console.log("updating the marker on new location");
+  // update driver location or the marker
+
+/*
+
+    console.log("updateDriverMarkers rightnow");
     console.log("updating location " + counter);
     for (var i = 0; i < curMarkers.length; i++) {
         console.log(curMarkers[i]);
@@ -33,9 +69,11 @@ function updateDriverMarkers() {
     }
     counter = counter + 1;
     setTimeout(updateDriverMarkers, 5000);
+    */
 }
 
 function getCurrentAddress(lat, lng) {
+  console.log("getCurrentAddress of the rider");
     $.ajax({
         url:'https://maps.googleapis.com/maps/api/geocode/json?latlng='+ lat + ',' + lng + '&key=AIzaSyBnXUp2Txy1C2OyYp0crd8iyaIDSb-N8oU',
         method: 'POST',
@@ -52,6 +90,7 @@ function getCurrentAddress(lat, lng) {
 }
 
 function showAvailableDrivers(lat, lng) {
+  console.log("showAvailableDrivers rightnow");
     $.ajax({
         url:'api/getDrivers',
         type: 'POST',
@@ -67,6 +106,7 @@ function showAvailableDrivers(lat, lng) {
 }
 
 function trackPosition() {
+  console.log("trackPosition of the rider");
     if (navigator.geolocation) {
         navigator.geolocation.watchPosition(updateLocation);
     } else {
@@ -75,6 +115,7 @@ function trackPosition() {
 }
 
 function requestDriver(origin, destination) {
+  console.log("requestDriver rightnow");
     console.log("called requestDriver");
     $.ajax({
         url:'api/requestdriver',
@@ -100,6 +141,7 @@ function requestDriver(origin, destination) {
 var rideCompleted;
 var rideCompletedTimeout;
 function checkRideCompleted(){
+  console.log("checkRideCompleted right now");
     $.ajax({
         url:'api/checkRideCompleted',
         type: 'POST',
@@ -110,6 +152,7 @@ function checkRideCompleted(){
               console.log("ride completed");
               toggleRideCompleted();
           } else {
+              updateDriverMarkers();
               console.log("ride is still in progress");
           }
         }
@@ -121,7 +164,7 @@ function checkRideCompleted(){
 }
 
 function requestRide() {
-    console.log("requesting ride");
+    console.log("requesting ride rightnow");
     var originA = document.getElementById('originRider').value;
     var destinationA = document.getElementById('destinationRider').value;
     var formData = {

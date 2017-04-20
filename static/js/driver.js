@@ -4,7 +4,6 @@ var theLat = 0;
 var theLong = 0;
 var pickupCoordinates;
 var destCoordinates;
-var drivingStatus = false;
 
 $(document).ready(function() {
     trackPosition();
@@ -33,28 +32,6 @@ function updateLocation(position) {
           }
       });
   }
-  /*
-  if(drivingStatus){
-    // update the location on the database named ActiveDrivers
-    //    api/activeDriverUpdate
-    var formData ={
-      'status':
-    }
-    $.ajax({
-        url: '/api/activeDriverUpdate',
-        type: 'POST',
-        data: formData,
-        success: function(data, status) {
-            foundRider = false;
-            checkForRider();
-            console.log(status + " : " + data);
-            $(".overlay.destination").hide(); setTimeout(function() {
-                $("body.driver").addClass('side-bar-active');
-            }, 200);
-        }
-    });
-  }
-  */
 }
 
 function trackPosition() {
@@ -67,6 +44,7 @@ function trackPosition() {
 }
 
 function toggleInactive() {
+  console.log("toggleInactive rightnow");
     isActive = false;
     $('#driverInactive').hide();
     $("body.driver").removeClass('side-bar-active');
@@ -75,6 +53,7 @@ function toggleInactive() {
 }
 
 function toggleFoundRider(rider){
+  console.log("toggleFoundRider rightnow");
   console.log(rider);
   console.log(driverCoordinates);
   console.log("found Rider and updating view");
@@ -100,12 +79,13 @@ function toggleFoundRider(rider){
 }
 
 function toggleAcceptRide() {
-    console.log("accepted ride and updating view");
+    console.log("accepted ride and updating view right now");
     $('#ride-request').removeClass('active');
     $('#directions-to-rider').addClass('active');
 }
 
 function togglePickedupRider(coords) {
+  console.log("togglePickedupRider rightnow");
     console.log(coords);
     console.log(pickupCoordinates);
     console.log("picked up Rider and updating view");
@@ -119,6 +99,7 @@ function togglePickedupRider(coords) {
 }
 
 function toggleCompletedRide() {
+  console.log("toggleCompletedRide rightnow");
     $('#directions-to-destination').removeClass('active');
     $('#waitting-state').addClass('active');
     foundRider = false;
@@ -130,6 +111,7 @@ function toggleCompletedRide() {
 var foundRider;
 var checkForRiderTimeout;
 function checkForRider() {
+  console.log("checkForRider rightnow");
     $.ajax({
         url: 'api/checkForRider',
         type: 'POST',
@@ -138,6 +120,7 @@ function checkForRider() {
             if (data == 'none') {
                 console.log('no match yet');
             } else {
+              console.log("rider found!!!!!!!!");
                 console.log(data.pickup_lat);
                 console.log(data.pickup_long);
                 console.log(data.rider_name);
@@ -150,10 +133,11 @@ function checkForRider() {
     if (!foundRider) {
         clearTimeout(checkForRiderTimeout);
         checkForRiderTimeout = setTimeout(checkForRider, 10000);
-    }
-}
+      }
+  }
 
 function setInactive() {
+  console.log("setInactive rightnow");
     isActive = false;
     $.ajax({
         url: '/api/inactive',
@@ -194,6 +178,7 @@ function readyDrive() {
 }
 
 function acceptDeclineRide(val) {
+  console.log("acceptDeclineRide rightnow");
     var formData = {
         'status': val
     };
@@ -216,6 +201,7 @@ function acceptDeclineRide(val) {
 }
 
 function pickup() {
+    console.log("pickup rightnow");
     var formData = {
         'status': $('input[name=ready]').val()
     };
@@ -236,6 +222,7 @@ function pickup() {
 }
 
 function completeRide() {
+  console.log("completeRide rightnow");
     var formData = {
         'status': $('input[name=completed]').val()
     };
