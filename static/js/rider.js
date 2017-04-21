@@ -141,7 +141,6 @@ function requestDriver(origin, destination) {
             if (data == "No drivers available. Check back later!") {
                 toggleNoDrivers();
             } else {
-                //$('#waitting-state').addClass('active');
                 travelTime = data.travelTime;
                 rideFare = data.fare;
                 rideAccepted = false;
@@ -179,8 +178,8 @@ function checkRideAccepted() {
             // else if ride request is accepted
               rideAccepted = true;
               clearTimeout(rideAcceptedTimeout);
-              rideCompleted = false;
-              checkRideCompleted();
+              pickedUp = false;
+              checkPickedUp();
               toggleFoundDriver(data.name, data.make, data.color, data.license_plate, data.pickup_eta);
           }
       }
@@ -195,6 +194,8 @@ function checkRideAccepted() {
 function toggleFoundDriver(driverName, carModel, carColor, plates, pickupTime) {
     $('.sidebar-state').removeClass('active'); //disables any active
     $('#driver-found').addClass('active');
+    $('#rider-buttons').addClass('active');
+    $('#driver-found-title').html('A driver is on the way!');
     $('.driver-name').html(driverName);
     $('.car-model').html(carModel);
     $('.car-color').html(carColor);
@@ -214,9 +215,15 @@ function checkPickedUp() {
         url: '/api/checkPickedUp',
         type: 'GET',
         success: function(data, status) {
-            pickedUp = true;
-            clearTimeout(pickedUpTimeout);
-            togglePickedUp();
+            if (data == 'true') {
+                pickedUp = true;
+                clearTimeout(pickedUpTimeout);
+                rideCompleted = false;
+                checkRideCompleted();
+                togglePickedUp();
+            } else {
+                console.log("rider is still waiting to be picked up");
+            }
         }
     });
     if (!pickedUp) {
@@ -226,7 +233,11 @@ function checkPickedUp() {
 }
 
 function togglePickedUp() {
-
+    console.log("picked up and updating view");
+    $('#driver-found-title').html('Enroute to Destination');
+    $('#rider-buttons').removeClass('active');
+    $('#directions-ride').addClass('active');
+    directionsDisplay.setPanel(document.getElementById("directions-ride"));
 }
 
 function checkRideCompleted() {

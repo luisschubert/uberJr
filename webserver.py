@@ -510,6 +510,15 @@ def api_acceptDeclineRide():
         db.session.commit()
         return 'ride declined. driver marked inactive, and rider returned to ride request pool'
 
+@app.route("/api/checkPickedUp", methods=['GET'])
+def api_checkPickedUp():
+    riderid = Users.query.filter_by(email = session['email']).first().id
+    ride = Rides.query.filter_by(rider_id=riderid).first()
+    if ride.pickedup == True:
+        return "true"
+    else:
+        return "false"
+
 @app.route("/api/checkRideCompleted", methods=['GET'])
 def api_checkRideCompleted():
     riderid = Users.query.filter_by(email = session['email']).first().id
