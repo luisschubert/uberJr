@@ -56,20 +56,16 @@ function updateDriverMarkers() {
   }
   console.log("updating the marker on new location");
   // update driver location or the marker
-
-/*
-
-    console.log("updateDriverMarkers rightnow");
-    console.log("updating location " + counter);
-    for (var i = 0; i < curMarkers.length; i++) {
-        console.log(curMarkers[i]);
-        driverslocations[i][1] = driverslocations[i][1] + 0.005;
-        driverslocations[i][2] = driverslocations[i][2] + 0.005;
-        curMarkers[i].setPosition(new google.maps.LatLng(driverslocations[i][1], driverslocations[i][2]));
-    }
-    counter = counter + 1;
-    setTimeout(updateDriverMarkers, 5000);
-    */
+  console.log("updateDriverMarkers rightnow");
+  console.log("updating location " + counter);
+  for (var i = 0; i < curMarkers.length; i++) {
+      console.log(curMarkers[i]);
+      driverslocations[i][1] = d_lat;
+      driverslocations[i][2] = d_lng;
+      curMarkers[i].setPosition(new google.maps.LatLng(driverslocations[i][1], driverslocations[i][2]));
+  }
+  counter = counter + 1;
+  setTimeout(updateDriverMarkers, 5000);
 }
 
 function getCurrentAddress(lat, lng) {

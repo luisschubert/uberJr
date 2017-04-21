@@ -1,0 +1,3 @@
+Issues:
+
+Scrolling changes the dummy cars and doesn't zoom in.
