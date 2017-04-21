@@ -104,6 +104,7 @@ function toggleFoundRider(rider) {
     console.log("found rider and updating view with details");
     $('#waitting-state').removeClass('active');
     $('#ride-title').html("New Ride Request!");
+    //$('#switch-toggle').addClass('disabled');
     $('#ride-request').addClass('active');
     $('#specifics').addClass('active');
     $('.rider-name').html(rider.rider_name);
@@ -205,6 +206,7 @@ function completeRide() {
 
 function toggleCompletedRide() {
     $('.sidebar-state').removeClass('active');
+    //$('#switch-toggle').removeClass('disabled');
     $('#waitting-state').addClass('active');
     directionsDisplay.setMap(null);
 }
@@ -225,6 +227,7 @@ function setInactive() {
 
 function toggleInactive() {
     $('#driverInactive').hide();
+    //$('#switch-toggle').removeClass('disabled');
     $('.sidebar-state').removeClass('active');
     $("body.driver").removeClass('side-bar-active');
     $(".overlay.destination").show();
@@ -249,15 +252,3 @@ $('#switch-toggle').click(function(e){
     }
   }
 });
-
-
-
-
-
-
-
-
-
-
-
-

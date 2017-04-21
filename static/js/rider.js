@@ -2,6 +2,7 @@ var originA;
 var destinationA;
 var counter = 1;
 var travelTime;
+var timeToDest;
 var rideFare;
 var rideAccepted;
 var rideAcceptedTimeout;
@@ -143,6 +144,8 @@ function requestDriver(origin, destination) {
             } else {
                 travelTime = data.travelTime;
                 rideFare = data.fare;
+                // estimated time to destination (minutes) assuming departure time = pickup time
+                timeToDest = data.timeToDest;
                 rideAccepted = false;
                 console.log("called checkRideAccepted in requestDriver");
                 checkRideAccepted();
@@ -200,6 +203,7 @@ function toggleFoundDriver(driverName, carModel, carColor, plates, pickupTime) {
     $('.car-model').html(carModel);
     $('.car-color').html(carColor);
     $('.car-plates').html(plates);
+    $('.time-title').html('Estimated Time of Pickup:');
     $('.time').html(pickupTime);
     $('.cost').html("$" + rideFare);
 }
@@ -211,16 +215,21 @@ function toggleNoDrivers() {
 }
 
 function checkPickedUp() {
+    var formData = {
+        'timeToRider': travelTime,
+        'timeToDest': timeToDest
+    };
     $.ajax({
         url: '/api/checkPickedUp',
-        type: 'GET',
+        type: 'POST',
+        data: formData,
         success: function(data, status) {
-            if (data == 'true') {
+            if (data != 'false') {
                 pickedUp = true;
                 clearTimeout(pickedUpTimeout);
                 rideCompleted = false;
                 checkRideCompleted();
-                togglePickedUp();
+                togglePickedUp(data.arrival_time);
             } else {
                 console.log("rider is still waiting to be picked up");
             }
@@ -232,10 +241,12 @@ function checkPickedUp() {
     }
 }
 
-function togglePickedUp() {
+function togglePickedUp(arrivaltime) {
     console.log("picked up and updating view");
     $('#driver-found-title').html('Enroute to Destination');
     $('#rider-buttons').removeClass('active');
+    $('.time-title').html('Estimated Time of Arrival:');
+    $('.time').html(arrivaltime);
     $('#directions-ride').addClass('active');
     directionsDisplay.setPanel(document.getElementById("directions-ride"));
 }

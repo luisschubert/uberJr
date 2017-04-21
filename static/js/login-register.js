@@ -1,7 +1,7 @@
 //JS for login and register views here
 
 $(document).ready(function() {
-	$('#riderUserType').change(function(){
+	$('#riderUserType').change(function() {
         selection = $(this).val();
         switch(selection) {
             case 'true':
@@ -89,7 +89,7 @@ function doRegister() {
             'password': $('#riderPasswordField').val(),
             'confirmpassword': $('#riderConfPasswordField').val(),
             'isdriver': $('#riderUserType').val()
-        }
+        };
     } else {
         var formData = {
             'name': $('#driverNameField').val(),
@@ -101,7 +101,7 @@ function doRegister() {
             'color': $('#color').val(),
             'year': $('#year').val(),
             'make': $('#make').val()
-        }
+        };
     }
     $.ajax({
         url: '/api/signup',
@@ -145,7 +145,7 @@ function doLogin() {
     var formData = {
         'email': $('input[name=email]').val(),
         'password': $('input[name=password]').val()
-    }
+    };
     $.ajax({
         url: '/api/login',
         type: 'POST',

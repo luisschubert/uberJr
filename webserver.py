@@ -6,6 +6,7 @@ from datetime import datetime, timedelta
 import requests
 from flask_bcrypt import Bcrypt
 import googlemaps
+import time
 
 gmaps = googlemaps.Client(key='AIzaSyDhoFXFuPUf6BZtqoTUsssx9on-PQYxo4w')
 luis_apiKey = "AIzaSyBSbiX832JWq30JrqzH4tj-HriK9eJhhNs"
@@ -417,39 +418,46 @@ def api_requestdriver():
         departureTime = "now"
 
         # for each active driver that hasn't been paired
-        timeToRider = 1000000;
+        timeToRider = 1000000
         closestDriver = ActiveDrivers.query.filter_by(paired=False).first()
         if closestDriver is None:
             Riders.query.filter_by(rider_id=riderid).delete()
             db.session.commit()
             return "No drivers available. Check back later!"
         else:
+            riderDestGPS = "%s,%s" % (rider_dest_lat,rider_dest_long)
             availdrivers = ActiveDrivers.query.filter_by(paired=False).all()
+            # find closest driver
             for availdriver in availdrivers:
                 # compute their current location's gps coords
                 driverOriginGPS = "%s,%s" % (availdriver.current_lat,availdriver.current_long)
-                print(driverOriginGPS)
                 # find closest driver in terms of travel time
-                #hardcoded below
-                #r = requests.get("https://maps.googleapis.com/maps/api/distancematrix/json?units=imperial&origins=%s&destinations=%s&key=%s&departure_time=%s" % (driverOriginGPS,riderOriginGPS,apiKey,departureTime))
+                r = requests.get("https://maps.googleapis.com/maps/api/distancematrix/json?units=imperial&origins=%s&destinations=%s&key=%s&departure_time=%s" % (driverOriginGPS,riderOriginGPS,apiKey,departureTime))
                 #print r
-                #if r.status_code == 200:
-                if True:
-                    #response = r.content
-                    #parsed_response = json.loads(response)
+                if r.status_code == 200:
+                #if True:
+                    response = r.content
+                    parsed_response = json.loads(response)
                     #print parsed_response
-                    #travelTime = parsed_response[u'rows'][0][u'elements'][0][u'duration'][u'value']
-                    travelTime = 921
-                    timeToDest = 2000
-                    milesToDest = 25
-                    cost = 2.50 + (0.65 * timeToDest / 60) + (0.85 * milesToDest) + 1.75
-                    cost = round(cost, 2)
-                    #print "Travel time is", travelTime/60, "minutes."
-                    # if driver is within a range of 15 minutes away
-                    #if travelTime < 900:
-                    if travelTime < timeToRider:
-                        timeToRider = travelTime
-                        closestDriver = availdriver
+                    travelTime = parsed_response[u'rows'][0][u'elements'][0][u'duration'][u'value']
+                    #travelTime = 921
+                    #timeToDest = 2000
+                    # if driver is within a range of 30 minutes away
+                    if travelTime < 1800:
+                        if travelTime < timeToRider:
+                            timeToRider = travelTime
+                            closestDriver = availdriver
+            # calculate eta to destination with departuretime set to estimated pickup time
+            depDestTime = int(time.time()) + timeToRider
+            destDir = requests.get("https://maps.googleapis.com/maps/api/distancematrix/json?units=imperial&origins=%s&destinations=%s&key=%s&departure_time=%s" % (riderOriginGPS,riderDestGPS,apiKey,depDestTime))
+            if destDir.status_code == 200:
+                destresponse = destDir.content
+                parsed_destresp = json.loads(destresponse)
+                timeToDest = parsed_destresp[u'rows'][0][u'elements'][0][u'duration'][u'value']
+                milesToDest = parsed_destresp[u'rows'][0][u'elements'][0][u'distance'][u'value']
+                milesToDest = milesToDest / 1609.34
+            cost = 2.50 + (0.65 * timeToDest / 60) + (0.85 * milesToDest) + 1.75
+            cost = round(cost, 2)
             # mark the closest driver as paired
             closestDriver.paired = True
             # mark the ride request as paired
@@ -459,7 +467,7 @@ def api_requestdriver():
             new_ride = Rides(riderid, closestdriverid, rider_origin_lat, rider_origin_long, rider_dest_lat, rider_dest_long, False, False, False)
             db.session.add(new_ride)
             db.session.commit()
-            info = {'travelTime': timeToRider, 'fare': cost}
+            info = {'travelTime': timeToRider, 'fare': cost, 'timeToDest': timeToDest}
             return jsonify(info)
     else:
         return "can't request another ride! rider is already paired??"
@@ -510,12 +518,18 @@ def api_acceptDeclineRide():
         db.session.commit()
         return 'ride declined. driver marked inactive, and rider returned to ride request pool'
 
-@app.route("/api/checkPickedUp", methods=['GET'])
+@app.route("/api/checkPickedUp", methods=['POST'])
 def api_checkPickedUp():
     riderid = Users.query.filter_by(email = session['email']).first().id
     ride = Rides.query.filter_by(rider_id=riderid).first()
     if ride.pickedup == True:
-        return "true"
+        timeToRider = request.form.get('timeToRider')
+        timeToDest = request.form.get('timeToDest')
+        timeToRider = int(timeToRider)
+        timeToDest = int(timeToDest)
+        arrival_time = datetime.now() + timedelta(seconds=timeToRider+timeToDest)
+        info = {'arrival_time': arrival_time.strftime("%I:%M %p").lstrip("0").replace(" 0", " ")}
+        return jsonify(info)
     else:
         return "false"
 
