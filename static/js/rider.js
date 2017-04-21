@@ -2,6 +2,7 @@ var originA;
 var destinationA;
 var counter = 1;
 var travelTime;
+var rideFare;
 var rideAccepted;
 var rideAcceptedTimeout;
 var pickedUp;
@@ -142,6 +143,7 @@ function requestDriver(origin, destination) {
             } else {
                 //$('#waitting-state').addClass('active');
                 travelTime = data.travelTime;
+                rideFare = data.fare;
                 rideAccepted = false;
                 console.log("called checkRideAccepted in requestDriver");
                 checkRideAccepted();
@@ -198,7 +200,7 @@ function toggleFoundDriver(driverName, carModel, carColor, plates, pickupTime) {
     $('.car-color').html(carColor);
     $('.car-plates').html(plates);
     $('.time').html(pickupTime);
-    //$('.cost').html(cost);
+    $('.cost').html("$" + rideFare);
 }
 
 function toggleNoDrivers() {

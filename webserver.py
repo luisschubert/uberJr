@@ -440,7 +440,11 @@ def api_requestdriver():
                     #print parsed_response
                     #travelTime = parsed_response[u'rows'][0][u'elements'][0][u'duration'][u'value']
                     travelTime = 921
-                    print "Travel time is", travelTime/60, "minutes."
+                    timeToDest = 2000
+                    milesToDest = 25
+                    cost = 2.50 + (0.65 * timeToDest / 60) + (0.85 * milesToDest) + 1.75
+                    cost = round(cost, 2)
+                    #print "Travel time is", travelTime/60, "minutes."
                     # if driver is within a range of 15 minutes away
                     #if travelTime < 900:
                     if travelTime < timeToRider:
@@ -455,7 +459,7 @@ def api_requestdriver():
             new_ride = Rides(riderid, closestdriverid, rider_origin_lat, rider_origin_long, rider_dest_lat, rider_dest_long, False, False, False)
             db.session.add(new_ride)
             db.session.commit()
-            info = {'travelTime': timeToRider}
+            info = {'travelTime': timeToRider, 'fare': cost}
             return jsonify(info)
     else:
         return "can't request another ride! rider is already paired??"
