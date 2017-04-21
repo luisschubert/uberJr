@@ -21,6 +21,8 @@
       opacity: 0;
    }
 
+   input[disabled] {}
+
    .switch-label {
       position: relative;
       display: block;

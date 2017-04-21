@@ -233,15 +233,20 @@ function toggleInactive() {
 
 
 //driver status toggle
-$('#switch-toggle').click(function(){
-  if ($('#switch-toggle').is(':checked')) {
-    $('.loc-sbmt-demo').click();
-    $('#waitting-state').toggleClass('active');
-    $('.driver-welcome').hide();
+$('#switch-toggle').click(function(e){
+  if($('.switch').hasClass('disabled')) {
+    e.preventDefault();
   }
   else {
-    $('.inactive').click();
-    $('#waitting-state').toggleClass('active');
+    if ($('#switch-toggle').is(':checked')) {
+      $('.loc-sbmt-demo').click();
+      $('#waitting-state').toggleClass('active');
+      $('.driver-welcome').hide();
+    }
+    else {
+      $('.inactive').click();
+      $('#waitting-state').toggleClass('active');
+    }
   }
 });
 
