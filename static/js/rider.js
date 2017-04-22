@@ -67,56 +67,8 @@ function requestRide() {
         type: 'POST',
         data: formData,
         success: function(data, status) {
-            requestDriver(originA, destinationA);
             console.log(data);
-            service.getDistanceMatrix({
-                origins: [originA],
-                destinations: [destinationA],
-                travelMode: 'DRIVING',
-                drivingOptions: {
-                    departureTime: currentTime,
-                    trafficModel: google.maps.TrafficModel.BEST_GUESS
-                },
-                unitSystem: google.maps.UnitSystem.IMPERIAL,
-                avoidHighways: false,
-                avoidTolls: false
-            }, function(response, status) {
-                if (status !== 'OK') {
-                    alert('Error was: ' + status);
-                } else {
-                    var originList = response.originAddresses;
-                    var destinationList = response.destinationAddresses;
-                    deleteMarkers(markersArray);
-                    var showGeocodedAddressOnMap = function() {
-                        return function(results, status) {
-                            if (status === 'OK') {
-                                map.fitBounds(bounds.extend(results[0].geometry.location));
-                            } else {
-                                alert('Geocode was not successful due to: ' + status);
-                            }
-                        };
-                    };
-
-                    for (var i = 0; i < originList.length; i++) {
-                        var results = response.rows[i].elements;
-                        geocoder.geocode({
-                                'address': originList[i]
-                            },
-                            showGeocodedAddressOnMap(false));
-                        for (var j = 0; j < results.length; j++) {
-                            geocoder.geocode({
-                                    'address': destinationList[j]
-                                },
-                                showGeocodedAddressOnMap(true));
-                            /*outputDiv.innerHTML += originList[i] + ' to ' + destinationList[j] +
-                                ': <b>' + results[j].distance.text + '</b> in <b>' +
-                                results[j].duration.text + '</b><br>';
-                            priceDiv.innerHTML += '<b>Estimated Value</b>: $' + calculateCost(results[j].distance.value, results[j].duration.value);*/
-                        }
-                    }
-
-                }
-            });
+            requestDriver(originA, destinationA);
             calculateAndDisplayRoute(directionsService, directionsDisplay, originA, destinationA);
             directionsDisplay.setMap(map);
             $(".overlay.destination").hide();
@@ -189,7 +141,7 @@ function checkRideAccepted() {
     });
     if (!rideAccepted) {
         clearTimeout(rideAcceptedTimeout);
-        setTimeout(checkRideAccepted, 10000);
+        setTimeout(checkRideAccepted, 8000);
     }
 }
 

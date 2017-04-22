@@ -1,50 +1,9 @@
-var isActive = false;
 var driverCoordinates;
 var pickupCoordinates;
 var destCoordinates;
+var trackPositionTimeout;
 var foundRider;
 var checkForRiderTimeout;
-
-$(document).ready(function() {
-    trackPosition();
-});
-
-function updateLocation(position) {
-    var lat = position.coords.latitude;
-    var lng = position.coords.longitude;
-    driverCoordinates = {lat:lat, lng:lng};
-    // to ensure that the location isn't updated before the driver becomes active
-    if (isActive) {
-        $.ajax({
-            url:'/api/updateDriverLocation',
-            type: 'POST',
-            data: {
-              'lat': lat,
-              'lng': lng
-            },
-            success: function(data) {
-                console.log(data);
-            }
-        })
-    }
-}
-
-function errorHandler(err) {
-    if (err.code == 1) {
-        console.log("Error: Access to location is denied!");
-    } else if (err.code == 2) {
-        console.log("Error: Position is unavailable!");
-    }
-}
-
-function trackPosition() {
-    if (navigator.geolocation) {
-        var options = {maximumAge:10000, timeout:10000, enableHighAccuracy:true};
-        navigator.geolocation.watchPosition(updateLocation, errorHandler, options);
-    } else {
-        console.log("Geolocation is not supported by this browser.");
-    }
-}
 
 function readyDrive() {
     console.log("Current driver latitude: " + curr_lat);
@@ -60,7 +19,7 @@ function readyDrive() {
         data: formData,
         success: function(data, status) {
             console.log(status + " : " + data);
-            isActive = true;
+            trackPositionTimeout = self.setInterval(function() {trackPosition()}, 10000);
             foundRider = false;
             checkForRider();
             $('#waitting-state').addClass('active');
@@ -73,6 +32,29 @@ function toggleActive() {
     $(".overlay.destination").hide(); setTimeout(function() {
         $("body.driver").addClass('side-bar-active');
     }, 200);
+}
+
+function trackPosition() {
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(function(position) {
+            console.log("updated lat: " + position.coords.latitude);
+            console.log("updated long: " + position.coords.longitude);
+            var formData = {
+                'lat': position.coords.latitude,
+                'lng': position.coords.longitude
+            };
+            $.ajax({
+                url: '/api/updateDriverLocation',
+                type: 'POST',
+                data: formData,
+                success: function(data) {
+                    console.log(data);
+                }
+            });
+        });
+    } else {
+        console.log("Geolocation is not supported by this browser.");
+    }
 }
 
 function checkForRider() {
@@ -93,7 +75,7 @@ function checkForRider() {
                 toggleFoundRider(data);
             }
         }
-    })
+    });
     if (!foundRider) {
         clearTimeout(checkForRiderTimeout);
         checkForRiderTimeout = setTimeout(checkForRider, 10000);
@@ -217,7 +199,7 @@ function setInactive() {
         type: 'POST',
         success: function(data) {
             console.log(data);
-            isActive = false;
+            clearInterval(trackPositionTimeout);
             foundRider = true;
             clearTimeout(checkForRiderTimeout);
             toggleInactive();
