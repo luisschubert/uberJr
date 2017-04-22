@@ -93,11 +93,12 @@ function toggleFoundRider(rider) {
     $('#ride-request').addClass('active');
     $('#specifics').addClass('active');
     $('.rider-name').html(rider.rider_name);
+    //$('#location-title').text("Pickup Address: ");
     pickupCoordinates = {lat:rider.pickup_lat, lng:rider.pickup_long};
     geocoder.geocode({'location': pickupCoordinates}, function(results, status) {
         if (status === 'OK') {
             if (results[0]) {
-                $('.rider-location').html(results[0].formatted_address);
+                $('#location').html("Pickup Address: <span>" + results[0].formatted_address + "</span>");
             } else {
                 window.alert('No results found');
             }
@@ -164,7 +165,19 @@ function togglePickedupRider(coords) {
     $('#directions-to-rider').removeClass('active');
     $('#directions-to-destination').addClass('active');
     $("#sidebar-driver").mCustomScrollbar("scrollTo", "#ride-request");
+    //$('#location-title').text("Destination Address: ");
     destCoordinates = {lat:coords.dest_lat, lng:coords.dest_long};
+    geocoder.geocode({'location': destCoordinates}, function(results, status) {
+        if (status === 'OK') {
+            if (results[0]) {
+                $('#location').html("Destination Address: <span>" + results[0].formatted_address + "</span>");
+            } else {
+                window.alert('No results found');
+            }
+        } else {
+            window.alert('Geocoder failed due to: ' + status);
+        }
+    });
     calculateAndDisplayRoute(directionsService,directionsDisplay,pickupCoordinates,destCoordinates);
     directionsDisplay.setMap(map);
     directionsDisplay.setPanel(document.getElementById("directions-dest"));

@@ -189,7 +189,7 @@ function checkPickedUp() {
     });
     if (!pickedUp) {
         clearTimeout(pickedUpTimeout);
-        pickedUpTimeout = setTimeout(checkPickedUp, 10000);
+        pickedUpTimeout = setTimeout(checkPickedUp, 8000);
     }
 }
 
@@ -226,6 +226,7 @@ function checkRideCompleted() {
 
 function toggleRideCompleted() {
     $('.sidebar-state').removeClass('active');
+    $('.fare').html("$" + rideFare);
     $('#ride-completed').addClass('active');
     directionsDisplay.setMap(null);
 }
@@ -269,11 +270,9 @@ $(document).ready(function() {
     });
     $('#payFare').submit(function(e) {
         e.preventDefault();
+        $('form').trigger('reset');
         $('#ride-completed').removeClass('active');
         $("body.rider").removeClass('side-bar-active');
         $(".overlay.destination").show();
     });
 });
-
-
-
