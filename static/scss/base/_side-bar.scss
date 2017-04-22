@@ -187,3 +187,84 @@ $bg-color: lightgray;
       -webkit-animation-delay: $duration * 0.5;
    }
 }
+
+#ride-completed {
+   p.fare {
+      font-weight: 100;
+      font-size: 34px;
+   }
+}
+
+form#payFare {
+   input[type="text"] {
+      width: 100%;
+      margin-bottom: 10px;
+
+      //padding: 1px 7px;
+      border-radius: 3px;
+
+      &#ccNumField {
+         width: calc(100% - 67px);
+      }
+
+      &#ccCVCField {
+         max-width: 30%;
+      }
+   }
+
+   select {
+      width: 33%;
+      margin-bottom: 10px;
+   }
+
+   input[type="submit"] {
+      margin-top: 20px;
+   }
+
+   .card-icon {
+      width: 60px;
+      height: 32px;
+      background: red;
+      display: inline-block;
+      border: solid 1px #a7a7a7;
+      border-radius: 4px;
+      vertical-align: top;
+      background: url("../images/card-icons/default.png") center;
+      background-size: 112%;
+
+      &.visa {
+         background: url("../images/card-icons/visa.png") center;
+         background-size: 100%;
+      }
+
+      &.amex {
+         background: url("../images/card-icons/amex.png") center;
+         background-size: 100%;
+      }
+
+      &.discover {
+         background: url("../images/card-icons/discover.png") center;
+         background-size: 100%;
+      }
+
+      &.jcb {
+         background: url("../images/card-icons/jcb.png") center;
+         background-size: 100%;
+      }
+
+      &.mastercard {
+         background: url("../images/card-icons/mastercard.png") center;
+         background-size: 100%;
+      }
+
+      &.paypal {
+         background: url("../images/card-icons/paypal.png") center;
+         background-size: 100%;
+      }
+
+      &.prtgs {
+         background: url("../images/card-icons/prtgs.png") center;
+         background-size: 100%;
+      }
+   }
+}
