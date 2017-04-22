@@ -233,29 +233,37 @@ function toggleRideCompleted() {
 $(document).ready(function() {
     $('#ccNumField').on('keyup paste input', function(e) {
         var ccNum = $(this).val();
+        var cardIconDIv = $('#card-icon');
+        cardIconDIv.removeClass();
         // american express
         if (ccNum.length == 15) {
             if (ccNum.substring(0, 1) == "3" && ccNum.substring(1, 2) == "4") {
                 console.log("amex 34 card entered");
+                cardIconDIv.addClass('amex');
             } else if (ccNum.substring(0, 1) == "3" && ccNum.substring(1, 2) == "7") {
                 console.log("amex 37 card entered");
+                cardIconDIv.addClass('amex');
             }
         }
         // visa 13/19 digits
         else if (ccNum.length == 13 || ccNum.length == 19) {
             if (ccNum.substring(0, 1) == "4") {
                 console.log("13/19 digit visa card entered");
+                cardIconDIv.addClass('visa');
             }
         }
         else if (ccNum.length == 16) {
             // mastercard
             if (ccNum.substring(0, 1) == "5" && parseInt(ccNum.substring(1, 2)) >= 1 && parseInt(ccNum.substring(1, 2)) <= 5) {
                 console.log("mastercard 5[1-5] card entered");
+                cardIconDIv.addClass('mastercard');
             } else if (ccNum.substring(0, 1) == "2" && parseInt(ccNum.substring(1, 2)) >= 2 && parseInt(ccNum.substring(1, 2)) <= 7) {
                 console.log("mastercard 2[2-7] card entered");
+                cardIconDIv.addClass('mastercard');
             } else if (ccNum.substring(0, 1) == "4") {
                 // visa 16 digits
                 console.log("19 digit visa card entered");
+                cardIconDIv.addClass('visa');
             }
         }
     });
@@ -266,3 +274,6 @@ $(document).ready(function() {
         $(".overlay.destination").show();
     });
 });
+
+
+
