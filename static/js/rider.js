@@ -100,7 +100,6 @@ function requestDriver(origin, destination) {
                 timeToDest = data.timeToDest;
                 rideAccepted = false;
                 checkRideAccepted();
-                console.log("called checkRideAccepted in requestDriver");
                 console.log(data);
             }
         }
@@ -293,7 +292,11 @@ $(document).ready(function() {
         e.preventDefault();
         $('form').trigger('reset');
         $('.sidebar-state').removeClass('active');
-        $("body.rider").removeClass('side-bar-active');
-        $(".overlay.destination").show();
+        $('#thank-rider').addClass('active');
+        setTimeout(function() {
+            $('#thank-rider').removeClass('active');
+            $("body.rider").removeClass('side-bar-active');
+            $(".overlay.destination").show();
+        }, 5000);
     });
 });
