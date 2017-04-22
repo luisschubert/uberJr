@@ -21,7 +21,7 @@
 		<div class="divider"></div>
 		<p class="time-title">Estimated Pickup Time:</p>
 		<p class="time">5:15pm</p>
-		<p>Estimated Fare:</p>
+		<p>Fare for this Ride:</p>
 		<p class="cost">$12.00</p>
 		<div class="divider"></div>
 		<div id="rider-buttons" class="sidebar-state">
@@ -31,13 +31,11 @@
 	</div>
 
 	<div id="directions-ride" class="sidebar-state">
-
 	</div>
 
 	<div id="no-drivers" class="sidebar-state">
 		<h1>No drivers available!</h1>
 		<div class="divider"></div>
-		<!--<p class="lght">Please try requesting a ride again later.</p>-->
 		<h4 class="driver-info">There are currently no drivers available to fulfill your ride request. UberJR apologizes for the inconvenience. Please try requesting a ride again later.</h4>
 		<div class="divider"></div>
 		<a id="retry-ride-request" href="" class="button">Retry Request</a>
@@ -45,6 +43,54 @@
 	</div>
 
 	<div id="ride-completed" class="sidebar-state">
-
+		<h1>Payment for Ride Fare</h1>
+		<div class="divider"></div>
+		<p>Fare for this Ride:</p>
+		<p class="fare">$3.50</p>
+		<div class="divider"></div>
+		<form id="payFare">
+			<input id="ccNameField" type="text" name="ccname" placeholder="Name on Card" required>
+			<input id="ccNumField" type="text" name="ccnum" placeholder="Card Number" maxlength="19" required>
+			<input id="ccCVCField" type="text" name="cccvc" placeholder="CVC" maxlength="3" required>
+			<select data-placeholder="Month" id="ccMonthField" required>
+				<option value="">Mo</option>
+				<option value="01">01</option>
+				<option value="02">02</option>
+				<option value="03">03</option>
+				<option value="04">04</option>
+				<option value="05">05</option>
+				<option value="06">06</option>
+				<option value="07">07</option>
+				<option value="08">08</option>
+				<option value="09">09</option>
+				<option value="10">10</option>
+				<option value="11">11</option>
+				<option value="12">12</option>
+			</select>
+			<select data-placeholder="Year" id="ccYearField" required>
+				<option value="">Year</option>
+				<option value="2017">2017</option>
+				<option value="2018">2018</option>
+				<option value="2019">2019</option>
+				<option value="2020">2020</option>
+				<option value="2021">2021</option>
+				<option value="2022">2022</option>
+				<option value="2023">2023</option>
+				<option value="2024">2024</option>
+				<option value="2025">2025</option>
+				<option value="2026">2026</option>
+				<option value="2027">2027</option>
+				<option value="2028">2028</option>
+				<option value="2029">2029</option>
+				<option value="2030">2030</option>
+				<option value="2032">2032</option>
+				<option value="2033">2033</option>
+				<option value="2034">2034</option>
+				<option value="2035">2035</option>
+				<option value="2036">2036</option>
+				<option value="2037">2037</option>
+			</select>
+			<input type="submit" value="Pay Fare" id="payRide" class="button">
+		</form>
 	</div>
 </div>

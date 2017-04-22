@@ -226,7 +226,43 @@ function checkRideCompleted() {
 
 function toggleRideCompleted() {
     $('.sidebar-state').removeClass('active');
-    $("body.rider").removeClass('side-bar-active');
-    $(".overlay.destination").show();
+    $('#ride-completed').addClass('active');
     directionsDisplay.setMap(null);
 }
+
+$(document).ready(function() {
+    $('#ccNumField').on('keyup paste input', function(e) {
+        var ccNum = $(this).val();
+        // american express
+        if (ccNum.length == 15) {
+            if (ccNum.substring(0, 1) == "3" && ccNum.substring(1, 2) == "4") {
+                console.log("amex 34 card entered");
+            } else if (ccNum.substring(0, 1) == "3" && ccNum.substring(1, 2) == "7") {
+                console.log("amex 37 card entered");
+            }
+        }
+        // visa 13/19 digits
+        else if (ccNum.length == 13 || ccNum.length == 19) {
+            if (ccNum.substring(0, 1) == "4") {
+                console.log("13/19 digit visa card entered");
+            }
+        }
+        else if (ccNum.length == 16) {
+            // mastercard
+            if (ccNum.substring(0, 1) == "5" && parseInt(ccNum.substring(1, 2)) >= 1 && parseInt(ccNum.substring(1, 2)) <= 5) {
+                console.log("mastercard 5[1-5] card entered");
+            } else if (ccNum.substring(0, 1) == "2" && parseInt(ccNum.substring(1, 2)) >= 2 && parseInt(ccNum.substring(1, 2)) <= 7) {
+                console.log("mastercard 2[2-7] card entered");
+            } else if (ccNum.substring(0, 1) == "4") {
+                // visa 16 digits
+                console.log("19 digit visa card entered");
+            }
+        }
+    });
+    $('#payFare').submit(function(e) {
+        e.preventDefault();
+        $('#ride-completed').removeClass('active');
+        $("body.rider").removeClass('side-bar-active');
+        $(".overlay.destination").show();
+    });
+});

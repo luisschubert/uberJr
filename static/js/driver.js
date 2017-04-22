@@ -8,6 +8,7 @@ var checkForRiderTimeout;
 function readyDrive() {
     console.log("Current driver latitude: " + curr_lat);
     console.log("Current driver longitude: " + curr_long);
+    driverCoordinates = {lat:curr_lat, lng:curr_long};
     var formData = {
         'status': $('input[name=ready]').val(),
         'originLat': curr_lat,
@@ -37,16 +38,18 @@ function toggleActive() {
 function trackPosition() {
     if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(function(position) {
-            console.log("updated lat: " + position.coords.latitude);
-            console.log("updated long: " + position.coords.longitude);
-            var formData = {
-                'lat': position.coords.latitude,
-                'lng': position.coords.longitude
-            };
+            var lat = position.coords.latitude;
+            var lng = position.coords.longitude;
+            driverCoordinates = {lat:lat, lng:lng};
+            console.log("updated lat: " + lat);
+            console.log("updated long: " + lng);
             $.ajax({
                 url: '/api/updateDriverLocation',
                 type: 'POST',
-                data: formData,
+                data: {
+                  'lat': lat,
+                  'lng': lng
+                },
                 success: function(data) {
                     console.log(data);
                 }
