@@ -26,7 +26,7 @@
 		<div class="divider"></div>
 		<div id="rider-buttons" class="sidebar-state">
 				<a href="" class="button">Call Driver</a>
-				<a href="" class="button cancel-ride">Cancel Ride</a>
+				<a id="cancel-btn" href="" class="button">Cancel Ride</a>
 		</div>
 	</div>
 
@@ -42,56 +42,76 @@
 		<a href="/logout" class="button">Log Out</a>
 	</div>
 
-	<div id="ride-completed" class="sidebar-state">
-		<h1>Payment for Ride Fare</h1>
+	<div id="cancel-conf" class="sidebar-state">
+		<h1>Cancel ride request?</h1>
 		<div class="divider"></div>
-		<p>Fare for this Ride:</p>
-		<p class="fare">$3.50</p>
+		<h4 class="conf-msg">Are you sure you want to cancel your request? Your driver has committed to you and is enroute. You will be charged a $5.00 cancellation fee.</h4>
 		<div class="divider"></div>
-		<form id="payFare">
-			<input id="ccNameField" type="text" name="ccname" placeholder="Name on Card" required>
-			<input id="ccNumField" type="text" name="ccnum" placeholder="Card Number" maxlength="19" required>
-			<div id="card-icon"></div>
-			<input id="ccCVCField" type="text" name="cccvc" placeholder="CVC" maxlength="3" required>
-			<select data-placeholder="Month" id="ccMonthField" required>
-				<option value="">Mo</option>
-				<option value="01">01</option>
-				<option value="02">02</option>
-				<option value="03">03</option>
-				<option value="04">04</option>
-				<option value="05">05</option>
-				<option value="06">06</option>
-				<option value="07">07</option>
-				<option value="08">08</option>
-				<option value="09">09</option>
-				<option value="10">10</option>
-				<option value="11">11</option>
-				<option value="12">12</option>
-			</select>
-			<select data-placeholder="Year" id="ccYearField" required>
-				<option value="">Year</option>
-				<option value="2017">2017</option>
-				<option value="2018">2018</option>
-				<option value="2019">2019</option>
-				<option value="2020">2020</option>
-				<option value="2021">2021</option>
-				<option value="2022">2022</option>
-				<option value="2023">2023</option>
-				<option value="2024">2024</option>
-				<option value="2025">2025</option>
-				<option value="2026">2026</option>
-				<option value="2027">2027</option>
-				<option value="2028">2028</option>
-				<option value="2029">2029</option>
-				<option value="2030">2030</option>
-				<option value="2032">2032</option>
-				<option value="2033">2033</option>
-				<option value="2034">2034</option>
-				<option value="2035">2035</option>
-				<option value="2036">2036</option>
-				<option value="2037">2037</option>
-			</select>
-			<input type="submit" value="Pay Fare" id="payRide" class="button">
+		<form id="conf-yes" action="/api/cancelRide" method="POST">
+			<input type="submit" value="Yes" id="cancel-ride" class="button cancel-ride" onclick="">
 		</form>
+		<a id="conf-no" href="" class="button">No</a>
 	</div>
+
+	<div id="ride-canceled" class="sidebar-state">
+		<h1>Your ride request has been canceled!</h1>
+		<div class="divider"></div>
+		<h4 class="canceled-msg">Because you canceled your ride request, a $5.00 cancellation fee will be charged.</h4>
+		<div class="divider"></div>
+	</div>
+
+		<div id="payment-title" class="sidebar-state">
+				<h1>Payment for Ride Fare</h1>
+				<div class="divider"></div>
+		</div>
+		<div id="payment-form" class="sidebar-state">
+				<p>Fare for this Ride:</p>
+				<p class="fare">$3.50</p>
+				<div class="divider"></div>
+				<form id="payFare">
+					<input id="ccNameField" type="text" name="ccname" placeholder="Name on Card" required>
+					<input id="ccNumField" type="text" name="ccnum" placeholder="Card Number" maxlength="19" required>
+					<div id="card-icon"></div>
+					<input id="ccCVCField" type="text" name="cccvc" placeholder="CVC" maxlength="3" required>
+					<select data-placeholder="Month" id="ccMonthField" required>
+						<option value="">Mo</option>
+						<option value="01">01</option>
+						<option value="02">02</option>
+						<option value="03">03</option>
+						<option value="04">04</option>
+						<option value="05">05</option>
+						<option value="06">06</option>
+						<option value="07">07</option>
+						<option value="08">08</option>
+						<option value="09">09</option>
+						<option value="10">10</option>
+						<option value="11">11</option>
+						<option value="12">12</option>
+					</select>
+					<select data-placeholder="Year" id="ccYearField" required>
+						<option value="">Year</option>
+						<option value="2017">2017</option>
+						<option value="2018">2018</option>
+						<option value="2019">2019</option>
+						<option value="2020">2020</option>
+						<option value="2021">2021</option>
+						<option value="2022">2022</option>
+						<option value="2023">2023</option>
+						<option value="2024">2024</option>
+						<option value="2025">2025</option>
+						<option value="2026">2026</option>
+						<option value="2027">2027</option>
+						<option value="2028">2028</option>
+						<option value="2029">2029</option>
+						<option value="2030">2030</option>
+						<option value="2032">2032</option>
+						<option value="2033">2033</option>
+						<option value="2034">2034</option>
+						<option value="2035">2035</option>
+						<option value="2036">2036</option>
+						<option value="2037">2037</option>
+					</select>
+					<input type="submit" value="Pay Fare" id="payRide" class="button">
+				</form>
+			</div>
 </div>

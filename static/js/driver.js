@@ -4,6 +4,8 @@ var destCoordinates;
 var trackPositionTimeout;
 var foundRider;
 var checkForRiderTimeout;
+var riderCanceled;
+var riderCanceledTimeout;
 
 function readyDrive() {
     console.log("Current driver latitude: " + curr_lat);
@@ -93,7 +95,6 @@ function toggleFoundRider(rider) {
     $('#ride-request').addClass('active');
     $('#specifics').addClass('active');
     $('.rider-name').html(rider.rider_name);
-    //$('#location-title').text("Pickup Address: ");
     pickupCoordinates = {lat:rider.pickup_lat, lng:rider.pickup_long};
     geocoder.geocode({'location': pickupCoordinates}, function(results, status) {
         if (status === 'OK') {
@@ -127,6 +128,8 @@ function acceptDeclineRide(val) {
             } else {
               // if driver accepted ride request
                 foundRider = true;
+                riderCanceled = false;
+                checkRideCanceled();
                 toggleAcceptRide();
             }
         }
@@ -141,6 +144,41 @@ function toggleAcceptRide() {
     directionsDisplay.setPanel(document.getElementById("directions-rider"));
 }
 
+function checkRideCanceled() {
+    $.ajax({
+        url: '/api/checkRideCanceled',
+        type: 'GET',
+        success: function(data, status) {
+            if (data == 'ride has been canceled by rider. returned to pool') {
+                riderCanceled = true;
+                clearTimeout(riderCanceledTimeout);
+                console.log('ride has been canceled by rider.');
+                toggleRiderCanceled();
+            } else {
+                console.log(data);
+            }
+        }
+    });
+    if (!riderCanceled) {
+        clearTimeout(riderCanceledTimeout);
+        riderCanceledTimeout = setTimeout(checkRideCanceled, 8000);
+    }
+}
+
+function toggleRiderCanceled() {
+    console.log("rider canceled; view updated");
+    $('.sidebar-state').removeClass('active');
+    $('.switch').removeClass('disabled');
+    $('#rider-canceled').addClass('active');
+    setTimeout(function() {
+        $('#rider-canceled').removeClass('active')
+        $("#waitting-state").addClass('active');
+    }, 5000);
+    directionsDisplay.setMap(null);
+    foundRider = false;
+    checkForRider();
+}
+
 function pickup() {
     $.ajax({
         url: '/api/pickup',
@@ -151,6 +189,8 @@ function pickup() {
             } else {
                 console.log("Destination latitude:" + data.dest_lat);
                 console.log("Destination longitude:" + data.dest_long);
+                riderCanceled = true;
+                clearTimeout(riderCanceledTimeout);
                 togglePickedupRider(data);
             }
         }
@@ -165,7 +205,6 @@ function togglePickedupRider(coords) {
     $('#directions-to-rider').removeClass('active');
     $('#directions-to-destination').addClass('active');
     $("#sidebar-driver").mCustomScrollbar("scrollTo", "#ride-request");
-    //$('#location-title').text("Destination Address: ");
     destCoordinates = {lat:coords.dest_lat, lng:coords.dest_long};
     geocoder.geocode({'location': destCoordinates}, function(results, status) {
         if (status === 'OK') {

@@ -32,7 +32,7 @@ $(document).ready(function() {
         e.preventDefault();
         completeRide();
     });
-    $('#retry-ride-request').click( function(e) {
+    $('#retry-ride-request').click(function(e) {
         e.preventDefault();
         $('.sidebar-state').removeClass('active');
         $("body.rider").removeClass('side-bar-active');
@@ -46,6 +46,21 @@ $(document).ready(function() {
     $('#driverInactive').submit(function(e) {
         e.preventDefault();
         setInactive();
+    });
+    $('#cancel-btn').click(function(e){
+        e.preventDefault();
+        $('.sidebar-state').removeClass('active');
+        $('#cancel-conf').addClass('active');
+    });
+    $('#conf-yes').submit(function(e) {
+        e.preventDefault();
+        cancelRide();
+    });
+    $('#conf-no').click(function(e) {
+        e.preventDefault();
+        $('#cancel-conf').removeClass('active');
+        $('#driver-found').addClass('active');
+        $('#rider-buttons').addClass('active');
     });
     getLocation();
 });

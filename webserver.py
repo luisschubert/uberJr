@@ -509,6 +509,33 @@ def api_acceptDeclineRide():
         db.session.commit()
         return 'ride declined. driver marked inactive, and rider returned to ride request pool'
 
+@app.route("/api/cancelRide", methods=['POST'])
+def api_cancelRide():
+    riderid = Users.query.filter_by(email = session['email']).first().id
+    ride = Rides.query.filter_by(rider_id=riderid).first()
+    driverid = ride.driver_id
+    # remove ride
+    Rides.query.filter_by(rider_id=riderid).delete()
+    # remove ride request
+    Riders.query.filter_by(rider_id = ride.rider_id).delete()
+    # mark driver unpaired
+    driver = ActiveDrivers.query.filter_by(id = driverid).first()
+    driver.paired = False
+    db.session.commit()
+    return "ride canceled"
+
+@app.route("/api/checkRideCanceled", methods=['GET'])
+def api_checkRideCanceled():
+    driverid = Users.query.filter_by(email = session['email']).first().id
+    ride = Rides.query.filter_by(driver_id=driverid).first()
+    if ride is None:
+        driver = ActiveDrivers.query.filter_by(id = driverid).first()
+        if driver.paired == False:
+            return "ride has been canceled by rider. returned to pool"
+    else:
+        return "ride hasn't been canceled"
+
+
 @app.route("/api/checkPickedUp", methods=['POST'])
 def api_checkPickedUp():
     riderid = Users.query.filter_by(email = session['email']).first().id

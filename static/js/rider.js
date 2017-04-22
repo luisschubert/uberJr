@@ -99,8 +99,8 @@ function requestDriver(origin, destination) {
                 // estimated time to destination (minutes) assuming departure time = pickup time
                 timeToDest = data.timeToDest;
                 rideAccepted = false;
-                console.log("called checkRideAccepted in requestDriver");
                 checkRideAccepted();
+                console.log("called checkRideAccepted in requestDriver");
                 console.log(data);
             }
         }
@@ -127,8 +127,6 @@ function checkRideAccepted() {
               // request ride/find another driver (check if paired in requestDriver?)
               console.log("driver declined ride request. searching for another driver");
               requestDriver(originA, destinationA);
-          } else if (data == "ride request can't be checked for acceptance because no drivers available") {
-              console.log("find out why checkRideAccepted is being called in the first place if rideAccepted is being set to true and the timeout is being cleared??");
           } else {
             // else if ride request is accepted
               rideAccepted = true;
@@ -141,7 +139,7 @@ function checkRideAccepted() {
     });
     if (!rideAccepted) {
         clearTimeout(rideAcceptedTimeout);
-        setTimeout(checkRideAccepted, 8000);
+        rideAcceptedTimeout = setTimeout(checkRideAccepted, 8000);
     }
 }
 
@@ -163,6 +161,28 @@ function toggleFoundDriver(driverName, carModel, carColor, plates, pickupTime) {
 function toggleNoDrivers() {
     $('.sidebar-state').removeClass('active'); //disables any active
     $('#no-drivers').addClass('active');
+    directionsDisplay.setMap(null);
+}
+
+function cancelRide() {
+    $.ajax({
+        url: '/api/cancelRide',
+        type: 'POST',
+        success: function(data) {
+            console.log(data);
+            pickedUp = true;
+            clearTimeout(pickedUpTimeout);
+            toggleRideCanceled();
+        }
+    });
+}
+
+function toggleRideCanceled() {
+    console.log("canceled ride; view updated");
+    $('.sidebar-state').removeClass('active');
+    $('#ride-canceled').addClass('active');
+    $('.fare').html("$5.00");
+    $('#payment-form').addClass('active');
     directionsDisplay.setMap(null);
 }
 
@@ -227,7 +247,8 @@ function checkRideCompleted() {
 function toggleRideCompleted() {
     $('.sidebar-state').removeClass('active');
     $('.fare').html("$" + rideFare);
-    $('#ride-completed').addClass('active');
+    $('#payment-title').addClass('active');
+    $('#payment-form').addClass('active');
     directionsDisplay.setMap(null);
 }
 
@@ -271,7 +292,7 @@ $(document).ready(function() {
     $('#payFare').submit(function(e) {
         e.preventDefault();
         $('form').trigger('reset');
-        $('#ride-completed').removeClass('active');
+        $('.sidebar-state').removeClass('active');
         $("body.rider").removeClass('side-bar-active');
         $(".overlay.destination").show();
     });
