@@ -71,21 +71,6 @@ function showPosition(position) {
     showAvailableDrivers(lat,lng);
 }
 
-
-function calculateCost(distance, time) {
-    var cost = 0;
-    var TAX = 0;
-    var BASE_PRICE = 5;
-    var COST_PER_MINUTE = 0.5;
-    var COST_PER_MILE = 1.05;
-    var TAX_PERCENT = 0.05;
-
-    cost = BASE_PRICE + (COST_PER_MINUTE * (time / 60)) + (COST_PER_MILE * (distance / 1000));
-    tax = (TAX_PERCENT * cost);
-
-    return (cost + tax).toFixed(2);
-}
-
 function deleteMarkers(markersArray) {
     for (var i = 0; i < markersArray.length; i++) {
         markersArray[i].setMap(null);
@@ -111,14 +96,12 @@ var map;
 var bounds;
 var markersArray = [];
 
-// DirectionsRenderer
 var directionsService;
 var directionsDisplay;
 
 var currentTime = new Date();
 
 var geocoder;
-var service;
 
 var sjsu = new google.maps.LatLng(37.336206, -121.882491);
 
@@ -208,7 +191,6 @@ function initMap() {
         mapOptions);
 
     geocoder = new google.maps.Geocoder;
-    service = new google.maps.DistanceMatrixService;
 
     var styledMapOptions = {
         name: 'Custom Style'

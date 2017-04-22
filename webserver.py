@@ -162,10 +162,6 @@ def signup():
     else:
         return render_template("signup.html")
 
-@app.route("/signupdriver")
-def signupdriver():
-    return render_template("signup-driver.html")
-
 @app.route("/login")
 def login():
     if 'email' in session:
@@ -196,10 +192,6 @@ def logout():
         session.pop('email', None)
         return redirect(url_for('home'))
 
-@app.route("/geolocationTest")
-def geolocationTest():
-    return render_template("geolocationTest.html")
-
 #return all available drivers in your area
 @app.route("/api/getDrivers", methods=['POST'])
 def getDrivers():
@@ -213,7 +205,6 @@ def getDrivers():
         print driver.current_lat
         print driver.current_long
         print "\n"
-
     #calculate average pickup time
     return "check it"
 
