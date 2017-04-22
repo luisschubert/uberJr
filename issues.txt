@@ -1,3 +1,5 @@
 Issues:
 
 Scrolling changes the dummy cars and doesn't zoom in.
+
+To make pulse work with current location - may be working, need to test

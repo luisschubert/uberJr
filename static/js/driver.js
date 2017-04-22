@@ -9,11 +9,32 @@ $(document).ready(function() {
     trackPosition();
 });
 
+function getCurrentAddress(lat, lng) {
+  console.log("getCurrentAddress of the driver");
+    $.ajax({
+        url:'https://maps.googleapis.com/maps/api/geocode/json?latlng='+ lat + ',' + lng + '&key=AIzaSyBnXUp2Txy1C2OyYp0crd8iyaIDSb-N8oU',
+        method: 'POST',
+        success: function(data,status){
+          console.log(status + " : " + data);
+          //get the address from the response object
+          address = data.results[0].formatted_address;
+          //insert the addres
+          $('#originRider').val(address);
+          //removes the placeholder text
+          //$('#originRider').removeAttr('placeholder');
+        }
+    });
+}
+function showAvailableDrivers(lat, lng){
+  //nothing goes here
+}
 function updateLocation(position) {
   console.log("updateLocation rightnow");
   var lat = position.coords.latitude;
   var lng = position.coords.longitude;
   driverCoordinates = {lat:lat, lng:lng};
+  showPosition(position);
+  // or use getLocation();
   console.log(driverCoordinates);
   //to ensure that the location isn't updated before the driver becomes active
   if (isActive) {
@@ -32,6 +53,7 @@ function updateLocation(position) {
           }
       });
   }
+
 }
 
 function trackPosition() {

@@ -84,8 +84,18 @@ function getCurrentAddress(lat, lng) {
         }
     });
 }
+var counter =0;
+var interval ;
+function startIntervalCalls(){
+    interval = setInterval(function() {getLocation();}, 1000);
+    counter +=1;
+}
+
 
 function showAvailableDrivers(lat, lng) {
+  if (counter === 0){
+    startIntervalCalls();
+  }
   console.log("showAvailableDrivers rightnow");
     $.ajax({
         url:'api/getDrivers',
