@@ -12,7 +12,7 @@ function readyDrive() {
         'status': $('input[name=ready]').val(),
         'originLat': curr_lat,
         'originLong': curr_long
-    }
+    };
     $.ajax({
         url: '/api/drive',
         type: 'POST',
@@ -86,7 +86,7 @@ function toggleFoundRider(rider) {
     console.log("found rider and updating view with details");
     $('#waitting-state').removeClass('active');
     $('#ride-title').html("New Ride Request!");
-    //$('#switch-toggle').addClass('disabled');
+    $('.switch').addClass('disabled');
     $('#ride-request').addClass('active');
     $('#specifics').addClass('active');
     $('.rider-name').html(rider.rider_name);
@@ -188,7 +188,7 @@ function completeRide() {
 
 function toggleCompletedRide() {
     $('.sidebar-state').removeClass('active');
-    //$('#switch-toggle').removeClass('disabled');
+    $('.switch').removeClass('disabled');
     $('#waitting-state').addClass('active');
     directionsDisplay.setMap(null);
 }
@@ -209,28 +209,28 @@ function setInactive() {
 
 function toggleInactive() {
     $('#driverInactive').hide();
-    //$('#switch-toggle').removeClass('disabled');
+    $('.switch').removeClass('disabled');
+    $('#switch-toggle').attr('checked', false);
     $('.sidebar-state').removeClass('active');
     $("body.driver").removeClass('side-bar-active');
     $(".overlay.destination").show();
     directionsDisplay.setMap(null);
 }
 
-
 //driver status toggle
-$('#switch-toggle').click(function(e){
-  if($('.switch').hasClass('disabled')) {
-    e.preventDefault();
-  }
-  else {
-    if ($('#switch-toggle').is(':checked')) {
-      $('.loc-sbmt-demo').click();
-      $('#waitting-state').toggleClass('active');
-      $('.driver-welcome').hide();
+$('#switch-toggle').click(function(e) {
+    if ($('.switch').hasClass('disabled')) {
+        e.preventDefault();
     }
     else {
-      $('.inactive').click();
-      $('#waitting-state').toggleClass('active');
+        if ($('#switch-toggle').is(':checked')) {
+            $('.loc-sbmt-demo').click();
+            $('#waitting-state').toggleClass('active');
+            $('.driver-welcome').hide();
+        }
+        else {
+            $('.inactive').click();
+            $('#waitting-state').toggleClass('active');
+        }
     }
-  }
 });
