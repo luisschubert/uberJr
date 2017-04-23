@@ -236,7 +236,7 @@ function initMap() {
     };
 
     //To show rider location
-    setTimeout(function() { //here tmp until lat lng fix
+  /*  setTimeout(function() { //here tmp until lat lng fix
         userMarker = new RichMarker({
             position: locationCenterMap,
             map: map,
@@ -244,7 +244,7 @@ function initMap() {
             shadow: 0
         });
         console.log("POSITION on TIMEOUT: ", userMarker);
-    }, 5000);
+    }, 5000);*/
 
     //To show drivers near by
     for (var i = 0; i < driverslocations.length; i++) {

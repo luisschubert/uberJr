@@ -29,6 +29,10 @@ function getCurrentAddress(lat, lng) {
     });
 }
 
+function showAvailableDrivers(lat, lng) {
+    //nothing goes here
+}
+
 function updateLocation(position) {
     console.log("updateLocation rightnow");
     var lat = position.coords.latitude;
