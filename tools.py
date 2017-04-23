@@ -11,4 +11,4 @@ def extractTravelTime(response):
 #calculates the travelCost based on the formula
 def calculateCost(timeToDest, milesToDest):
     cost = 2.50 + (0.65 * timeToDest / 60) + (0.85 * milesToDest) + 1.75
-    return round(cost, 2)
+    return "%.2f" % round(cost, 2)

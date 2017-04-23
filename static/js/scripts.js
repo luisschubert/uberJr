@@ -38,16 +38,32 @@ $(document).ready(function() {
         $("body.rider").removeClass('side-bar-active');
         $(".overlay.destination").show();
     });
-    $('#acceptDeclineRide input[type=submit]').click(function(e) {
+    $('#acceptRide input[type=submit]').click(function(e) {
         var val = $(this).attr('value');
         e.preventDefault();
         acceptDeclineRide(val);
+    });
+    $('#decline-btn').click(function(e) {
+        e.preventDefault();
+        $('.sidebar-state').removeClass('active');
+        $('#decline-conf').addClass('active');
+    });
+    $('#declineRide input[type=submit]').click(function(e) {
+        var val = $(this).attr('value');
+        e.preventDefault();
+        acceptDeclineRide(val);
+    });
+    $('#decline-no').click(function(e) {
+        e.preventDefault();
+        $('#decline-conf').removeClass('active');
+        $('#ride-request').addClass('active');
+        $('#specifics').addClass('active');
     });
     $('#driverInactive').submit(function(e) {
         e.preventDefault();
         setInactive();
     });
-    $('#cancel-btn').click(function(e){
+    $('#cancel-btn').click(function(e) {
         e.preventDefault();
         $('.sidebar-state').removeClass('active');
         $('#cancel-conf').addClass('active');

@@ -86,7 +86,7 @@ function getCurrentAddress(lat, lng) {
           //get the address from the response object
           address = data.results[0].formatted_address;
           //insert the addres
-          $('#originRider').val(address);
+          //$('#originRider').val(address);
         }
     });
 }

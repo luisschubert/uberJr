@@ -50,10 +50,10 @@
 				<p>Estimated Time of Pickup:</p>
 				<p class="time">5:15pm</p>
 				<div class="divider"></div>
-				<form id="acceptDeclineRide" action="/api/acceptDeclineRide" method="POST">
+				<form id="acceptRideForm" action="/api/acceptDeclineRide" method="POST">
 					<input type="submit" value="accept" id="acceptRide" class="button" onclick="">
-					<input type="submit" value="decline" id="declineRide" class="button" onclick="">
 				</form>
+        <a id="decline-btn" href="" class="button">Decline</a>
 			</div>
 			<br>
 			<div class="divider"></div>
@@ -64,7 +64,7 @@
   		<div class="divider"></div>
   		<h4 class="conf-msg">Are you sure you want to decline this ride request? You will be temporarily timed out for 5 minutes, during which you won't be able to search for any ride requests.</h4>
   		<div class="divider"></div>
-      <form id="declineRide" action="/api/acceptDeclineRide" method="POST">
+      <form id="declineRideForm" action="/api/acceptDeclineRide" method="POST">
         <input type="submit" value="yes" id="declineRide" class="button" onclick="">
       </form>
   		<a id="decline-no" href="" class="button">No</a>

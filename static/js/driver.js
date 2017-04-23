@@ -74,8 +74,6 @@ function trackPosition() {
     }
 }
 
-
-
 function readyDrive() {
     console.log("Current driver latitude: " + curr_lat);
     console.log("Current driver longitude: " + curr_long);
@@ -96,17 +94,9 @@ function readyDrive() {
             foundRider = false;
             //$('#logout-btn').addClass('disabled');
             checkForRider();
-            //$('#waitting-state').addClass('active');
-            //toggleActive();
         }
     });
 }
-
-/*function toggleActive() {
-    $(".overlay.destination").hide(); setTimeout(function() {
-        $("body.driver").addClass('side-bar-active');
-    }, 200);
-}*/
 
 /*function trackPosition() {
     if (navigator.geolocation) {
@@ -341,14 +331,11 @@ function toggleInactive() {
     $('#driverInactive').hide();
     $('#switch-toggle').attr('checked', false);
     $('.sidebar-state').removeClass('active');
-    /*$("body.driver").removeClass('side-bar-active');
-    $(".overlay.destination").show();*/
     directionsDisplay.setMap(null);
     if (timedOut) {
         $('#tooltip').html('You cannot be active until you are no longer timed out!');
         toggleTimedout();
     } else {
-        //$('.switch').removeClass('disabled');
         //$('#logout-btn').removeClass('disabled');
     }
 }
