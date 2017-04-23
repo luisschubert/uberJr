@@ -341,7 +341,7 @@ function toggleInactive() {
 }
 
 function toggleTimedout() {
-    var countDownDate = new Date().getTime() + 5 * 60 * 1000;
+    var countDownDate = new Date().getTime() + 1 * 60 * 1000;
     var x = setInterval(function() {
         var now = new Date().getTime();
         var distance = countDownDate - now;

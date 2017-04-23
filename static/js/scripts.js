@@ -86,14 +86,14 @@ $(document).ready(function() {
     getLocation();
 });
 
-var initLocation = false;
-function updateMyLocation(){
+/*var initLocation = false;
+function updateMyLocation() {
     setInterval(function() {
       console.log("SETING INTERVAL");
       userMarker.setPosition(new google.maps.LatLng(curr_lat, curr_long));
     },
     1000);
-}
+}*/
 
 function getLocation() {
     if (navigator.geolocation) {
@@ -103,7 +103,7 @@ function getLocation() {
     }
 }
 
-function setLocation(){
+/*function setLocation() {
     initLocation = true;
     console.log("setting initial location");
     userMarker = new RichMarker({
@@ -113,12 +113,12 @@ function setLocation(){
         shadow: 0
         });
     updateMyLocation();
-}
+}*/
 
 function showPosition(position) {
-    if (!initLocation) {
+    /*if (!initLocation) {
         setLocation();
-    }
+    }*/
     lat = position.coords.latitude;
     curr_lat = position.coords.latitude;
     lng = position.coords.longitude;

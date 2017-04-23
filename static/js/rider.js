@@ -14,7 +14,7 @@ var pickedUpTimeout;
 var rideCompleted;
 var rideCompletedTimeout;
 
-function showAvailableDrivers(lat, lng) {
+/*function showAvailableDrivers(lat, lng) {
     if (cnt === 0){
         startIntervalCalls();
     }
@@ -75,7 +75,7 @@ var cnt = 0;
 function startIntervalCalls(){
     interval = setInterval(function() {getLocation();}, 1000);
     cnt +=1;
-}
+}*/
 
 function getCurrentAddress(lat, lng) {
     $.ajax({
@@ -238,7 +238,7 @@ function checkPickedUp() {
                 checkRideCompleted();
                 togglePickedUp(data.arrival_time);
             } else {
-                updateDriverMarkers();
+                //updateDriverMarkers();
                 console.log("rider is still waiting to be picked up");
             }
         }
@@ -270,7 +270,7 @@ function checkRideCompleted() {
               console.log("ride completed");
               toggleRideCompleted();
           } else {
-              updateDriverMarkers();
+              //updateDriverMarkers();
               console.log("ride is still in progress");
           }
         }
