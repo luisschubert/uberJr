@@ -1,6 +1,9 @@
 var originA;
 var destinationA;
 var counter = 1;
+var interval;
+var d_lat;
+var d_lng;
 var travelTime;
 var timeToDest;
 var rideFare;
@@ -12,6 +15,10 @@ var rideCompleted;
 var rideCompletedTimeout;
 
 function showAvailableDrivers(lat, lng) {
+    if (counter === 0){
+        startIntervalCalls();
+    }
+    console.log("showAvailableDrivers rightnow");
     $.ajax({
         url: '/api/getDrivers',
         type: 'POST',
@@ -27,15 +34,47 @@ function showAvailableDrivers(lat, lng) {
 }
 
 function updateDriverMarkers() {
+    console.log("<NITYAM> .. updateDriverMarkers right now");
+    // remove the current marker
+    // check database(rides table) here by ajax
+    $.ajax({
+        url: '/api/checkDriverLocation',
+        type: 'POST',
+        // data: formData, // formdata notDefined
+        success: function(data) {
+            if (data == 'none') {
+                console.log('Driver coords not found... check the RIDERS table connection');
+            } else {
+                console.log("Inside updateDriverMarkers' Ajax command");
+                d_lat = data.dest_lat;
+                d_lng = data.dest_long;
+            }
+        }
+    });
+    if (typeof(d_lat) == "undefined"){
+        console.log("UNDEFINED DRIVER's LOCATION");
+    } else {
+        console.log("driver lat outside :", d_lat);
+        console.log("driver lng outside:", d_lng);
+    }
+    console.log("updating the marker on new location");
+    // update driver location or the marker
+    console.log("updateDriverMarkers rightnow");
     console.log("updating location " + counter);
     for (var i = 0; i < curMarkers.length; i++) {
         console.log(curMarkers[i]);
-        driverslocations[i][1] = driverslocations[i][1] + 0.005;
-        driverslocations[i][2] = driverslocations[i][2] + 0.005;
+        driverslocations[i][1] = d_lat;
+        driverslocations[i][2] = d_lng;
         curMarkers[i].setPosition(new google.maps.LatLng(driverslocations[i][1], driverslocations[i][2]));
     }
     counter = counter + 1;
     setTimeout(updateDriverMarkers, 5000);
+}
+
+var counter = 0;
+function startIntervalCalls(){
+    interval = setInterval(function() {getLocation();}, 1000);
+    counter +=1;
 }
 
 function getCurrentAddress(lat, lng) {
@@ -199,6 +238,7 @@ function checkPickedUp() {
                 checkRideCompleted();
                 togglePickedUp(data.arrival_time);
             } else {
+                updateDriverMarkers();
                 console.log("rider is still waiting to be picked up");
             }
         }
@@ -230,6 +270,7 @@ function checkRideCompleted() {
               console.log("ride completed");
               toggleRideCompleted();
           } else {
+              updateDriverMarkers();
               console.log("ride is still in progress");
           }
         }

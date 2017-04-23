@@ -218,15 +218,18 @@ def updateDriverLocation():
     lng = request.form.get('lng')
     lat = request.form.get('lat')
     activeDriver = ActiveDrivers.query.filter_by(id= driver.id).first()
-    activeDriver.current_long = lng
-    activeDriver.current_lat = lat
-    db.session.commit()
-    return "updated driver\'s location"
+    if activeDriver is not None:
+        activeDriver.current_long = lng
+        activeDriver.current_lat = lat
+        db.session.commit()
+        return "updated driver\'s location"
+    else:
+        return "couldn't update driver\'s location because not active??"
 
 #API for the frontend to request estimate travel time/cost based on user GPS location and destination Address
 @app.route("/api/getTravelTime", methods=['POST'])
 def api_getTravelInfo():
-    originLongitude  = request.json.get('longitude')
+    originLongitude = request.json.get('longitude')
     originLatitude = request.json.get('latitude')
     destinationAddress = request.json.get('destinationAddress')
     estimatePickUpTime = request.json.get('estimatePickUpTime')
@@ -540,6 +543,24 @@ def api_checkRideCanceled():
     else:
         return "ride hasn't been canceled"
 
+@app.route("/api/checkDriverLocation", methods=['POST'])
+def api_checkDriveLocation():
+    print ("*** checking driver's location....")
+    riderid = Users.query.filter_by(email=session['email']).first().id
+    ride = Rides.query.filter_by(rider_id=riderid).first()
+    if ride is not None:
+        driverid = ride.driver_id
+        activeDriver = ActiveDrivers.query.filter_by(id=driverid).first()
+        dest_lat = activeDriver.current_lat;
+        dest_long = activeDriver.current_long;
+        info = {'dest_lat': dest_lat,
+                'dest_long': dest_long}
+        print ("d_Lat: ", dest_lat);
+        print ("d_long: ", dest_long);
+
+        return jsonify(info)
+    else:
+        return "none"
 
 @app.route("/api/checkPickedUp", methods=['POST'])
 def api_checkPickedUp():

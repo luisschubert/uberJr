@@ -12,12 +12,34 @@ $(document).ready(function() {
     trackPosition();
 });
 
+function getCurrentAddress(lat, lng) {
+  console.log("getCurrentAddress of the driver");
+    $.ajax({
+        url: 'https://maps.googleapis.com/maps/api/geocode/json?latlng='+ lat + ',' + lng + '&key=AIzaSyBnXUp2Txy1C2OyYp0crd8iyaIDSb-N8oU',
+        method: 'POST',
+        success: function(data,status){
+          console.log(status + " : " + data);
+          //get the address from the response object
+          address = data.results[0].formatted_address;
+          //insert the addres
+          $('#originRider').val(address);
+          //removes the placeholder text
+          //$('#originRider').removeAttr('placeholder');
+        }
+    });
+}
+
 function updateLocation(position) {
+    console.log("updateLocation rightnow");
     var lat = position.coords.latitude;
     var lng = position.coords.longitude;
     driverCoordinates = {lat:lat, lng:lng};
+    showPosition(position);
+    // or use getLocation();
+    console.log(driverCoordinates);
     // to ensure that the location isn't updated before the driver becomes active
     if (isActive) {
+        console.log("isActive? yes it is...");
         $.ajax({
             url:'/api/updateDriverLocation',
             type: 'POST',
@@ -48,6 +70,8 @@ function trackPosition() {
         console.log("Geolocation is not supported by this browser.");
     }
 }
+
+
 
 function readyDrive() {
     console.log("Current driver latitude: " + curr_lat);
@@ -80,7 +104,7 @@ function readyDrive() {
     }, 200);
 }*/
 
-function trackPosition() {
+/*function trackPosition() {
     if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(function(position) {
             var lat = position.coords.latitude;
@@ -103,7 +127,7 @@ function trackPosition() {
     } else {
         console.log("Geolocation is not supported by this browser.");
     }
-}
+}*/
 
 function checkForRider() {
     $.ajax({

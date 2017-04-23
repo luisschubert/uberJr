@@ -65,6 +65,15 @@ $(document).ready(function() {
     getLocation();
 });
 
+var initLocation = false;
+function updateMyLocation(){
+    setInterval(function() {
+      console.log("SETING INTERVAL");
+      userMarker.setPosition(new google.maps.LatLng(curr_lat, curr_long));
+    },
+    1000);
+}
+
 function getLocation() {
     if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(showPosition);
@@ -73,15 +82,28 @@ function getLocation() {
     }
 }
 
+function setLocation(){
+    initLocation = true;
+    console.log("setting initial location");
+    userMarker = new RichMarker({
+        position: locationCenterMap,
+        map: map,
+        content: '<div class="richmarker-wrapper"><span class="pulse"></span></div>',
+        shadow: 0
+        });
+    updateMyLocation();
+}
+
 function showPosition(position) {
+    if (!initLocation) {
+        setLocation();
+    }
     lat = position.coords.latitude;
     curr_lat = position.coords.latitude;
     lng = position.coords.longitude;
     curr_long = position.coords.longitude;
     map.setCenter(new google.maps.LatLng(lat, lng));
     locationCenterMap = new google.maps.LatLng(parseFloat(lat), parseFloat(lng));
-    console.log(lat);
-    console.log(lng);
     getCurrentAddress(lat,lng);
     showAvailableDrivers(lat,lng);
 }
@@ -187,11 +209,11 @@ function initMap() {
         }]
     }];
 
-    bounds = new google.maps.LatLngBounds;
+    bounds = new google.maps.LatLngBounds();
 
-    directionsService = new google.maps.DirectionsService;
+    directionsService = new google.maps.DirectionsService();
 
-    directionsDisplay = new google.maps.DirectionsRenderer;
+    directionsDisplay = new google.maps.DirectionsRenderer();
 
     var mapOptions = {
         zoom: 14,
@@ -207,7 +229,7 @@ function initMap() {
     map = new google.maps.Map(document.getElementById('map-canvas'),
         mapOptions);
 
-    geocoder = new google.maps.Geocoder;
+    geocoder = new google.maps.Geocoder();
 
     var styledMapOptions = {
         name: 'Custom Style'
@@ -221,6 +243,7 @@ function initMap() {
             content: '<div class="richmarker-wrapper"><span class="pulse"></span></div>',
             shadow: 0
         });
+        console.log("POSITION on TIMEOUT: ", userMarker);
     }, 5000);
 
     //To show drivers near by
