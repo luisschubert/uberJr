@@ -15,7 +15,7 @@ var rideCompleted;
 var rideCompletedTimeout;
 
 function showAvailableDrivers(lat, lng) {
-    if (counter === 0){
+    if (cnt === 0){
         startIntervalCalls();
     }
     console.log("showAvailableDrivers rightnow");
@@ -71,10 +71,10 @@ function updateDriverMarkers() {
     setTimeout(updateDriverMarkers, 5000);
 }
 
-var counter = 0;
+var cnt = 0;
 function startIntervalCalls(){
     interval = setInterval(function() {getLocation();}, 1000);
-    counter +=1;
+    cnt +=1;
 }
 
 function getCurrentAddress(lat, lng) {
