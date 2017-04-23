@@ -8,28 +8,7 @@ def extractTravelTime(response):
     travelDistance = parsed_response[u'routes'][0][u'legs'][0][u'distance'][u'value']
     return travelTime, travelDistance
 
-#this will access the database and check if the username is not already registered.
-#if the user is not registered a new entry will be created.
-def signup(name,email,password,confirmpassword):
-    if not db.userExists(email):
-        if password == confirmpassword:
-            db.addUser(email,password)
-            return "SUCCESS"
-        else:
-            return "FAILURE"
-    else:
-        return "DUPLICATE"
-
-def login(email,password):
-    if db.userExists(email):
-        storedPassword = userdb.getPassword(email)
-        if storedPassword == password:
-            return "SUCCESS"
-        else:
-            "INCORRECT"
-    else:
-        return "NONEXISTENT"
-
 #calculates the travelCost based on the formula
-def calculateCost(travelTime, travelDistance):
-    return 300
+def calculateCost(timeToDest, milesToDest):
+    cost = 2.50 + (0.65 * timeToDest / 60) + (0.85 * milesToDest) + 1.75
+    return round(cost, 2)

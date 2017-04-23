@@ -48,8 +48,6 @@ function getCurrentAddress(lat, lng) {
           address = data.results[0].formatted_address;
           //insert the addres
           $('#originRider').val(address);
-          //removes the placeholder text
-          //$('#originRider').removeAttr('placeholder');
         }
     });
 }
@@ -142,7 +140,6 @@ function checkRideAccepted() {
     }
 }
 
-//function updateDriverInfo(driverName, carModel, carColor,plates, arrivalTime,cost){
 function toggleFoundDriver(driverName, carModel, carColor, plates, pickupTime) {
     $('.sidebar-state').removeClass('active'); //disables any active
     $('#driver-found').addClass('active');

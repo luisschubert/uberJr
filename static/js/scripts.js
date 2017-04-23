@@ -199,6 +199,8 @@ function initMap() {
         mapTypeControlOptions: {
             mapTypeIds: [google.maps.MapTypeId.ROADMAP, MY_MAPTYPE_ID]
         },
+        streetViewControl: false,
+        fullscreenControl: false,
         mapTypeId: MY_MAPTYPE_ID
     };
 

@@ -25,17 +25,17 @@ function readyDrive() {
             trackPositionTimeout = self.setInterval(function() {trackPosition()}, 10000);
             foundRider = false;
             checkForRider();
-            $('#waitting-state').addClass('active');
-            toggleActive();
+            //$('#waitting-state').addClass('active');
+            //toggleActive();
         }
     });
 }
 
-function toggleActive() {
+/*function toggleActive() {
     $(".overlay.destination").hide(); setTimeout(function() {
         $("body.driver").addClass('side-bar-active');
     }, 200);
-}
+}*/
 
 function trackPosition() {
     if (navigator.geolocation) {
@@ -91,6 +91,7 @@ function toggleFoundRider(rider) {
     console.log("found rider and updating view with details");
     $('#waitting-state').removeClass('active');
     $('#ride-title').html("New Ride Request!");
+    $('#tooltip').html('You need to decline or complete the ride first!');
     $('.switch').addClass('disabled');
     $('#ride-request').addClass('active');
     $('#specifics').addClass('active');
@@ -138,6 +139,7 @@ function acceptDeclineRide(val) {
 
 function toggleAcceptRide() {
     console.log("accepted ride and updating view");
+    $('#tooltip').html('You need to complete the ride first!');
     $('#ride-title').html("Enroute to Pickup");
     $('#specifics').removeClass('active');
     $('#directions-to-rider').addClass('active');
@@ -267,8 +269,8 @@ function toggleInactive() {
     $('.switch').removeClass('disabled');
     $('#switch-toggle').attr('checked', false);
     $('.sidebar-state').removeClass('active');
-    $("body.driver").removeClass('side-bar-active');
-    $(".overlay.destination").show();
+    /*$("body.driver").removeClass('side-bar-active');
+    $(".overlay.destination").show();*/
     directionsDisplay.setMap(null);
 }
 

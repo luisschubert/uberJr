@@ -48,15 +48,19 @@ class Drivers(db.Model):
     car_year = db.Column(db.Text)
     car_make = db.Column(db.Text)
     is_active = db.Column(db.Boolean)
+    timed_out = db.Column(db.Boolean)
+    timeout_time = db.Column(db.Integer)
     active_rel = db.relationship('ActiveDrivers', backref='drivers', primaryjoin='Drivers.driver_id == ActiveDrivers.id', uselist=False)
 
-    def __init__(self, driver_id, license_plate, car_color, car_year, car_make, is_active):
+    def __init__(self, driver_id, license_plate, car_color, car_year, car_make, is_active, timed_out, timeout_time):
         self.driver_id = driver_id
         self.license_plate = license_plate
         self.car_color = car_color
         self.car_year = car_year
         self.car_make = car_make
         self.is_active = is_active
+        self.timed_out = timed_out
+        self.timeout_time = timeout_time
 
     def __repr__(self):
         return '<Driver %r>' % self.license_plate
@@ -278,10 +282,9 @@ def api_signup():
             db.session.commit()
             # if user is a driver, create an entry with car details in drivers table
             if (isDriver == True):
-                isActive = False
                 # driver_id = corresponding user account's id (as a foreign key)
                 driveid = Users.query.filter_by(email=userEmail).first().id
-                new_driver = Drivers(driveid, licenseplate, color, year, make, isActive)
+                new_driver = Drivers(driveid, licenseplate, color, year, make, False, False, 0)
                 db.session.add(new_driver)
                 db.session.commit()
                 print 'driver account creation succeeded'
@@ -433,8 +436,8 @@ def api_requestdriver():
                     travelTime = parsed_response[u'rows'][0][u'elements'][0][u'duration'][u'value']
                     #travelTime = 921
                     #timeToDest = 2000
-                    # if driver is within a range of 30 minutes away
-                    if travelTime < 1800:
+                    # if driver is within a range of 20 minutes away
+                    if travelTime < 1200:
                         if travelTime < timeToRider:
                             timeToRider = travelTime
                             closestDriver = availdriver
@@ -447,8 +450,7 @@ def api_requestdriver():
                 timeToDest = parsed_destresp[u'rows'][0][u'elements'][0][u'duration'][u'value']
                 milesToDest = parsed_destresp[u'rows'][0][u'elements'][0][u'distance'][u'value']
                 milesToDest = milesToDest / 1609.34
-            cost = 2.50 + (0.65 * timeToDest / 60) + (0.85 * milesToDest) + 1.75
-            cost = round(cost, 2)
+            cost = tools.calculateCost(timeToDest, milesToDest)
             # mark the closest driver as paired
             closestDriver.paired = True
             # mark the ride request as paired
@@ -499,6 +501,9 @@ def api_acceptDeclineRide():
         # mark driver inactive
         driver = Drivers.query.filter_by(driver_id=driverid).first()
         driver.is_active = False
+        # time out driver for 5 minutes
+        driver.timed_out = True
+        driver.timeout_time = int(time.time()) + 60
         # remove driver from the activedrivers table
         ActiveDrivers.query.filter_by(id=driverid).delete()
         # return rider to ride request pool

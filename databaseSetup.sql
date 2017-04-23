@@ -6,7 +6,9 @@ CREATE TABLE drivers (
     car_color text NOT NULL,
     car_year text NOT NULL,
     car_make text NOT NULL,
-    is_active boolean DEFAULT false
+    is_active boolean DEFAULT false,
+    timed_out boolean DEFAULT false,
+    timeout_time integer NOT NULL
 );
 
 
