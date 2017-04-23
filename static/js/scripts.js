@@ -62,6 +62,11 @@ $(document).ready(function() {
         $('#driver-found').addClass('active');
         $('#rider-buttons').addClass('active');
     });
+    $('#logout-btn').click(function(e) {
+        if ($(this).hasClass('disabled')) {
+            e.preventDefault();
+        }
+    });
     getLocation();
 });
 
@@ -236,7 +241,7 @@ function initMap() {
     };
 
     //To show rider location
-  /*  setTimeout(function() { //here tmp until lat lng fix
+    /*setTimeout(function() { //here tmp until lat lng fix
         userMarker = new RichMarker({
             position: locationCenterMap,
             map: map,

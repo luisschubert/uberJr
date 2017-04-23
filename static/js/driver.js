@@ -7,6 +7,7 @@ var foundRider;
 var checkForRiderTimeout;
 var riderCanceled;
 var riderCanceledTimeout;
+var timedOut;
 
 $(document).ready(function() {
     trackPosition();
@@ -23,8 +24,6 @@ function getCurrentAddress(lat, lng) {
           address = data.results[0].formatted_address;
           //insert the addres
           $('#originRider').val(address);
-          //removes the placeholder text
-          //$('#originRider').removeAttr('placeholder');
         }
     });
 }
@@ -95,6 +94,7 @@ function readyDrive() {
             isActive = true;
             //trackPositionTimeout = self.setInterval(function() {trackPosition()}, 10000);
             foundRider = false;
+            //$('#logout-btn').addClass('disabled');
             checkForRider();
             //$('#waitting-state').addClass('active');
             //toggleActive();
@@ -162,7 +162,7 @@ function toggleFoundRider(rider) {
     console.log("found rider and updating view with details");
     $('#waitting-state').removeClass('active');
     $('#ride-title').html("New Ride Request!");
-    $('#tooltip').html('You need to decline or complete the ride first!');
+    $('#tooltip').html('You must decline or complete the ride first!');
     $('.switch').addClass('disabled');
     $('#ride-request').addClass('active');
     $('#specifics').addClass('active');
@@ -196,6 +196,7 @@ function acceptDeclineRide(val) {
             console.log(data);
             if (data == 'ride declined. driver marked inactive, and rider returned to ride request pool') {
             // if driver declined ride request, timeout/mark inactive
+                timedOut = true;
                 setInactive();
             } else {
               // if driver accepted ride request
@@ -210,7 +211,7 @@ function acceptDeclineRide(val) {
 
 function toggleAcceptRide() {
     console.log("accepted ride and updating view");
-    $('#tooltip').html('You need to complete the ride first!');
+    $('#tooltip').html('You must complete the ride first!');
     $('#ride-title').html("Enroute to Pickup");
     $('#specifics').removeClass('active');
     $('#directions-to-rider').addClass('active');
@@ -338,12 +339,37 @@ function setInactive() {
 
 function toggleInactive() {
     $('#driverInactive').hide();
-    $('.switch').removeClass('disabled');
     $('#switch-toggle').attr('checked', false);
     $('.sidebar-state').removeClass('active');
     /*$("body.driver").removeClass('side-bar-active');
     $(".overlay.destination").show();*/
     directionsDisplay.setMap(null);
+    if (timedOut) {
+        $('#tooltip').html('You cannot be active until you are no longer timed out!');
+        toggleTimedout();
+    } else {
+        //$('.switch').removeClass('disabled');
+        //$('#logout-btn').removeClass('disabled');
+    }
+}
+
+function toggleTimedout() {
+    var countDownDate = new Date().getTime() + 5 * 60 * 1000;
+    var x = setInterval(function() {
+        var now = new Date().getTime();
+        var distance = countDownDate - now;
+        var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+        var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+        $('#timer').html(minutes + "m " + seconds + "s ");
+        if (distance < 0) {
+            clearInterval(x);
+            timedOut = false;
+            $('#timed-out').removeClass('active');
+            $('.switch').removeClass('disabled');
+            //$('#logout-btn').removeClass('disabled');
+        }
+    }, 1000);
+    $('#timed-out').addClass('active');
 }
 
 //driver status toggle
