@@ -17,8 +17,8 @@
 		    <span class="switch-label" data-on="Active" data-off="Inactive"></span>
 		    <span class="switch-handle"></span>
 		    <div class="tooltip">
-			 	<p id="tooltip">You need to decline or complete the ride first!</p>
-			  </div>
+		 		<p id="tooltip">You need to decline or complete the ride first!</p>
+		    </div>
 		 </label>
 	 </div>
     <div class="divider"></div>
@@ -26,7 +26,7 @@
 
     <div class="driver-welcome wow fadeOut" data-wow-duration="1s" data-wow-delay="8s">
     	<h4>Welcome!</h4>
-    	<p>Please update your active status!</p>
+    	<p>Please update your status!</p>
     </div>
 
     <!-- driver waitting for request -->
@@ -66,8 +66,8 @@
   		<div class="divider"></div>
       <form id="declineRide" action="/api/acceptDeclineRide" method="POST">
         <input type="submit" value="yes" id="declineRideSubmit" class="button" onclick="">
+        <a id="decline-no" href="" class="button flt-right">No</a>
       </form>
-  		<a id="decline-no" href="" class="button">No</a>
   	</div>
 
     <div id="timed-out" class="sidebar-state">

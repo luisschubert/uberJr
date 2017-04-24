@@ -15,6 +15,7 @@ $mobile-sm: 479px;
 @import "base/buttons";
 @import "base/scrollbars";
 @import "base/toggle_switch";
+@import "base/tooltips";
 
 .clear {
    clear: both;
@@ -75,6 +76,10 @@ body {
          animation-duration: 2.25s;
          animation-iteration-count: infinite;
          opacity: .2;
+
+         &.animated {
+            display: none !important;
+         }
       }
 
       .circle-inner {

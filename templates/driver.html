@@ -13,6 +13,9 @@
   			<input type="submit" value="Inactive" id="inactive" class="button inactive" onclick="">
   		</form> -->
       <a href="/logout" id="logout-btn" class="button logout">Log Out</a>
+      <div class="tooltip">
+        <p id="tooltip">You need to decline or complete the ride first!</p>
+      </div>
     </div>
     {% include 'sidebar-driver.html' %}
     <div class="map-wrapper wow zoomOutIn" data-wow-delay="3.4s" data-wow-duration="3.s">

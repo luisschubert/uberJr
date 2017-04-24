@@ -58,7 +58,7 @@ $(document).ready(function() {
         $('#rider-buttons').addClass('active');
     });
     $('#logout-btn').click(function(e) {
-        if ($(this).hasClass('disabled')) {
+        if ($(".log-out-box").hasClass('disabled')) {
             e.preventDefault();
         }
     });

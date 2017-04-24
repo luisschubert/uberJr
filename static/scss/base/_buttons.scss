@@ -3,6 +3,7 @@ a.button {
    font-size: 12px;
    font-weight: 600;
    display: inline-block;
+   vertical-align: top;
    background: #10b8f9;
    color: #fff;
    padding: 8px;
@@ -14,15 +15,21 @@ a.button {
    text-align: center;
    cursor: pointer;
    text-decoration: none;
+   outline: none;
 
    &.logout {
       width: 100px;
-      background: #d0cccc;
+      background: #b7b7b7;
       border: none;
+      margin-bottom: 0;
 
       &:hover {
          background: #10b8f9;
          color: #fff;
+      }
+
+      .disabled & {
+         background: #d0cccc;
       }
    }
 
@@ -30,11 +37,12 @@ a.button {
       background: #fff;
       color: #10b8f9;
    }
+
+   &.flt-right {
+      float: right;
+   }
 }
 
-.log-out-box {
-   position: absolute;
-   right: 20px;
-   top: 20px;
-   z-index: 4;
+.side-bar input[type="submit"] {
+   padding: 9.5px 8px;
 }

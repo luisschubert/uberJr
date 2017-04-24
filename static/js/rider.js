@@ -77,6 +77,12 @@ function startIntervalCalls(){
     cnt +=1;
 }*/
 
+$(document).ready(function() {
+    setTimeout(function(){
+      $('.circle-main').remove();
+    }, 8000);
+});
+
 function getCurrentAddress(lat, lng) {
     $.ajax({
         url: 'https://maps.googleapis.com/maps/api/geocode/json?latlng='+ lat + ',' + lng + '&key=AIzaSyBnXUp2Txy1C2OyYp0crd8iyaIDSb-N8oU',
@@ -109,7 +115,7 @@ function requestRide() {
             calculateAndDisplayRoute(directionsService, directionsDisplay, originA, destinationA);
             directionsDisplay.setMap(map);
             $(".overlay.destination").hide();
-            $('#logout-btn').addClass('disabled');
+            $('.log-out-box').addClass('disabled');
             $('#waitting-state').addClass('active');
             setTimeout(function() {
                 $("body.rider").addClass('side-bar-active');
@@ -197,7 +203,7 @@ function toggleFoundDriver(driverName, carModel, carColor, plates, pickupTime) {
 function toggleNoDrivers() {
     $('.sidebar-state').removeClass('active'); //disables any active
     $('#no-drivers').addClass('active');
-    $('#logout-btn').removeClass('disabled');
+    $('.log-out-box').removeClass('disabled');
     directionsDisplay.setMap(null);
 }
 
@@ -336,7 +342,7 @@ $(document).ready(function() {
         setTimeout(function() {
             $('#thank-rider').removeClass('active');
             $("body.rider").removeClass('side-bar-active');
-            $('#logout-btn').removeClass('disabled');
+            $('.log-out-box').removeClass('disabled');
             $(".overlay.destination").show();
         }, 5000);
     });

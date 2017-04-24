@@ -35,6 +35,9 @@ $(document).ready(function() {
         $('#ride-request').addClass('active');
         $('#specifics').addClass('active');
     });
+    setTimeout(function(){
+      $('.circle-main').remove();
+    }, 8000);
 });
 
 function checkTimedOut() {
@@ -46,7 +49,7 @@ function checkTimedOut() {
                 timedout_time = data.time * 1000;
                 $('.driver-welcome').hide();
                 $('.switch').addClass('disabled');
-                $('#logout-btn').addClass('disabled');
+                $('.log-out-box').addClass('disabled');
                 timedOut = true;
                 toggleInactive();
             } else {
@@ -135,7 +138,7 @@ function readyDrive() {
             isActive = true;
             //trackPositionTimeout = self.setInterval(function() {trackPosition()}, 10000);
             foundRider = false;
-            $('#logout-btn').addClass('disabled');
+            $('.log-out-box').addClass('disabled');
             checkForRider();
         }
     });
@@ -374,7 +377,7 @@ function toggleInactive() {
     $('#driverInactive').hide();
     $('#switch-toggle').attr('checked', false);
     $('.sidebar-state').removeClass('active');
-    $('#logout-btn').removeClass('disabled');
+    $('.log-out-box').removeClass('disabled');
     if (timedOut) {
         $('#tooltip').html('You cannot be active until you are no longer timed out!');
         toggleTimedout();
@@ -395,7 +398,7 @@ function toggleTimedout(duration) {
             clearInterval(x);
             timedOut = false;
             $('#timed-out').removeClass('active');
-            $('#logout-btn').removeClass('disabled');
+            $('.log-out-box').removeClass('disabled');
             $('.switch').removeClass('disabled');
             noTimeOut();
         }
