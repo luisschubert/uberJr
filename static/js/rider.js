@@ -115,6 +115,7 @@ function requestRide() {
             calculateAndDisplayRoute(directionsService, directionsDisplay, originA, destinationA);
             directionsDisplay.setMap(map);
             $(".overlay.destination").hide();
+            $('#rider-logout-tooltip').html("You cannot log out while searching for a ride!");
             $('.log-out-box').addClass('disabled');
             $('#waitting-state').addClass('active');
             setTimeout(function() {
@@ -200,6 +201,7 @@ function toggleFoundDriver(driverName, carModel, carColor, plates, pickupTime) {
     $('.time-title').html('Estimated Time of Pickup:');
     $('.time').html(pickupTime);
     $('.cost').html("$" + rideFare);
+    $('#rider-logout-tooltip').html("You must complete the ride first!");
 }
 
 function toggleNoDrivers() {
@@ -303,6 +305,7 @@ function toggleRideCompleted() {
     $('.fare').html("$" + rideFare);
     $('#payment-title').addClass('active');
     $('#payment-form').addClass('active');
+    $('#rider-logout-tooltip').html("You must pay for your ride first!");
     directionsDisplay.setMap(null);
 }
 

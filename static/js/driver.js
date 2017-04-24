@@ -387,7 +387,7 @@ function toggleInactive() {
 }
 
 function toggleTimedout(duration) {
-    $('#timer').html("5m 00s");
+    $('#timer').html("1m 00s");
     var x = setInterval(function() {
         var now = Date.now();
         var distance = timedout_time - now;

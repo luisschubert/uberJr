@@ -537,7 +537,7 @@ def api_acceptDeclineRide():
         # mark driver inactive
         driver = Drivers.query.filter_by(driver_id=driverid).first()
         driver.is_active = False
-        # time out driver for 5 minutes
+        # time out driver for 1 minute
         driver.timed_out = True
         driver.timeout_time = int(time.time()) + 60
         # remove driver from the activedrivers table
