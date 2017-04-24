@@ -58,21 +58,25 @@ $(document).ready(function() {
         $('#rider-buttons').addClass('active');
     });
     $('#logout-btn').click(function(e) {
-        if ($(".log-out-box").hasClass('disabled')) {
+        if ($(this).hasClass('disabled')) {
             e.preventDefault();
         }
     });
     getLocation();
 });
 
-/*var initLocation = false;
+var initLocation = false;
 function updateMyLocation() {
     setInterval(function() {
       console.log("SETING INTERVAL");
-      userMarker.setPosition(new google.maps.LatLng(curr_lat, curr_long));
+      if (userMarker === null) {
+          console.log("!!!userMarker is Null now!!!!");
+      } else {
+          userMarker.setPosition(new google.maps.LatLng(curr_lat, curr_long));
+      }
     },
-    1000);
-}*/
+    7000);
+}
 
 function getLocation() {
     if (navigator.geolocation) {
@@ -82,22 +86,11 @@ function getLocation() {
     }
 }
 
-/*function setLocation() {
-    initLocation = true;
-    console.log("setting initial location");
-    userMarker = new RichMarker({
-        position: locationCenterMap,
-        map: map,
-        content: '<div class="richmarker-wrapper"><span class="pulse"></span></div>',
-        shadow: 0
-        });
-    updateMyLocation();
-}*/
-
 function showPosition(position) {
-    /*if (!initLocation) {
-        setLocation();
-    }*/
+    console.log("ShowPostion on the script.js: ");
+    if (!initLocation) {
+        updateMyLocation();
+    }
     lat = position.coords.latitude;
     curr_lat = position.coords.latitude;
     lng = position.coords.longitude;
@@ -236,7 +229,7 @@ function initMap() {
     };
 
     //To show rider location
-    /*setTimeout(function() { //here tmp until lat lng fix
+    setTimeout(function() { //here tmp until lat lng fix
         userMarker = new RichMarker({
             position: locationCenterMap,
             map: map,
@@ -244,7 +237,9 @@ function initMap() {
             shadow: 0
         });
         console.log("POSITION on TIMEOUT: ", userMarker);
-    }, 5000);*/
+        console.log("deleting markers here");
+        deleteMarkers(userMarker);
+    }, 5000);
 
     //To show drivers near by
     for (var i = 0; i < driverslocations.length; i++) {
