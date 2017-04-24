@@ -3,8 +3,8 @@
 For best practice install Ubuntu in a Virtual Machine and run uberJr in sandboxed environment to ensure consistent performance.
 
 ## 1. Install Python (if you don't already have it) 
-We are using version 2.7
-run `python` in your terminal to check if you have python install.
+We are using version 2.7  
+run `python` in your terminal to check if you have python install.  
 if a python interpreter is launched, run to check your version
 ```
 import sys
@@ -35,51 +35,44 @@ Python dependencies will be installed using Pip.
 `sudo pip install psycopg2`
 
 ## 3. Install PostgreSQL
-### OS X:
-Install the PostgresApp from https://postgresapp.com/.
-This is the easiest way to run a PostgreSQL Server on Mac. Follow Instructions on site for installation.
 ### Linux:
 ```
 sudo apt-get install postgres
 ```
 
+### OS X:
+Install the PostgresApp from https://postgresapp.com/.  
+This is the easiest way to run a PostgreSQL Server on Mac. Follow Instructions on site for installation.  
+
 ## 4. Connect to Postgres, Create Database & Tables
+### Connect to Postgres
 ### Linux:
 Connect to the postgres server with the postgres user:
 ```
 sudo su - postgres
 psql -p5432
 ```
-First we will create a new database called `uberjr`.
-```
-create Database uberjr;
-```
-Now we'll have to connect to the database.
-```
-\c uberjr
-```
-To execute the sql statement in `databaseSetup.sql` we will just copy and paste the contents of the file into our psql prompt.
-
-To check if the tables have been create successfully you can execute:
-```
-\d
-```
 ### OS X
 Connect to the postgres server with the postgres user:
 ```
 "/Applications/Postgres.app/Contents/Versions/9.6/bin/psql" -p5432 -d "postgres"
 ```
-First we will create a new database called `uberjr`.
+### Create Database & Tables
+Create a new database called `uberjr`
 ```
 create Database uberjr;
 ```
-Now we'll have to connect to the database.
+Connect to the database.
 ```
-\c uberjr
+\c uberjr;
 ```
 To execute the sql statement in `databaseSetup.sql` we will just copy and paste the contents of the file into our psql prompt.
 
 To check if the tables have been create successfully you can execute:
 ```
 \d
+```
+Change the postgres password to `uberjr`
+```
+\password postgres;
 ```
