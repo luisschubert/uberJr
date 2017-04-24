@@ -76,10 +76,6 @@ body {
          animation-duration: 2.25s;
          animation-iteration-count: infinite;
          opacity: .2;
-
-         &.animated {
-            display: none !important;
-         }
       }
 
       .circle-inner {
