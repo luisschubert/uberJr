@@ -289,7 +289,7 @@ function checkRideCompleted() {
               console.log("ride completed");
               toggleRideCompleted();
           } else {
-              //updateDriverMarkers();
+              updateDriverMarkers();
               console.log("ride is still in progress");
           }
         }
