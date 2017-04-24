@@ -45,6 +45,8 @@ function checkTimedOut() {
             if (data != 'false') {
                 timedout_time = data.time * 1000;
                 $('.driver-welcome').hide();
+                $('.switch').addClass('disabled');
+                $('#logout-btn').addClass('disabled');
                 timedOut = true;
                 toggleInactive();
             } else {
@@ -393,6 +395,7 @@ function toggleTimedout(duration) {
             clearInterval(x);
             timedOut = false;
             $('#timed-out').removeClass('active');
+            $('#logout-btn').removeClass('disabled');
             $('.switch').removeClass('disabled');
             noTimeOut();
         }
