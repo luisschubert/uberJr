@@ -1,9 +1,8 @@
-# uberJr
-user installation and configuration guide
+# uberJr – Installation and Configuration Guide
 
-For best result install Ubuntu in a Virtual Machine and run uberJr in sandboxed environment to ensure consistent performance.
+For best practice install Ubuntu in a Virtual Machine and run uberJr in sandboxed environment to ensure consistent performance.
 
-1. Install Python (if you don't already have it) 
+## 1. Install Python (if you don't already have it) 
 https://www.python.org/downloads/
 We are using version 2.7
 run `python` in your terminal of choice to launch a python interpreter.
@@ -18,22 +17,22 @@ to check your version
 
 Python dependencies will be installed using Pip.
 
-->flask
+### flask
 `sudo pip install flask`
 
-->flask-bcrypt
+### flask-bcrypt
 `sudo pip install flask-bcrypt`
 
-->flask_sqlalchemy
+### flask_sqlalchemy
 `sudo pip install flask_sqlalchemy`
 
-->requests
+### requests
 `sudo pip install requests`
 
-->googlemaps
+### googlemaps
 `sudo pip install googlemaps`
 
-->psycopg2
+### psycopg2
 `sudo pip install psycopg2`
 
 ## 3. Install PostgreSQL
