@@ -14,7 +14,7 @@ print (sys.version)
 ```
 to check your version
 
-2. Install Python Dependencies
+## 2. Install Python Dependencies
 
 Python dependencies will be installed using Pip.
 
@@ -36,14 +36,14 @@ Python dependencies will be installed using Pip.
 ->psycopg2
 `sudo pip install psycopg2`
 
-3. Install PostgreSQL
+## 3. Install PostgreSQL
 OS X -> https://postgresapp.com/ this is the easiest way to run a PostgreSQL Server on Mac. Follow Instructions on site.
 Linux:
 ```
 sudo apt-get install postgres
 ```
 
-4. Create Database Tables
+## 4. Create Database Tables
 Linux:
 Connect to db with postgres user:
 ```
