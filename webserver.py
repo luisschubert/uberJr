@@ -190,11 +190,24 @@ def logout():
                 driver.is_active = False
                 # remove the driver from the activedrivers table
                 ActiveDrivers.query.filter_by(id = user.id).delete()
+                db.session.commit()
+                session.pop('email', None)
+                return redirect(url_for('home'))
+            else:
+                if driver.timed_out == True:
+                    return redirect(url_for('driver'))
+                else:
+                    driver.is_active = False
+                    # remove the driver from the activedrivers table
+                    ActiveDrivers.query.filter_by(id = user.id).delete()
+                    db.session.commit()
+                    session.pop('email', None)
+                    return redirect(url_for('home'))
         else:
             Riders.query.filter_by(rider_id=user.id).delete()
-        db.session.commit()
-        session.pop('email', None)
-        return redirect(url_for('home'))
+            db.session.commit()
+            session.pop('email', None)
+            return redirect(url_for('home'))
 
 #return all available drivers in your area
 @app.route("/api/getDrivers", methods=['POST'])
@@ -329,6 +342,24 @@ def api_login():
         return "No account with that email was found!"
     else:
         return "No idea??"
+
+@app.route("/api/checkTimedOut", methods=['GET'])
+def api_checkTimedOut():
+    driverid = Users.query.filter_by(email = session['email']).first().id
+    driver = Drivers.query.filter_by(driver_id = driverid).first()
+    if driver.timed_out == True:
+        info = {'time': driver.timeout_time}
+        return jsonify(info)
+    else:
+        return "false"
+
+@app.route("/api/noTimeOut", methods=['POST'])
+def api_noTimeOut():
+    driverid = Users.query.filter_by(email = session['email']).first().id
+    driver = Drivers.query.filter_by(driver_id = driverid).first()
+    driver.timed_out = False
+    db.session.commit()
+    return "no longer timed out"
 
 @app.route("/api/drive", methods=['POST'])
 def api_drive():
@@ -515,6 +546,7 @@ def api_acceptDeclineRide():
         riderequest = Riders.query.filter_by(rider_id=riderid).first()
         riderequest.paired = False
         db.session.commit()
+        print("Driver timed out status: ", driver.timed_out)
         return 'ride declined. driver marked inactive, and rider returned to ride request pool'
 
 @app.route("/api/cancelRide", methods=['POST'])

@@ -8,10 +8,51 @@ var checkForRiderTimeout;
 var riderCanceled;
 var riderCanceledTimeout;
 var timedOut;
+var timedout_time;
 
 $(document).ready(function() {
+    checkTimedOut();
     trackPosition();
+    $('#acceptRide input[type=submit]').click(function(e) {
+        var val = $(this).attr('value');
+        e.preventDefault();
+        acceptDeclineRide(val);
+    });
+    $('#decline-btn').click(function(e) {
+        e.preventDefault();
+        $('.sidebar-state').removeClass('active');
+        $('#decline-conf').addClass('active');
+    });
+    $('#declineRide input[type=submit]').click(function(e) {
+        var val = $(this).attr('value');
+        e.preventDefault();
+        timedout_time = Date.now() + (1 * 60 * 1000);
+        acceptDeclineRide(val);
+    });
+    $('#decline-no').click(function(e) {
+        e.preventDefault();
+        $('#decline-conf').removeClass('active');
+        $('#ride-request').addClass('active');
+        $('#specifics').addClass('active');
+    });
 });
+
+function checkTimedOut() {
+    $.ajax({
+        url: '/api/checkTimedOut',
+        type: 'GET',
+        success: function(data, status) {
+            if (data != 'false') {
+                timedout_time = data.time * 1000;
+                $('.driver-welcome').hide();
+                timedOut = true;
+                toggleInactive();
+            } else {
+                console.log("not timed out");
+            }
+        }
+    });
+}
 
 function getCurrentAddress(lat, lng) {
   console.log("getCurrentAddress of the driver");
@@ -21,15 +62,15 @@ function getCurrentAddress(lat, lng) {
         success: function(data,status){
           console.log(status + " : " + data);
           //get the address from the response object
-          address = data.results[0].formatted_address;
+          //address = data.results[0].formatted_address;
           //insert the addres
-          $('#originRider').val(address);
+          //$('#originRider').val(address);
         }
     });
 }
 
 function showAvailableDrivers(lat, lng) {
-    //nothing goes here
+
 }
 
 function updateLocation(position) {
@@ -53,7 +94,7 @@ function updateLocation(position) {
             success: function(data) {
                 console.log(data);
             }
-        })
+        });
     }
 }
 
@@ -92,7 +133,7 @@ function readyDrive() {
             isActive = true;
             //trackPositionTimeout = self.setInterval(function() {trackPosition()}, 10000);
             foundRider = false;
-            //$('#logout-btn').addClass('disabled');
+            $('#logout-btn').addClass('disabled');
             checkForRider();
         }
     });
@@ -225,7 +266,7 @@ function checkRideCanceled() {
     });
     if (!riderCanceled) {
         clearTimeout(riderCanceledTimeout);
-        riderCanceledTimeout = setTimeout(checkRideCanceled, 8000);
+        riderCanceledTimeout = setTimeout(checkRideCanceled, 3000);
     }
 }
 
@@ -331,32 +372,48 @@ function toggleInactive() {
     $('#driverInactive').hide();
     $('#switch-toggle').attr('checked', false);
     $('.sidebar-state').removeClass('active');
-    directionsDisplay.setMap(null);
     if (timedOut) {
         $('#tooltip').html('You cannot be active until you are no longer timed out!');
         toggleTimedout();
     } else {
-        //$('#logout-btn').removeClass('disabled');
+        directionsDisplay.setMap(null);
+        $('#logout-btn').removeClass('disabled');
     }
 }
 
-function toggleTimedout() {
-    var countDownDate = new Date().getTime() + 1 * 60 * 1000;
+function toggleTimedout(duration) {
+    $('#timer').html("5m 00s");
     var x = setInterval(function() {
-        var now = new Date().getTime();
-        var distance = countDownDate - now;
-        var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-        var seconds = Math.floor((distance % (1000 * 60)) / 1000);
-        $('#timer').html(minutes + "m " + seconds + "s ");
+        var now = Date.now();
+        var distance = timedout_time - now;
+        var minutes = Math.floor((distance / 60) / 1000);
+        var seconds = Math.floor(distance / 1000);
+        $('#timer').html(minutes + "m " + seconds + "s");
         if (distance < 0) {
             clearInterval(x);
             timedOut = false;
             $('#timed-out').removeClass('active');
             $('.switch').removeClass('disabled');
-            //$('#logout-btn').removeClass('disabled');
+            noTimeOut();
+            $('#logout-btn').removeClass('disabled');
         }
     }, 1000);
     $('#timed-out').addClass('active');
+    directionsDisplay.setMap(null);
+}
+
+function noTimeOut() {
+    var formData = {
+        'timedOut': timedOut
+    };
+    $.ajax({
+        url: '/api/noTimeOut',
+        type: 'POST',
+        data: formData,
+        success: function(data) {
+            console.log(data);
+        }
+    });
 }
 
 //driver status toggle

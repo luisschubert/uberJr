@@ -109,6 +109,7 @@ function requestRide() {
             calculateAndDisplayRoute(directionsService, directionsDisplay, originA, destinationA);
             directionsDisplay.setMap(map);
             $(".overlay.destination").hide();
+            $('#logout-btn').addClass('disabled');
             $('#waitting-state').addClass('active');
             setTimeout(function() {
                 $("body.rider").addClass('side-bar-active');
@@ -175,7 +176,7 @@ function checkRideAccepted() {
     });
     if (!rideAccepted) {
         clearTimeout(rideAcceptedTimeout);
-        rideAcceptedTimeout = setTimeout(checkRideAccepted, 8000);
+        rideAcceptedTimeout = setTimeout(checkRideAccepted, 5000);
     }
 }
 
@@ -196,6 +197,7 @@ function toggleFoundDriver(driverName, carModel, carColor, plates, pickupTime) {
 function toggleNoDrivers() {
     $('.sidebar-state').removeClass('active'); //disables any active
     $('#no-drivers').addClass('active');
+    $('#logout-btn').removeClass('disabled');
     directionsDisplay.setMap(null);
 }
 
@@ -245,7 +247,7 @@ function checkPickedUp() {
     });
     if (!pickedUp) {
         clearTimeout(pickedUpTimeout);
-        pickedUpTimeout = setTimeout(checkPickedUp, 8000);
+        pickedUpTimeout = setTimeout(checkPickedUp, 3000);
     }
 }
 
@@ -334,6 +336,7 @@ $(document).ready(function() {
         setTimeout(function() {
             $('#thank-rider').removeClass('active');
             $("body.rider").removeClass('side-bar-active');
+            $('#logout-btn').removeClass('disabled');
             $(".overlay.destination").show();
         }, 5000);
     });
