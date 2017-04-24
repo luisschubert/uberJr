@@ -203,7 +203,7 @@ function toggleFoundDriver(driverName, carModel, carColor, plates, pickupTime) {
 function toggleNoDrivers() {
     $('.sidebar-state').removeClass('active'); //disables any active
     $('#no-drivers').addClass('active');
-    $('.log-out-box').addClass('disabled');
+    $('.log-out-box').removeClass('disabled');
     directionsDisplay.setMap(null);
 }
 
@@ -342,7 +342,7 @@ $(document).ready(function() {
         setTimeout(function() {
             $('#thank-rider').removeClass('active');
             $("body.rider").removeClass('side-bar-active');
-            $('.log-out-box').addClass('disabled');
+            $('.log-out-box').removeClass('disabled');
             $(".overlay.destination").show();
         }, 5000);
     });
