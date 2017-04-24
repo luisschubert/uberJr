@@ -19,22 +19,22 @@ to check your version
 Python dependencies will be installed using Pip.
 
 ->flask
-sudo pip install flask
+`sudo pip install flask`
 
 ->flask-bcrypt
-sudo pip install flask-bcrypt
+`sudo pip install flask-bcrypt`
 
 ->flask_sqlalchemy
-sudo pip install flask_sqlalchemy
+`sudo pip install flask_sqlalchemy`
 
 ->requests
-sudo pip install requests
+`sudo pip install requests`
 
 ->googlemaps
-sudo pip install googlemaps
+`sudo pip install googlemaps`
 
 ->psycopg2
-sudo pip install psycopg2
+`sudo pip install psycopg2`
 
 3. Install PostgreSQL
 OS X -> https://postgresapp.com/ this is the easiest way to run a PostgreSQL Server on Mac. Follow Instructions on site.
