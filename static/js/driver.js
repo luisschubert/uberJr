@@ -372,12 +372,12 @@ function toggleInactive() {
     $('#driverInactive').hide();
     $('#switch-toggle').attr('checked', false);
     $('.sidebar-state').removeClass('active');
+    $('#logout-btn').removeClass('disabled');
     if (timedOut) {
         $('#tooltip').html('You cannot be active until you are no longer timed out!');
         toggleTimedout();
     } else {
         directionsDisplay.setMap(null);
-        $('#logout-btn').removeClass('disabled');
     }
 }
 
@@ -395,7 +395,6 @@ function toggleTimedout(duration) {
             $('#timed-out').removeClass('active');
             $('.switch').removeClass('disabled');
             noTimeOut();
-            $('#logout-btn').removeClass('disabled');
         }
     }, 1000);
     $('#timed-out').addClass('active');

@@ -546,7 +546,6 @@ def api_acceptDeclineRide():
         riderequest = Riders.query.filter_by(rider_id=riderid).first()
         riderequest.paired = False
         db.session.commit()
-        print("Driver timed out status: ", driver.timed_out)
         return 'ride declined. driver marked inactive, and rider returned to ride request pool'
 
 @app.route("/api/cancelRide", methods=['POST'])
