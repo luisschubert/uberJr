@@ -803,8 +803,11 @@ RichMarker.prototype.draw = function() {
   var pos = projection.fromLatLngToDivPixel(latLng);
 
   var offset = this.getOffset_();
-  this.markerWrapper_.style['top'] = (pos.y + offset.height) + 'px';
-  this.markerWrapper_.style['left'] = (pos.x + offset.width) + 'px';
+
+  if (pos != null) {
+  	this.markerWrapper_.style['top'] = (pos.y + offset.height) + 'px';
+    this.markerWrapper_.style['left'] = (pos.x + offset.width) + 'px';
+  }
 
   var height = this.markerContent_.offsetHeight;
   var width = this.markerContent_.offsetWidth;

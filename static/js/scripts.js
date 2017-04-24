@@ -236,15 +236,18 @@ function initMap() {
     };
 
     //To show rider location
-    /*setTimeout(function() { //here tmp until lat lng fix
-        userMarker = new RichMarker({
-            position: locationCenterMap,
-            map: map,
-            content: '<div class="richmarker-wrapper"><span class="pulse"></span></div>',
-            shadow: 0
-        });
-        console.log("POSITION on TIMEOUT: ", userMarker);
-    }, 5000);*/
+    setTimeout(function() { //here tmp until lat lng fix
+        if (locationCenterMap != null) {
+            console.log("Center Map Coordinates" + locationCenterMap);
+            userMarker = new RichMarker({
+                position: locationCenterMap,
+                map: map,
+                content: '<div class="richmarker-wrapper"><span class="pulse"></span></div>',
+                shadow: 0
+            });
+        }
+        //console.log("POSITION on TIMEOUT: ", userMarker);
+    }, 5000);
 
     //To show drivers near by
     for (var i = 0; i < driverslocations.length; i++) {
