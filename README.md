@@ -1,60 +1,66 @@
 # uberJr
-Uber clone
+user installation and configuration guide
 
-## Webserver Routes
->This will outline the routes our webserver can handle and the views it will return.
+For best result install Ubuntu in a Virtual Machine and run uberJr in sandboxed environment to ensure consistent performance.
 
-#### /
-displays the login view
+1. Install Python (if you don't already have it) 
+https://www.python.org/downloads/
+We are using version 2.7
+run `python` in your terminal of choice to launch a python interpreter.
+run
+```
+import sys
+print (sys.version)
+```
+to check your version
 
-#### /driver
-displays the driver view
+2. Install Python Dependencies
 
-#### /rider
-displays the rider view
+Python dependencies will be installed using Pip.
 
-#### /signup
-displays the signup view
+->flask
+sudo pip install flask
 
-#### /login
-displays the login view
+->flask-bcrypt
+sudo pip install flask-bcrypt
 
-#### /logout
-logs current user out and displays the login view
+->flask_sqlalchemy
+sudo pip install flask_sqlalchemy
 
-#### /geolocationTest
-displays a button to retrieve GPS Coordinates using HTML5 API
+->requests
+sudo pip install requests
 
+->googlemaps
+sudo pip install googlemaps
 
-## API Documentation
->all api calls go to /api/...
+->psycopg2
+sudo pip install psycopg2
 
-#### getTravelTime (POST) JSON
-###### Parameters:
-* originLongitude
-* originLatitude
-* destinationAddress
-* estimatePickupTime
-* pickUpAddress //OPTIONAL
+3. Install PostgreSQL
+OS X -> https://postgresapp.com/ this is the easiest way to run a PostgreSQL Server on Mac. Follow Instructions on site.
+Linux:
+```
+sudo apt-get install postgres
+```
 
-#### getEstimatePickupTime (POST) JSON
-###### Parameters:
-* originLongitude
-* originLatitude
+4. Create Database Tables
+Linux:
+Connect to db with postgres user:
+```
+sudo su - postgres
+psql -p5432
+```
+First we will create a new database called `uberjr`.
+```
+create Database uberjr;
+```
+Now we'll have to connect to the database.
+```
+\c uberjr
+```
+To execute the sql statement in `databaseSetup.sql` we will just copy and paste the contents of the file into our psql prompt.
 
-#### signup (POST) JSON
-###### Parameters:
-* name
-* email
-* password
-* confpassword
-* isdriver
-* licenseplate (if driver)
-* color (if driver)
-* year (if driver)
-* make (if driver)
-
-#### login (POST) JSON
-###### Parameters:
-* email
-* password
+To check if the tables have been create successfully you can execute:
+```
+\d
+```
