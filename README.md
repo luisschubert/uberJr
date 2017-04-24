@@ -1,60 +1,87 @@
-# uberJr
-Uber clone
+# uberJr – Installation and Configuration Guide
 
-## Webserver Routes
->This will outline the routes our webserver can handle and the views it will return.
+For best practice install Ubuntu in a Virtual Machine and run uberJr in sandboxed environment to ensure consistent performance.
 
-#### /
-displays the login view
+## 1. Install Python (if you don't already have it) 
+We are using version 2.7  
+run `python` in your terminal to check if you have python install.  
+if a python interpreter is launched, run to check your version
+```
+import sys
+print (sys.version)
+```
+else download python here https://www.python.org/downloads/
 
-#### /driver
-displays the driver view
+## 2. Install Python Dependencies
 
-#### /rider
-displays the rider view
+Python dependencies will be installed using Pip.
 
-#### /signup
-displays the signup view
+### flask
+`sudo pip install flask`
 
-#### /login
-displays the login view
+### flask-bcrypt
+`sudo pip install flask-bcrypt`
 
-#### /logout
-logs current user out and displays the login view
+### flask_sqlalchemy
+`sudo pip install flask_sqlalchemy`
 
-#### /geolocationTest
-displays a button to retrieve GPS Coordinates using HTML5 API
+### requests
+`sudo pip install requests`
 
+### googlemaps
+`sudo pip install googlemaps`
 
-## API Documentation
->all api calls go to /api/...
+### psycopg2
+`sudo pip install psycopg2`
 
-#### getTravelTime (POST) JSON
-###### Parameters:
-* originLongitude
-* originLatitude
-* destinationAddress
-* estimatePickupTime
-* pickUpAddress //OPTIONAL
+## 3. Install PostgreSQL
+### Linux:
+```
+sudo apt-get install postgres
+```
 
-#### getEstimatePickupTime (POST) JSON
-###### Parameters:
-* originLongitude
-* originLatitude
+### OS X:
+Install the PostgresApp from https://postgresapp.com/.  
+This is the easiest way to run a PostgreSQL Server on Mac. Follow Instructions on site for installation.  
 
-#### signup (POST) JSON
-###### Parameters:
-* name
-* email
-* password
-* confpassword
-* isdriver
-* licenseplate (if driver)
-* color (if driver)
-* year (if driver)
-* make (if driver)
+## 4. Connect to Postgres, Create Database & Tables
+### Connect to Postgres:
+### Linux:
+Connect to the postgres server with the postgres user:
+```
+sudo su - postgres
+psql -p5432
+```
+### OS X:
+Connect to the postgres server with the postgres user:
+```
+"/Applications/Postgres.app/Contents/Versions/9.6/bin/psql" -p5432 -d "postgres"
+```
+### Create Database & Tables:
+Create a new database called `uberjr`
+```
+create Database uberjr;
+```
+Connect to the `uberjr` database.
+```
+\c uberjr;
+```
+To execute the sql statement in `databaseSetup.sql` we will just copy and paste the contents of the file into our psql prompt.
 
-#### login (POST) JSON
-###### Parameters:
-* email
-* password
+To check if the tables have been create successfully you can execute:
+```
+\d
+```
+Change the postgres password to `uberjr`
+```
+\password postgres;
+```
+
+## 5. Launch uberJr 
+Clone the repository to your machine.
+Navigate to the project in your terminal and run to start the webserver:
+```
+python webserver.py
+```
+UberJr is now running at `localhost:5000` [uberJr](http://localhost:5000)
+

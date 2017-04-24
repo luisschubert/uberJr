@@ -14,7 +14,13 @@ var pickedUpTimeout;
 var rideCompleted;
 var rideCompletedTimeout;
 
-/*function showAvailableDrivers(lat, lng) {
+$(document).ready(function() {
+    setTimeout(function(){
+      $('.circle-main').remove();
+    }, 8000);
+});
+
+function showAvailableDrivers(lat, lng) {
     if (cnt === 0){
         startIntervalCalls();
     }
@@ -73,15 +79,9 @@ function updateDriverMarkers() {
 
 var cnt = 0;
 function startIntervalCalls(){
-    interval = setInterval(function() {getLocation();}, 1000);
+    interval = setInterval(function() {getLocation();}, 7000);
     cnt +=1;
-}*/
-
-$(document).ready(function() {
-    setTimeout(function(){
-      $('.circle-main').remove();
-    }, 8000);
-});
+}
 
 function getCurrentAddress(lat, lng) {
     $.ajax({
@@ -90,7 +90,7 @@ function getCurrentAddress(lat, lng) {
         success: function(data,status) {
           console.log(status + " : " + data);
           //get the address from the response object
-          address = data.results[0].formatted_address;
+          //address = data.results[0].formatted_address;
           //insert the addres
           //$('#originRider').val(address);
         }
@@ -203,7 +203,7 @@ function toggleFoundDriver(driverName, carModel, carColor, plates, pickupTime) {
 function toggleNoDrivers() {
     $('.sidebar-state').removeClass('active'); //disables any active
     $('#no-drivers').addClass('active');
-    $('.log-out-box').removeClass('disabled');
+    $('.log-out-box').addClass('disabled');
     directionsDisplay.setMap(null);
 }
 
@@ -342,7 +342,7 @@ $(document).ready(function() {
         setTimeout(function() {
             $('#thank-rider').removeClass('active');
             $("body.rider").removeClass('side-bar-active');
-            $('.log-out-box').removeClass('disabled');
+            $('.log-out-box').addClass('disabled');
             $(".overlay.destination").show();
         }, 5000);
     });
