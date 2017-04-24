@@ -43,12 +43,31 @@ Linux:
 sudo apt-get install postgres
 ```
 
-## 4. Create Database Tables
-Linux:
-Connect to db with postgres user:
+## 4. Connect to Postgres, Create Database & Tables
+### Linux:
+Connect to the postgres server with the postgres user:
 ```
 sudo su - postgres
 psql -p5432
+```
+First we will create a new database called `uberjr`.
+```
+create Database uberjr;
+```
+Now we'll have to connect to the database.
+```
+\c uberjr
+```
+To execute the sql statement in `databaseSetup.sql` we will just copy and paste the contents of the file into our psql prompt.
+
+To check if the tables have been create successfully you can execute:
+```
+\d
+```
+### OS X
+Connect to the postgres server with the postgres user:
+```
+"/Applications/Postgres.app/Contents/Versions/9.6/bin/psql" -p5432 -d "postgres"
 ```
 First we will create a new database called `uberjr`.
 ```
