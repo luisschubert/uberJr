@@ -3,15 +3,14 @@
 For best practice install Ubuntu in a Virtual Machine and run uberJr in sandboxed environment to ensure consistent performance.
 
 ## 1. Install Python (if you don't already have it) 
-https://www.python.org/downloads/
 We are using version 2.7
-run `python` in your terminal of choice to launch a python interpreter.
-run
+run `python` in your terminal to check if you have python install.
+if a python interpreter is launched, run to check your version
 ```
 import sys
 print (sys.version)
 ```
-to check your version
+else download python here https://www.python.org/downloads/
 
 ## 2. Install Python Dependencies
 
