@@ -435,6 +435,7 @@ $('#switch-toggle').click(function(e) {
         else {
             $('.inactive').click();
             $('#waitting-state').toggleClass('active');
+            $('.driver-welcome').show();
         }
     }
 });
