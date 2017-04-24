@@ -52,7 +52,7 @@ Connect to the postgres server with the postgres user:
 sudo su - postgres
 psql -p5432
 ```
-### OS X
+### OS X:
 Connect to the postgres server with the postgres user:
 ```
 "/Applications/Postgres.app/Contents/Versions/9.6/bin/psql" -p5432 -d "postgres"
@@ -83,4 +83,5 @@ Navigate to the project in your terminal and run to start the webserver:
 ```
 python webserver.py
 ```
+UberJr is now running at `localhost:5000` [uberJr](http://localhost:5000)
 
