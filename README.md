@@ -36,8 +36,10 @@ Python dependencies will be installed using Pip.
 `sudo pip install psycopg2`
 
 ## 3. Install PostgreSQL
-OS X -> https://postgresapp.com/ this is the easiest way to run a PostgreSQL Server on Mac. Follow Instructions on site.
-Linux:
+### OS X:
+Install the PostgresApp from https://postgresapp.com/.
+This is the easiest way to run a PostgreSQL Server on Mac. Follow Instructions on site for installation.
+### Linux:
 ```
 sudo apt-get install postgres
 ```
