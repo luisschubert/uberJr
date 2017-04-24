@@ -467,7 +467,7 @@ def api_requestdriver():
                     response = r.content
                     parsed_response = json.loads(response)
                     #print parsed_response
-                    travelTime = parsed_response[u'rows'][0][u'elements'][0][u'duration'][u'value']
+                    travelTime = parsed_response[u'rows'][0][u'elements'][0][u'duration_in_traffic'][u'value']
                     #travelTime = 921
                     #timeToDest = 2000
                     # if driver is within a range of 20 minutes away
@@ -481,9 +481,11 @@ def api_requestdriver():
             if destDir.status_code == 200:
                 destresponse = destDir.content
                 parsed_destresp = json.loads(destresponse)
-                timeToDest = parsed_destresp[u'rows'][0][u'elements'][0][u'duration'][u'value']
+                timeToDest = parsed_destresp[u'rows'][0][u'elements'][0][u'duration_in_traffic'][u'value']
                 milesToDest = parsed_destresp[u'rows'][0][u'elements'][0][u'distance'][u'value']
                 milesToDest = milesToDest / 1609.34
+                if milesToDest >= 100:
+                    return "destination is out of range/too far"
             cost = tools.calculateCost(timeToDest, milesToDest)
             # mark the closest driver as paired
             closestDriver.paired = True

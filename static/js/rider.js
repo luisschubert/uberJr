@@ -137,6 +137,8 @@ function requestDriver(origin, destination) {
             console.log("requestdriver data = " + data);
             if (data == "No drivers available. Check back later!") {
                 toggleNoDrivers();
+            } else if (data == "destination is out of range/too far") {
+                toggleTooFar();
             } else {
                 travelTime = data.travelTime;
                 rideFare = data.fare;
@@ -203,6 +205,13 @@ function toggleFoundDriver(driverName, carModel, carColor, plates, pickupTime) {
 function toggleNoDrivers() {
     $('.sidebar-state').removeClass('active'); //disables any active
     $('#no-drivers').addClass('active');
+    $('.log-out-box').removeClass('disabled');
+    directionsDisplay.setMap(null);
+}
+
+function toggleTooFar() {
+    $('.sidebar-state').removeClass('active'); //disables any active
+    $('#too-far').addClass('active');
     $('.log-out-box').removeClass('disabled');
     directionsDisplay.setMap(null);
 }

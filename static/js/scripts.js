@@ -32,7 +32,7 @@ $(document).ready(function() {
         e.preventDefault();
         completeRide();
     });
-    $('#retry-ride-request').click(function(e) {
+    $('#retry-ride-request, #retry-too-far-request').click(function(e) {
         e.preventDefault();
         $('.sidebar-state').removeClass('active');
         $("body.rider").removeClass('side-bar-active');
@@ -230,7 +230,7 @@ function initMap() {
 
     //To show rider location
     setTimeout(function() { //here tmp until lat lng fix
-        if (locationCenterMap != null) { 
+        if (locationCenterMap != null) {
             console.log("Center Map Coordinates" + locationCenterMap);
             userMarker = new RichMarker({
                 position: locationCenterMap,
