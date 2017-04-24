@@ -45,7 +45,7 @@ Install the PostgresApp from https://postgresapp.com/.
 This is the easiest way to run a PostgreSQL Server on Mac. Follow Instructions on site for installation.  
 
 ## 4. Connect to Postgres, Create Database & Tables
-### Connect to Postgres
+### Connect to Postgres:
 ### Linux:
 Connect to the postgres server with the postgres user:
 ```
@@ -57,12 +57,12 @@ Connect to the postgres server with the postgres user:
 ```
 "/Applications/Postgres.app/Contents/Versions/9.6/bin/psql" -p5432 -d "postgres"
 ```
-### Create Database & Tables
+### Create Database & Tables:
 Create a new database called `uberjr`
 ```
 create Database uberjr;
 ```
-Connect to the database.
+Connect to the `uberjr` database.
 ```
 \c uberjr;
 ```
@@ -76,3 +76,11 @@ Change the postgres password to `uberjr`
 ```
 \password postgres;
 ```
+
+## 5. Launch uberJr 
+Clone the repository to your machine.
+Navigate to the project in your terminal and run to start the webserver:
+```
+python webserver.py
+```
+
