@@ -467,7 +467,6 @@ def api_requestdriver():
                     response = r.content
                     parsed_response = json.loads(response)
                     print parsed_response
-                    print('hello')
                     print(parsed_response[u'rows'][0][u'elements'][0][u'status'])
                     if parsed_response[u'rows'][0][u'elements'][0][u'status'] != 'ZERO_RESULTS':
                         travelTime = parsed_response[u'rows'][0][u'elements'][0][u'duration'][u'value']
