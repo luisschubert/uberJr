@@ -12,6 +12,8 @@ print (sys.version)
 ```
 else download python here https://www.python.org/downloads/
 
+Also make sure that pip is installed to install the Python dependencies in the next step.
+
 ## 2. Install Python Dependencies
 
 Python dependencies will be installed using Pip.
