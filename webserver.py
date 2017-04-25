@@ -466,10 +466,13 @@ def api_requestdriver():
                 #if True:
                     response = r.content
                     parsed_response = json.loads(response)
-                    #print parsed_response
-                    travelTime = parsed_response[u'rows'][0][u'elements'][0][u'duration'][u'value']
-                    #travelTime = 921
-                    #timeToDest = 2000
+                    print parsed_response
+                    print('hello')
+                    print(parsed_response[u'rows'][0][u'elements'][0][u'status'])
+                    if parsed_response[u'rows'][0][u'elements'][0][u'status'] != 'ZERO_RESULTS':
+                        travelTime = parsed_response[u'rows'][0][u'elements'][0][u'duration'][u'value']
+                    else:
+                        travelTime = 1000
                     # if driver is within a range of 20 minutes away
                     if travelTime < 1200:
                         if travelTime < timeToRider:
@@ -481,9 +484,13 @@ def api_requestdriver():
             if destDir.status_code == 200:
                 destresponse = destDir.content
                 parsed_destresp = json.loads(destresponse)
-                timeToDest = parsed_destresp[u'rows'][0][u'elements'][0][u'duration'][u'value']
-                milesToDest = parsed_destresp[u'rows'][0][u'elements'][0][u'distance'][u'value']
-                milesToDest = milesToDest / 1609.34
+                if parsed_destresp[u'rows'][0][u'elements'][0][u'status'] != 'ZERO_RESULTS':
+                    timeToDest = parsed_destresp[u'rows'][0][u'elements'][0][u'duration'][u'value']
+                    milesToDest = parsed_destresp[u'rows'][0][u'elements'][0][u'distance'][u'value']
+                    milesToDest = milesToDest / 1609.34
+                else:
+                    timeToDest = 1800
+                    milesToDest = 55
                 if milesToDest >= 100:
                     return "destination is out of range/too far"
             cost = tools.calculateCost(timeToDest, milesToDest)

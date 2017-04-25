@@ -13,6 +13,7 @@ var pickedUp;
 var pickedUpTimeout;
 var rideCompleted;
 var rideCompletedTimeout;
+var driverMarkersTimeout;
 
 $(document).ready(function() {
     setTimeout(function(){
@@ -74,7 +75,7 @@ function updateDriverMarkers() {
         curMarkers[i].setPosition(new google.maps.LatLng(driverslocations[i][1], driverslocations[i][2]));
     }
     counter = counter + 1;
-    setTimeout(updateDriverMarkers, 5000);
+    driverMarkersTimeout = setTimeout(updateDriverMarkers, 5000);
 }
 
 var cnt = 0;
@@ -257,7 +258,7 @@ function checkPickedUp() {
                 checkRideCompleted();
                 togglePickedUp(data.arrival_time);
             } else {
-                //updateDriverMarkers();
+                updateDriverMarkers();
                 console.log("rider is still waiting to be picked up");
             }
         }
@@ -286,10 +287,11 @@ function checkRideCompleted() {
           if (data == 'true') {
               rideCompleted = true;
               clearTimeout(rideCompletedTimeout);
+              clearInterval(interval);
+              clearTimeout(driverMarkersTimeout);
               console.log("ride completed");
               toggleRideCompleted();
           } else {
-              updateDriverMarkers();
               console.log("ride is still in progress");
           }
         }
