@@ -69,7 +69,7 @@ var initLocation = false;
 function updateMyLocation() {
     setInterval(function() {
       console.log("SETING INTERVAL");
-      if (userMarker === null) {
+      if (userMarker === null || userMarker == undefined || userMarker == '') {
           console.log("!!!userMarker is Null now!!!!");
       } else {
           userMarker.setPosition(new google.maps.LatLng(curr_lat, curr_long));
@@ -228,10 +228,14 @@ function initMap() {
         name: 'Custom Style'
     };
 
-    //To show rider location
+    //To display custom marker at user location
     setTimeout(function() { //here tmp until lat lng fix
-        if (locationCenterMap != null) {
-            console.log("Center Map Coordinates" + locationCenterMap);
+        if (locationCenterMap == null || locationCenterMap == undefined ||
+            locationCenterMap.length <= 0 || locationCenterMap == '') {            
+                console.log("Unable to get User location");
+        }
+        else {
+            console.log("User location success: " + locationCenterMap);
             userMarker = new RichMarker({
                 position: locationCenterMap,
                 map: map,
@@ -245,14 +249,14 @@ function initMap() {
     }, 5000);
 
     //To show drivers near by
-    for (var i = 0; i < driverslocations.length; i++) {
-        curMarkers[i] = new RichMarker({
-            position: new google.maps.LatLng(driverslocations[i][1], driverslocations[i][2]),
-            map: map,
-            content: '<div class="richmarker-wrapper"><span class="uber-car"></span></div>',
-            shadow: 0
-        });
-    }
+    // for (var i = 0; i < driverslocations.length; i++) {
+    //     curMarkers[i] = new RichMarker({
+    //         position: new google.maps.LatLng(driverslocations[i][1], driverslocations[i][2]),
+    //         map: map,
+    //         content: '<div class="richmarker-wrapper"><span class="uber-car"></span></div>',
+    //         shadow: 0
+    //     });
+    // }
 
     var customMapType = new google.maps.StyledMapType(featureOpts, styledMapOptions);
 

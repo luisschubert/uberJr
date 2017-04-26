@@ -1,6 +1,16 @@
 //JS for login and register views here
+// page init
+jQuery(function() {
+    initWow();
+});
+
+// wow for scroll animations
+function initWow() {
+    new WOW().init();
+}
 
 $(document).ready(function() {
+    $('#wrapper').fadeIn(1200);
 	$('#riderUserType').change(function() {
         selection = $(this).val();
         switch(selection) {
