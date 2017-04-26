@@ -487,11 +487,14 @@ def api_requestdriver():
                     timeToDest = parsed_destresp[u'rows'][0][u'elements'][0][u'duration'][u'value']
                     milesToDest = parsed_destresp[u'rows'][0][u'elements'][0][u'distance'][u'value']
                     milesToDest = milesToDest / 1609.34
+                    if milesToDest >= 100:
+                        riderid = Users.query.filter_by(email = session['email']).first().id
+                        Riders.query.filter_by(rider_id = riderid).delete()
+                        db.session.commit()
+                        return "destination is out of range/too far"
                 else:
                     timeToDest = 1800
                     milesToDest = 55
-                if milesToDest >= 100:
-                    return "destination is out of range/too far"
             cost = tools.calculateCost(timeToDest, milesToDest)
             # mark the closest driver as paired
             closestDriver.paired = True
@@ -564,7 +567,7 @@ def api_cancelRide():
     # remove ride
     Rides.query.filter_by(rider_id=riderid).delete()
     # remove ride request
-    Riders.query.filter_by(rider_id = ride.rider_id).delete()
+    Riders.query.filter_by(rider_id = riderid).delete()
     # mark driver unpaired
     driver = ActiveDrivers.query.filter_by(id = driverid).first()
     driver.paired = False
