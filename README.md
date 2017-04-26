@@ -13,6 +13,11 @@ print (sys.version)
 else download python here https://www.python.org/downloads/
 
 Also make sure that pip is installed to install the Python dependencies in the next step.
+### Linux:
+```
+sudo apt-get install python-setuptools
+sudo easy_install pip
+```
 
 ## 2. Install Python Dependencies
 
