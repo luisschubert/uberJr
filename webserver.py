@@ -127,7 +127,6 @@ class Rides(db.Model):
 def home():
     if 'email' in session:
         user = Users.query.filter_by(email = session['email']).first()
-        print user.is_driver
         if user.is_driver == True:
             return redirect(url_for('driver'))
         else:
@@ -271,7 +270,6 @@ def api_getTravelInfo():
 
 @app.route("/api/signup", methods=['POST'])
 def api_signup():
-    print(request.form)
     name = request.form.get('name')
     userEmail = request.form.get('email')
     password = request.form.get('password')
@@ -282,9 +280,6 @@ def api_signup():
         color = request.form.get('color')
         year = request.form.get('year')
         make = request.form.get('make')
-        print "name: %s, email: %s, password: %s, confirmpassword: %s, isdriver: %s, licenseplate: %s, color: %s, year: %s, make: %s" %(name,userEmail,password,confirmpassword,status,licenseplate,color,year,make)
-    else:
-        print "name: %s, email: %s, password: %s, confirmpassword: %s, isdriver: %s" %(name,userEmail,password,confirmpassword,status)
     user = Users.query.filter_by(email=userEmail).first()
     if user is None:
         if password == confirmpassword:
@@ -303,12 +298,10 @@ def api_signup():
                 new_driver = Drivers(driveid, licenseplate, color, year, make, False, False, 0)
                 db.session.add(new_driver)
                 db.session.commit()
-                print 'driver account creation succeeded'
                 resp = make_response(url_for('driver'))
                 session['email'] = new_user.email
                 return resp
             else:
-                print 'rider account creation succeeded'
                 resp = make_response(url_for('rider'))
                 session['email'] = new_user.email
                 return resp
@@ -366,8 +359,8 @@ def api_drive():
     status = request.form.get('status')
     currentlat = request.form.get('originLat')
     currentlong = request.form.get('originLong')
-    print(currentlat)
-    print(currentlong)
+    print('driver\'s current lat', currentlat)
+    print('driver\'s current long', currentlong)
     if status == 'true':
         # mark the driver as 'active'
         driverid = Users.query.filter_by(email = session['email']).first().id
@@ -404,16 +397,12 @@ def api_rider():
     parsed_origin = json.loads(json.dumps(geocode_origin))
     origin_lat = parsed_origin[0][u'geometry'][u'location'][u'lat']
     origin_long = parsed_origin[0][u'geometry'][u'location'][u'lng']
-    print(origin_lat)
-    print(origin_long)
     ### Destination
     destination = request.form.get('destination')
     geocode_destination = gmaps.geocode(destination)
     parsed_destination = json.loads(json.dumps(geocode_destination))
     destination_lat = parsed_destination[0][u'geometry'][u'location'][u'lat']
     destination_long = parsed_destination[0][u'geometry'][u'location'][u'lng']
-    print(destination_lat)
-    print(destination_long)
     # rider_id = corresponding user account's id (as a foreign key)
     riderid = Users.query.filter_by(email = session['email']).first().id
     # add ride request to riders table
@@ -429,9 +418,8 @@ def api_requestdriver():
     if riderequest.paired == False:
         # origin of rider
         rider_origin = request.form.get('origin')
-        print(rider_origin)
         rider_dest = request.form.get('destination')
-        print(rider_dest)
+        print('rider origin', rider_origin, ' rider dest', rider_dest)
         # calculate rider's current location gps coords
         geocode_rider_origin = gmaps.geocode(rider_origin)
         parsed_rider_origin = json.loads(json.dumps(geocode_rider_origin))
@@ -467,7 +455,6 @@ def api_requestdriver():
                     response = r.content
                     parsed_response = json.loads(response)
                     print parsed_response
-                    print(parsed_response[u'rows'][0][u'elements'][0][u'status'])
                     if parsed_response[u'rows'][0][u'elements'][0][u'status'] != 'ZERO_RESULTS':
                         travelTime = parsed_response[u'rows'][0][u'elements'][0][u'duration'][u'value']
                     else:
@@ -585,7 +572,7 @@ def api_checkRideCanceled():
     else:
         return "ride hasn't been canceled"
 
-@app.route("/api/checkDriverLocation", methods=['POST'])
+@app.route("/api/checkDriverLocation", methods=['GET'])
 def api_checkDriveLocation():
     print ("*** checking driver's location....")
     riderid = Users.query.filter_by(email=session['email']).first().id
@@ -597,9 +584,7 @@ def api_checkDriveLocation():
         dest_long = activeDriver.current_long;
         info = {'dest_lat': dest_lat,
                 'dest_long': dest_long}
-        print ("d_Lat: ", dest_lat);
-        print ("d_long: ", dest_long);
-
+        print ("d_Lat", dest_lat, ", d_long", dest_long);
         return jsonify(info)
     else:
         return "none"

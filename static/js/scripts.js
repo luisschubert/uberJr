@@ -67,8 +67,8 @@ $(document).ready(function() {
 
 var initLocation = false;
 function updateMyLocation() {
-    setInterval(function() {
-      console.log("SETING INTERVAL");
+    setTimeout(function() {
+      console.log("SETTING INTERVAL");
       var exists = false;
       try { userMarker; exists = true;} catch(e) {}
       if (exists) {
@@ -89,7 +89,7 @@ function getLocation() {
 }
 
 function showPosition(position) {
-    console.log("ShowPostion on the script.js: ");
+    console.log("ShowPosition on script.js: ");
     if (!initLocation) {
         updateMyLocation();
     }
@@ -233,7 +233,7 @@ function initMap() {
     //To display custom marker at user location
     setTimeout(function() { //here tmp until lat lng fix
         if (locationCenterMap == null || locationCenterMap == undefined ||
-            locationCenterMap.length <= 0 || locationCenterMap == '') {            
+            locationCenterMap.length <= 0 || locationCenterMap == '') {
                 console.log("Unable to get User location");
         }
         else {
