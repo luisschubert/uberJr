@@ -67,7 +67,7 @@ $(document).ready(function() {
 
 var initLocation = false;
 function updateMyLocation() {
-    setTimeout(function() {
+    setInterval(function() {
       console.log("SETTING INTERVAL");
       var exists = false;
       try { userMarker; exists = true;} catch(e) {}
