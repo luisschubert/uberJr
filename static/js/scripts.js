@@ -69,10 +69,12 @@ var initLocation = false;
 function updateMyLocation() {
     setInterval(function() {
       console.log("SETING INTERVAL");
-      if (userMarker === null || userMarker == undefined || userMarker == '') {
-          console.log("!!!userMarker is Null now!!!!");
-      } else {
+      var exists = false;
+      try { userMarker; exists = true;} catch(e) {}
+      if (exists) {
           userMarker.setPosition(new google.maps.LatLng(curr_lat, curr_long));
+      } else {
+          console.log("!!!userMarker is Null now!!!!");
       }
     },
     7000);
@@ -264,3 +266,7 @@ function initMap() {
 }
 
 google.maps.event.addDomListener(window, 'load', initMap);
+
+google.maps.event.addDomListener(window, 'resize', function() {
+    map.setCenter(locationCenterMap);
+});
