@@ -456,7 +456,7 @@ def api_requestdriver():
                     parsed_response = json.loads(response)
                     print parsed_response
                     if parsed_response[u'rows'][0][u'elements'][0][u'status'] != 'ZERO_RESULTS':
-                        travelTime = parsed_response[u'rows'][0][u'elements'][0][u'duration'][u'value']
+                        travelTime = parsed_response[u'rows'][0][u'elements'][0][u'duration_in_traffic'][u'value']
                     else:
                         travelTime = 1000
                     # if driver is within a range of 20 minutes away
@@ -471,7 +471,7 @@ def api_requestdriver():
                 destresponse = destDir.content
                 parsed_destresp = json.loads(destresponse)
                 if parsed_destresp[u'rows'][0][u'elements'][0][u'status'] != 'ZERO_RESULTS':
-                    timeToDest = parsed_destresp[u'rows'][0][u'elements'][0][u'duration'][u'value']
+                    timeToDest = parsed_destresp[u'rows'][0][u'elements'][0][u'duration_in_traffic'][u'value']
                     milesToDest = parsed_destresp[u'rows'][0][u'elements'][0][u'distance'][u'value']
                     milesToDest = milesToDest / 1609.34
                     if milesToDest >= 100:
