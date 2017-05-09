@@ -55,11 +55,13 @@ $(document).ready(function() {
             doRegister();
         } else {
             $("#signupRiderForm").effect("shake");
+            $(".signup-error").html("Passwords do not match.");
+            $(".signup-error").css('color', '#d50000');
             document.getElementById('riderNameField').style.borderColor = "green";
             document.getElementById('riderEmailField').style.borderColor = "green";
-            document.getElementById('riderPasswordField').style.borderColor = "red";
+            document.getElementById('riderPasswordField').style.borderColor = "#d50000";
             document.getElementById('riderPasswordField').value = "";
-            document.getElementById('riderConfPasswordField').style.borderColor = "red";
+            document.getElementById('riderConfPasswordField').style.borderColor = "#d50000";
             document.getElementById('riderConfPasswordField').value = "";
             document.getElementById('riderUserType').style.borderColor = "green";
         }
@@ -70,11 +72,13 @@ $(document).ready(function() {
             doRegister();
         } else {
             $("#signupDriverForm").effect("shake");
+            $(".signup-error").html("Passwords do not match.");
+            $(".signup-error").css('color', '#d50000');
             document.getElementById('driverNameField').style.borderColor = "green";
             document.getElementById('driverEmailField').style.borderColor = "green";
-            document.getElementById('driverPasswordField').style.borderColor = "red";
+            document.getElementById('driverPasswordField').style.borderColor = "#d50000";
             document.getElementById('driverPasswordField').value = "";
-            document.getElementById('driverConfPasswordField').style.borderColor = "red";
+            document.getElementById('driverConfPasswordField').style.borderColor = "#d50000";
             document.getElementById('driverConfPasswordField').value = "";
             document.getElementById('driverUserType').style.borderColor = "green";
             document.getElementById('platesField').style.borderColor = "green";
@@ -123,8 +127,10 @@ function doRegister() {
                 window.location.href = data;
             } else if (data.charAt(0) === "f") {
                 $("#signupRiderForm").effect("shake");
+                $(".signup-error").html("That email is taken. Try another.");
+                $(".signup-error").css('color', '#d50000');
                 document.getElementById('riderNameField').style.borderColor = "green";
-                document.getElementById('riderEmailField').style.borderColor = "red";
+                document.getElementById('riderEmailField').style.borderColor = "#d50000";
                 document.getElementById('riderEmailField').value = "";
                 document.getElementById('riderPasswordField').style.borderColor = "grey";
                 document.getElementById('riderPasswordField').value = "";
@@ -133,8 +139,10 @@ function doRegister() {
                 document.getElementById('riderUserType').style.borderColor = "green";
             } else if (data.charAt(0) === "t") {
                 $("#signupDriverForm").effect("shake");
+                $(".signup-error").html("That email is taken. Try another.");
+                $(".signup-error").css('color', '#d50000');
                 document.getElementById('driverNameField').style.borderColor = "green";
-                document.getElementById('driverEmailField').style.borderColor = "red";
+                document.getElementById('driverEmailField').style.borderColor = "#d50000";
                 document.getElementById('driverEmailField').value = "";
                 document.getElementById('driverPasswordField').style.borderColor = "grey";
                 document.getElementById('driverPasswordField').value = "";
@@ -166,12 +174,16 @@ function doLogin() {
                 window.location.href = data;
             } else if (data === "Invalid password!") {
                 $("#loginForm").effect("shake");
+                $("#login-error").html("Wrong password. Try again.");
+                $("#login-error").css('color', '#d50000');
                 document.getElementById('emailField').style.borderColor = "green";
-                document.getElementById('passwordField').style.borderColor = "red";
+                document.getElementById('passwordField').style.borderColor = "#d50000";
                 document.getElementById('passwordField').value = "";
             } else if (data === "No account with that email was found!") {
                 $("#loginForm").effect("shake");
-                document.getElementById('emailField').style.borderColor = "red";
+                $("#login-error").html("Couldn't find your uberJR account.");
+                $("#login-error").css('color', '#d50000');
+                document.getElementById('emailField').style.borderColor = "#d50000";
                 document.getElementById('emailField').value = "";
                 document.getElementById('passwordField').style.borderColor = "grey";
                 document.getElementById('passwordField').value = "";

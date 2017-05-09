@@ -6,6 +6,7 @@
       <div class="register-wrapper wow fadeInUpMin" data-wow-delay=".2s" data-wow-duration="2.s" id="riderForm">
         <img class="logo" src="/static/images/uberjr-logo.png" alt="uber jr logo">
         <h2>Register</h2>
+        <div class="signup-error"></div>
         <form id="signupRiderForm" action="/api/signup" method="POST">
           <input id="riderNameField" type="text" name="ridername" placeholder="Name" required>
           <input id="riderEmailField" type="email" name="rideremail" placeholder="Email" required>
@@ -26,6 +27,7 @@
             <img class="logo" src="/static/images/uberjr-logo.png" alt="uber jr logo">
             <h2>Register</h2>
             <div class="col left">
+               <div class="signup-error"></div>
                <input id="driverNameField" type="text" name="drivername" placeholder="Name" required>
                <input id="driverEmailField" type="email" name="driveremail" placeholder="Email" required>
                <input id="driverPasswordField" type="password" name="driverpassword" placeholder="Password" required>
