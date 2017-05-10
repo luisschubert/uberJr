@@ -79,10 +79,10 @@
 				<div class="divider"></div>
 				<form id="payFare">
 					<p id="card-error"></p>
-					<input id="ccNameField" type="text" name="ccname" placeholder="Name on Card" required>
+					<input id="ccNameField" type="text" name="ccname" placeholder="Name on Card" autocomplete="cc-name" required>
 					<input id="ccNumField" type="text" name="ccnum" placeholder="Card Number" maxlength="19" required>
 					<div id="card-icon"></div>
-					<input id="ccCVCField" type="text" name="cccvc" placeholder="CVC" maxlength="4" required>
+					<input id="ccCVCField" type="text" name="cccvc" placeholder="CVC" maxlength="4" autocomplete="off" required>
 					<select data-placeholder="Month" id="ccMonthField" required>
 						<option value="">Mo</option>
 						<option value="01">01</option>

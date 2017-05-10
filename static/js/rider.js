@@ -341,26 +341,38 @@ $(document).ready(function() {
     });
     $('#payFare').submit(function(e) {
         e.preventDefault();
-        var valid = $.payment.validateCardNumber($('#ccNumField').val());
-        if (!valid) {
+        var numValid = $.payment.validateCardNumber($('#ccNumField').val());
+        var cardType = $.payment.cardType($('#ccNumField').val());
+        var cvcValid = $.payment.validateCardCVC($('#ccCVCField').val(), cardType);
+        var expValid = $.payment.validateCardExpiry($('#ccMonthField').val(), $('#ccYearField').val());
+        if (!numValid) {
             $('#payFare').effect('shake');
-            document.getElementById('ccNameField').style.borderColor = "green";
-            document.getElementById('ccNumField').style.borderColor = "#d50000";
             $('#card-error').html("Card number invalid. Try again.");
             $('#card-error').css('color', '#d50000');
         } else {
-            $('form').trigger('reset');
-            document.getElementById('ccNameField').style.borderColor = "grey";
-            document.getElementById('ccNumField').style.borderColor = "grey";
-            $('#card-error').html("");
-            $('.sidebar-state').removeClass('active');
-            $('#thank-rider').addClass('active');
-            setTimeout(function() {
-                $('#thank-rider').removeClass('active');
-                $("body.rider").removeClass('side-bar-active');
-                $('.log-out-box').removeClass('disabled');
-                $(".overlay.destination").show();
-            }, 5000);
+              if (!cvcValid) {
+                  $('#payFare').effect('shake');
+                  $('#card-error').html("Card CVC code invalid. Try again.");
+                  $('#card-error').css('color', '#d50000');
+              } else {
+                  if (!expValid) {
+                      $('#payFare').effect('shake');
+                      $('#card-error').html("Card expiration date invalid. Try again.");
+                      $('#card-error').css('color', '#d50000');
+                  } else {
+                      $('form').trigger('reset');
+                      $('#card-error').html("");
+                      $('#card-icon').removeClass();
+                      $('.sidebar-state').removeClass('active');
+                      $('#thank-rider').addClass('active');
+                      setTimeout(function() {
+                          $('#thank-rider').removeClass('active');
+                          $("body.rider").removeClass('side-bar-active');
+                          $('.log-out-box').removeClass('disabled');
+                          $(".overlay.destination").show();
+                      }, 5000);
+                  }
+              }
         }
     });
 });
