@@ -339,14 +339,21 @@ $(document).ready(function() {
     });
     $('#payFare').submit(function(e) {
         e.preventDefault();
-        $('form').trigger('reset');
-        $('.sidebar-state').removeClass('active');
-        $('#thank-rider').addClass('active');
-        setTimeout(function() {
-            $('#thank-rider').removeClass('active');
-            $("body.rider").removeClass('side-bar-active');
-            $('.log-out-box').removeClass('disabled');
-            $(".overlay.destination").show();
-        }, 5000);
+        if ($('#card-icon').hasClass("visa") == true || $('#card-icon').hasClass("amex") == true || $('#card-icon').hasClass("mastercard") == true) {
+            $('form').trigger('reset');
+            $('.sidebar-state').removeClass('active');
+            $('#thank-rider').addClass('active');
+            setTimeout(function() {
+                $('#thank-rider').removeClass('active');
+                $("body.rider").removeClass('side-bar-active');
+                $('.log-out-box').removeClass('disabled');
+                $(".overlay.destination").show();
+            }, 5000);
+        } else {
+            $('#payFare').effect('shake');
+            document.getElementById('ccNumField').style.borderColor = "#d50000";
+            $('#card-error').html("Card number invalid. Try again.");
+            $('#card-error').css('color', '#d50000');
+        }
     });
 });
