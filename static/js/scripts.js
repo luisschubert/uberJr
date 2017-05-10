@@ -15,6 +15,7 @@ var curr_long;
 
 $(document).ready(function() {
     $('#wrapper').fadeIn(1200);
+    getLocation();
     $('#riderRequest').submit(function(e) {
         e.preventDefault();
         requestRide();
@@ -62,7 +63,6 @@ $(document).ready(function() {
             e.preventDefault();
         }
     });
-    getLocation();
 });
 
 var initLocation = false;
@@ -235,8 +235,7 @@ function initMap() {
         if (locationCenterMap == null || locationCenterMap == undefined ||
             locationCenterMap.length <= 0 || locationCenterMap == '') {
                 console.log("Unable to get User location");
-        }
-        else {
+        } else {
             console.log("User location success: " + locationCenterMap);
             userMarker = new RichMarker({
                 position: locationCenterMap,
@@ -246,7 +245,7 @@ function initMap() {
             });
         }
         // console.log("POSITION on TIMEOUT: ", userMarker);
-        // console.log("deleting markers here");
+        // console.log("centering here");
         // deleteMarkers(userMarker);
     }, 5000);
 

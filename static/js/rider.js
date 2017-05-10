@@ -16,19 +16,14 @@ var rideCompletedTimeout;
 var driverMarkersTimeout;
 var cnt = 0;
 
-$(document).ready(function() {
-    setTimeout(function(){
-      $('.circle-main').remove();
-    }, 8000);
-});
 
-function startIntervalCalls(){
+function startIntervalCalls() {
     interval = setTimeout(function() {getLocation();}, 7000);
     cnt +=1;
 }
 
 function showAvailableDrivers(lat, lng) {
-    if (cnt === 0){
+    if (cnt === 0) {
         startIntervalCalls();
     }
     console.log("showAvailableDrivers rightnow");
@@ -301,6 +296,9 @@ function toggleRideCompleted() {
 }
 
 $(document).ready(function() {
+    setTimeout(function(){
+      $('.circle-main').remove();
+    }, 8000);
     $('#ccNumField').payment('formatCardNumber');
     $('#ccCVCField').payment('formatCardCVC');
     $('#ccNumField').on('keyup paste input', function(e) {
