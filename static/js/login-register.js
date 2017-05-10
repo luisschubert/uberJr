@@ -18,9 +18,19 @@ $(document).ready(function() {
                 $('#driverForm').show();
                 $('#riderForm').hide();
                 $('#driverNameField').val($('#riderNameField').val());
+                var nameColor = document.getElementById('riderNameField').style.borderColor;
+                document.getElementById('driverNameField').style.borderColor = nameColor;
                 $('#driverEmailField').val($('#riderEmailField').val());
+                var emailColor = document.getElementById('riderEmailField').style.borderColor;
+                document.getElementById('driverEmailField').style.borderColor = emailColor;
                 $('#driverPasswordField').val($('#riderPasswordField').val());
+                var passColor = document.getElementById('riderPasswordField').style.borderColor;
+                document.getElementById('driverPasswordField').style.borderColor = passColor;
                 $('#driverConfPasswordField').val($('#riderConfPasswordField').val());
+                var confPassColor = document.getElementById('riderConfPasswordField').style.borderColor;
+                document.getElementById('driverConfPasswordField').style.borderColor = confPassColor;
+                var typeColor = document.getElementById('riderUserType').style.borderColor;
+                document.getElementById('driverUserType').style.borderColor = typeColor;
                 /*$('#driverPasswordField').val('');
                 $('#driverConfPasswordField').val('');*/
                 $('#driverUserType').val("true");
@@ -37,9 +47,19 @@ $(document).ready(function() {
                 $('#driverForm').hide();
                 $('#riderForm').show();
                 $('#riderNameField').val($('#driverNameField').val());
+                var nameColor = document.getElementById('driverNameField').style.borderColor;
+                document.getElementById('riderNameField').style.borderColor = nameColor;
                 $('#riderEmailField').val($('#driverEmailField').val());
+                var emailColor = document.getElementById('driverEmailField').style.borderColor;
+                document.getElementById('riderEmailField').style.borderColor = emailColor;
                 $('#riderPasswordField').val($('#driverPasswordField').val());
+                var passColor = document.getElementById('driverPasswordField').style.borderColor;
+                document.getElementById('riderPasswordField').style.borderColor = passColor;
                 $('#riderConfPasswordField').val($('#driverConfPasswordField').val());
+                var confPassColor = document.getElementById('driverConfPasswordField').style.borderColor;
+                document.getElementById('riderConfPasswordField').style.borderColor = confPassColor;
+                var typeColor = document.getElementById('driverUserType').style.borderColor;
+                document.getElementById('riderUserType').style.borderColor = typeColor;
                 /*$('#riderPasswordField').val('');
                 $('#riderConfPasswordField').val('');*/
                 $('#riderUserType').val("false");
